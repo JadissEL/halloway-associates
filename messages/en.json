@@ -1,0 +1,374 @@
+{
+  "metadata": {
+    "title": "Halloway & Associates — Production Lab",
+    "description": "AI, automation, and growth engineering studio. We build production-grade systems for ambitious companies across Morocco, Europe, North America, and the UAE.",
+    "keywords": "AI automation|MVP development|growth engineering|revenue systems|Halloway & Associates|Production Lab|global delivery|n8n automation|Stripe integration"
+  },
+  "seo": {
+    "learnMore": "Learn more",
+    "allServices": "View all services",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "The page you requested does not exist or has moved.",
+    "notFoundCta": "Back to home"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "work": "Work",
+    "insights": "Insights",
+    "discuss": "Discuss with us",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "skipToContent": "Skip to content",
+    "language": "Language"
+  },
+  "hero": {
+    "eyebrow": "Production Lab",
+    "title": "We engineer systems that scale businesses.",
+    "subtitle": "Halloway & Associates is an AI, automation, and growth engineering studio. We design and ship production-grade workflows, products, and revenue systems — not slide decks.",
+    "ctaPrimary": "Start a conversation",
+    "ctaSecondary": "Explore our capabilities"
+  },
+  "stats": {
+    "pillars": { "value": "14", "label": "Service pillars across our Production Lab" },
+    "tracks": { "value": "4", "label": "Focus tracks: Automation, Revenue, Growth, Product" },
+    "regions": { "value": "8", "label": "Global markets across Africa, Europe, and North America" },
+    "mvpWeeks": { "value": "2–6", "label": "Typical MVP delivery window for focused builds" }
+  },
+  "thesis": {
+    "eyebrow": "Our thesis",
+    "title": "Technology should compound — not accumulate chaos.",
+    "body": "Most organizations stack tools without connecting them. We architect integrated systems: automation pipelines, AI layers, payment flows, and digital products that work together and scale with your business."
+  },
+  "focusTracks": {
+    "eyebrow": "Focus tracks",
+    "title": "Four disciplines. One integrated studio.",
+    "subtitle": "Every engagement draws from our Production Lab — modular capabilities that combine when your challenge demands it.",
+    "exploreLink": "Explore capabilities",
+    "automation": {
+      "title": "Automation & AI",
+      "description": "End-to-end workflows, intelligent agents, and connected toolchains that eliminate manual handoffs."
+    },
+    "revenue": {
+      "title": "Revenue systems",
+      "description": "Stripe, subscriptions, invoicing, and offer engineering designed to capture and recover revenue."
+    },
+    "growth": {
+      "title": "Marketing & growth",
+      "description": "SEO, funnels, content engines, and paid acquisition loops built as systems — not campaigns."
+    },
+    "product": {
+      "title": "Product & MVP",
+      "description": "Websites, SaaS platforms, and rapid MVPs with the architecture to grow beyond the first release."
+    }
+  },
+  "servicesPreview": {
+    "eyebrow": "Production Lab",
+    "title": "Fourteen capabilities. One standard: production-ready.",
+    "subtitle": "From n8n automation to MVP development — every service is engineered for reliability, clarity, and scale.",
+    "viewAll": "View all services"
+  },
+  "regions": {
+    "eyebrow": "Global coverage",
+    "title": "Eight markets. One delivery standard.",
+    "subtitle": "We partner with teams across Morocco, Southern Europe, the United Kingdom, North America, and the UAE — on-site when it matters, remote when it scales.",
+    "selectorLabel": "Select a market",
+    "mapLegend": "Global coverage map",
+    "mapAriaLabel": "Interactive world map of Halloway & Associates markets in Morocco, Europe, North America, and the UAE",
+    "mapFootnote": "Markers show our active markets. Dashed arcs indicate delivery routes from the selected market to the rest of our global network.",
+    "mapAttribution": "Map data: Natural Earth & world-atlas (public domain).",
+    "mapLoadError": "Unable to load map data. Please refresh the page.",
+    "legendMarket": "Active market",
+    "legendNetwork": "Delivery network",
+    "detailCoverage": "Coverage",
+    "detailDelivery": "Delivery modes",
+    "detailTimezone": "Time zone",
+    "detailLanguages": "Languages",
+    "morocco": {
+      "city": "Morocco",
+      "shortLabel": "MA",
+      "detail": "North & West Africa hub",
+      "role": "Active market",
+      "mapLabel": "Morocco — active market",
+      "coverage": "Casablanca, Rabat, and North African enterprise & growth mandates",
+      "delivery": "On-site · Remote · Hybrid",
+      "timezone": "WET / CET (UTC+0 to +1)",
+      "languages": "Arabic · French · English",
+      "note": "Our Morocco practice supports automation, product builds, and growth systems for regional operators expanding across MENA and Europe."
+    },
+    "greece": {
+      "city": "Greece",
+      "shortLabel": "GR",
+      "detail": "Southern Europe · Mediterranean",
+      "role": "Active market",
+      "mapLabel": "Greece — active market",
+      "coverage": "Athens, Thessaloniki, and EU-adjacent product & automation work",
+      "delivery": "Remote · Periodic on-site",
+      "timezone": "EET (UTC+2)",
+      "languages": "Greek · English",
+      "note": "Greece engagements focus on SaaS MVPs, workflow automation, and EU-market go-to-market systems."
+    },
+    "spain": {
+      "city": "Spain",
+      "shortLabel": "ES",
+      "detail": "Iberia · EU market",
+      "role": "Active market",
+      "mapLabel": "Spain — active market",
+      "coverage": "Madrid, Barcelona, and Iberian growth & revenue engineering",
+      "delivery": "Remote · On-site workshops",
+      "timezone": "CET (UTC+1)",
+      "languages": "Spanish · English",
+      "note": "We deliver payment systems, marketing automation, and product launches for Spanish and cross-border EU teams."
+    },
+    "italy": {
+      "city": "Italy",
+      "shortLabel": "IT",
+      "detail": "Southern Europe · Enterprise",
+      "role": "Active market",
+      "mapLabel": "Italy — active market",
+      "coverage": "Milan, Rome, and national automation & digital product programs",
+      "delivery": "Remote · Hybrid",
+      "timezone": "CET (UTC+1)",
+      "languages": "Italian · English",
+      "note": "Italy work spans CRM automation, AI assistants, and production-grade integrations for mid-market and enterprise clients."
+    },
+    "uk": {
+      "city": "United Kingdom",
+      "shortLabel": "UK",
+      "detail": "London & national remote",
+      "role": "Active market",
+      "mapLabel": "United Kingdom — active market",
+      "coverage": "London, Manchester, and UK-wide product & growth engineering",
+      "delivery": "Remote · On-site sprints",
+      "timezone": "GMT / BST (UTC+0 to +1)",
+      "languages": "English",
+      "note": "UK clients engage us for revenue systems, AI layers, and scalable web platforms with async-first delivery."
+    },
+    "usa": {
+      "city": "United States",
+      "shortLabel": "US",
+      "detail": "North America · Remote-first",
+      "role": "Active market",
+      "mapLabel": "United States — active market",
+      "coverage": "East Coast, national SaaS, and US growth & automation programs",
+      "delivery": "Remote · Async collaboration",
+      "timezone": "Aligned to client (ET / PT)",
+      "languages": "English",
+      "note": "US engagements run fully remote with structured discovery, sprint reviews, and production handoffs."
+    },
+    "canada": {
+      "city": "Canada",
+      "shortLabel": "CA",
+      "detail": "North America · Bilingual delivery",
+      "role": "Active market",
+      "mapLabel": "Canada — active market",
+      "coverage": "Toronto, Montréal, and national Canadian product & automation mandates",
+      "delivery": "On-site · Remote · Hybrid",
+      "timezone": "ET / PT (UTC−5 to −8)",
+      "languages": "English · French",
+      "note": "Canada remains a core market for bilingual delivery, provincial programs, and cross-border North American builds."
+    },
+    "uae": {
+      "city": "United Arab Emirates",
+      "shortLabel": "UAE",
+      "detail": "Gulf · MENA gateway",
+      "role": "Active market",
+      "mapLabel": "United Arab Emirates — active market",
+      "coverage": "Dubai, Abu Dhabi, and Gulf enterprise automation & product work",
+      "delivery": "On-site · Remote · Hybrid",
+      "timezone": "GST (UTC+4)",
+      "languages": "Arabic · English",
+      "note": "UAE projects emphasize payment infrastructure, AI automation, and digital products for regional expansion."
+    }
+  },
+  "cta": {
+    "title": "Ready to discuss what we could build together?",
+    "subtitle": "A 15-minute discovery call is enough to explore fit — no pitch deck required.",
+    "button": "Book a discovery call"
+  },
+  "discussBar": {
+    "text": "Have a project in mind?",
+    "action": "Let's discuss"
+  },
+  "servicesPage": {
+    "eyebrow": "Production Lab — Full service list",
+    "title": "Every capability in our studio",
+    "subtitle": "Filter by focus track or browse the full catalog. Select any capability to see how we deliver it.",
+    "filterAll": "All",
+    "filterAutomation": "Automation & AI",
+    "filterRevenue": "Revenue",
+    "filterGrowth": "Growth",
+    "filterProduct": "Product",
+    "discussCapability": "Discuss this capability",
+    "items": {
+      "ai-automation": {
+        "title": "AI + Automation Engineering",
+        "summary": "n8n, Make, Zapier — CRM to sales to payment pipelines, fully connected.",
+        "details": "We design end-to-end automation systems: lead routing, internal ops, finance workflows, and multi-tool integrations. Built for reliability, observability, and scale."
+      },
+      "ai-chatbots": {
+        "title": "AI Chatbots & Intelligent Systems",
+        "summary": "Website, WhatsApp, and social bots for sales, support, and follow-up.",
+        "details": "AI assistants that qualify leads, answer support questions, and follow up 24/7 — across web, messaging platforms, and internal team tools."
+      },
+      "payments": {
+        "title": "Payment & Revenue Systems",
+        "summary": "Stripe, subscriptions, invoicing, and failed-payment recovery.",
+        "details": "Checkout flows, SaaS billing, automated invoicing, and revenue recovery systems that reduce leakage without adding headcount."
+      },
+      "content-social": {
+        "title": "Content + Social Media Automation",
+        "summary": "Multi-platform posting, AI content workflows, and repurposing systems.",
+        "details": "Turn one core asset into LinkedIn, Instagram, TikTok, and email — with scheduling, tracking, and content strategy automation."
+      },
+      "marketing-seo": {
+        "title": "Marketing, SEO & Growth Engineering",
+        "summary": "SEO, CRO, funnels, paid ads, and lead generation systems.",
+        "details": "Technical SEO, landing page optimization, conversion funnels, and growth loops engineered for measurable, repeatable acquisition."
+      },
+      "web-mvp": {
+        "title": "Website, App & MVP Development",
+        "summary": "Custom platforms, SaaS builds, and rapid product delivery.",
+        "details": "From marketing sites to full SaaS products — modern UX, API integrations, admin dashboards, and marketplace architectures."
+      },
+      "data-crm": {
+        "title": "Data, CRM & Business Intelligence",
+        "summary": "CRM setup, enrichment, segmentation, and KPI dashboards.",
+        "details": "HubSpot, Airtable, custom CRM migrations, lead deduplication, predictive analytics, and competitor intelligence automation."
+      },
+      "community": {
+        "title": "Community Building & Engagement",
+        "summary": "Discord, Circle, monetization, gamification, and retention systems.",
+        "details": "Community platforms with engagement automation, paid access tiers, loyalty systems, and creator/influencer infrastructure."
+      },
+      "branding": {
+        "title": "Branding, Content Strategy & Reputation",
+        "summary": "Positioning, authority building, storytelling, and reputation monitoring.",
+        "details": "Brand identity, founder personal branding, thought leadership systems, viral content strategy, and online reputation management."
+      },
+      "consulting": {
+        "title": "Business Growth & Consulting",
+        "summary": "GTM strategy, offer engineering, pricing, and expansion planning.",
+        "details": "Business model redesign, market expansion, pricing optimization, and performance audits for scaling organizations."
+      },
+      "startup-mvp": {
+        "title": "Startup MVP & Product Studio",
+        "summary": "0→product builds, validation systems, and product-market fit experiments.",
+        "details": "Rapid 2–6 week MVP cycles, landing page validation, technical architecture, and structured PMF experimentation."
+      },
+      "fundraising": {
+        "title": "Fundraising & Investor Preparation",
+        "summary": "Pitch decks, narrative engineering, projections, and demo prep.",
+        "details": "Investor-ready pitch materials, financial modeling, startup narrative design, and MVP demo preparation for fundraising."
+      },
+      "training": {
+        "title": "IT Training & Digital Transformation",
+        "summary": "Team upskilling on automation, CRM, and AI tools.",
+        "details": "Workshops and training programs for n8n, Zapier, HubSpot, AI tooling, and digital transformation for teams and founders."
+      },
+      "revenue-engineering": {
+        "title": "Revenue & Growth Engineering",
+        "summary": "Funnel design, A/B testing, subscription models, and offer restructuring.",
+        "details": "Conversion optimization, sales funnel architecture, pricing experiments, and subscription growth models for higher LTV."
+      }
+    }
+  },
+  "aboutPage": {
+    "eyebrow": "About us",
+    "title": "A production lab for ambitious operators.",
+    "intro": "Halloway & Associates is not a traditional agency. We are a technical studio that designs, builds, and integrates systems — automation, AI, revenue infrastructure, and digital products — with the rigor of an engineering team and the clarity of a strategic partner.",
+    "mission": {
+      "title": "Our mission",
+      "body": "Transform ideas into fully operational, scalable, revenue-generating systems. We exist for founders and operators who need production-grade execution — not another vendor who disappears after the kickoff call."
+    },
+    "methodology": {
+      "eyebrow": "How we deliver",
+      "title": "Discover → Design → Build → Scale",
+      "steps": {
+        "discover": { "title": "Discover", "body": "We map your operations, stack, and growth constraints. No assumptions — we validate before we build." },
+        "design": { "title": "Design", "body": "Architecture, workflows, and UX defined with clear scope. You know exactly what ships and why." },
+        "build": { "title": "Build", "body": "Production code, tested integrations, and documented systems — not prototypes that never reach production." },
+        "scale": { "title": "Scale", "body": "Monitoring, iteration, and expansion paths built in from day one." }
+      }
+    },
+    "principles": {
+      "title": "Operating principles",
+      "items": {
+        "modularity": { "title": "Modularity", "body": "Every system is composed of isolated, maintainable modules — never monolithic black boxes." },
+        "production": { "title": "Production-first", "body": "Error handling, logging, security, and observability are defaults — not add-ons." },
+        "honesty": { "title": "Honest scope", "body": "We tell you what will work, what won't, and what to build first for maximum impact." }
+      }
+    },
+    "locations": {
+      "title": "Global markets",
+      "subtitle": "Active delivery across Morocco, Southern Europe, the United Kingdom, North America, and the UAE."
+    }
+  },
+  "contactPage": {
+    "eyebrow": "Contact",
+    "title": "Let's discuss your next system.",
+    "subtitle": "Tell us about your business and what you're trying to build. We'll respond within one business day.",
+    "form": {
+      "name": "Full name",
+      "company": "Company",
+      "email": "Work email",
+      "focus": "Primary interest",
+      "focusOptions": {
+        "automation": "Automation & AI",
+        "revenue": "Revenue systems",
+        "growth": "Marketing & growth",
+        "product": "Product & MVP",
+        "other": "Not sure yet"
+      },
+      "message": "What are you trying to build or fix?",
+      "submit": "Send message",
+      "sending": "Sending…",
+      "success": "Message sent. We'll be in touch shortly.",
+      "error": "Something went wrong. Please email hello@hallowayassociates.com directly.",
+      "validation": {
+        "name": "Please enter your name.",
+        "email": "Please enter a valid email address.",
+        "message": "Please tell us a bit about your project."
+      }
+    },
+    "direct": {
+      "title": "Prefer email?",
+      "email": "hello@hallowayassociates.com",
+      "website": "www.hallowayassociates.com"
+    }
+  },
+  "futurePage": {
+    "eyebrow": "Coming soon",
+    "title": "This section is being prepared.",
+    "work": "Case studies and portfolio work will appear here as we publish selected engagements.",
+    "insights": "Articles, research, and press coverage will appear here.",
+    "backHome": "Back to home"
+  },
+  "footer": {
+    "tagline": "Production Lab · AI · Automation · Growth Engineering",
+    "ourWork": "Our work",
+    "privacy": "Privacy",
+    "contact": "Contact",
+    "copyright": "© {year} Halloway & Associates"
+  },
+  "chat": {
+    "title": "Halloway Advisor",
+    "subtitle": "Services · Discovery · Contact",
+    "open": "Chat with us",
+    "close": "Close chat",
+    "welcome": "Hi — I'm here to help you understand our Production Lab services and find the fastest path to a discovery call. What are you trying to build or improve?",
+    "placeholder": "Ask about automation, growth, product…",
+    "send": "Send message",
+    "thinking": "Thinking…",
+    "error": "I'm temporarily unavailable. Please email hello@hallowayassociates.com or use our contact page.",
+    "contactNudge": "Ready? Book a discovery call",
+    "quick": {
+      "services": "What services do you offer?",
+      "automation": "We need automation & AI",
+      "contact": "I'd like to talk to your team",
+      "regions": "Where do you operate?"
+    }
+  }
+}

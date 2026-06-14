@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <title>Halloway &amp; Associates</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-page: #f7f7f7;
+      --ink: #1a1a1a;
+      --ink-secondary: #4a4a4a;
+      --ink-muted: #767676;
+      --ink-faint: #999999;
+      --line: #e8e8e8;
+      --card-lavender: #ebe6f2;
+      --card-warm: #f0ebe3;
+      --card-neutral: #f3f3f3;
+      --plum: #3d3450;
+      --gold-muted: #9a8555;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --email-width: 600px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-page);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 17px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      display: block;
+      border: 0;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* Dev panel — outside email aesthetic */
+    .dev-panel {
+      max-width: var(--email-width);
+      margin: 24px auto 16px;
+      padding: 16px 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--ink-secondary);
+    }
+
+    .dev-panel summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--ink);
+      list-style: none;
+    }
+
+    .dev-panel summary::-webkit-details-marker { display: none; }
+
+    .dev-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .dev-grid label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 4px;
+    }
+
+    .dev-grid input,
+    .dev-grid select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font: inherit;
+      font-size: 14px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .dev-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .dev-actions button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font: 600 12px/1 var(--font-sans);
+      cursor: pointer;
+    }
+
+    .dev-actions button.primary {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    /* Email shell */
+    .email {
+      max-width: var(--email-width);
+      margin: 0 auto 48px;
+      background: var(--bg);
+    }
+
+    .preheader {
+      display: none !important;
+      visibility: hidden;
+      mso-hide: all;
+      font-size: 1px;
+      line-height: 1px;
+      max-height: 0;
+      overflow: hidden;
+    }
+
+    .block {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    /* Logo */
+    .logo-wrap {
+      padding: 40px 24px 28px;
+      text-align: center;
+    }
+
+    .logo {
+      margin: 0;
+      font: 700 28px/1.1 var(--font-serif);
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .logo span {
+      font-weight: 700;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 0 24px 32px;
+    }
+
+    .hero img {
+      width: 100%;
+      border-radius: var(--radius-xl);
+    }
+
+    /* Intro copy */
+    .intro {
+      padding: 0 24px 8px;
+    }
+
+    .intro p {
+      margin: 0 0 18px;
+      color: var(--ink-secondary);
+      font-size: 17px;
+      line-height: 1.58;
+    }
+
+    .intro p:last-child { margin-bottom: 0; }
+
+    .intro strong { color: var(--ink); font-weight: 600; }
+
+    /* Primary CTA */
+    .cta-wrap {
+      padding: 28px 24px 48px;
+      text-align: center;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 28px;
+      background: var(--ink);
+      color: #fff !important;
+      text-decoration: none !important;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    /* Section headings */
+    .section-head {
+      padding: 8px 24px 20px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--ink-secondary);
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    /* Metric cards — Wealthsimple rate-card style */
+    .metric-row {
+      padding: 0 24px 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .metric-card {
+      border-radius: var(--radius-lg);
+      padding: 28px 22px 24px;
+      min-height: 132px;
+    }
+
+    .metric-card--lavender { background: var(--card-lavender); }
+    .metric-card--warm { background: var(--card-warm); }
+
+    .metric-card .value {
+      display: block;
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .metric-card .label {
+      display: block;
+      font-size: 15px;
+      line-height: 1.35;
+      color: var(--ink-secondary);
+    }
+
+    /* Comparison table */
+    .table-wrap {
+      padding: 12px 24px 40px;
+    }
+
+    .table-title {
+      margin: 0 0 16px;
+      font-size: 26px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      font-size: 15px;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    .compare-table th {
+      background: #fafafa;
+      font-weight: 600;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .compare-table tr:last-child td { border-bottom: 0; }
+
+    .compare-table td:first-child {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .compare-table .highlight td {
+      background: #fafafa;
+    }
+
+    .compare-table .muted { color: var(--ink-muted); }
+
+    /* Numbered list */
+    .numbered-section {
+      padding: 8px 24px 16px;
+    }
+
+    .numbered-title {
+      margin: 0 0 8px;
+      font-size: 26px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .numbered-list {
+      margin: 20px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .numbered-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 16px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .numbered-item:last-child { border-bottom: 0; }
+
+    .num-circle {
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid var(--ink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-top: 2px;
+    }
+
+    .numbered-item h3 {
+      margin: 0 0 6px;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+
+    .numbered-item p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--ink-secondary);
+    }
+
+    .numbered-item a {
+      font-weight: 600;
+    }
+
+    /* Secondary CTA block */
+    .cta-wrap--secondary {
+      padding: 16px 24px 56px;
+    }
+
+    /* Feature card */
+    .feature-card-wrap {
+      padding: 0 24px 48px;
+    }
+
+    .feature-card {
+      background: var(--card-lavender);
+      border-radius: var(--radius-xl);
+      padding: 36px 28px 32px;
+      text-align: center;
+    }
+
+    .feature-icon {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 20px;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .feature-card p {
+      margin: 0 auto 22px;
+      max-width: 28em;
+      color: var(--ink-secondary);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .feature-card .text-link {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Follow-up row */
+    .followup-wrap {
+      padding: 0 24px 56px;
+      text-align: center;
+    }
+
+    .followup-wrap h3 {
+      margin: 0 0 20px;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .followup-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .followup-btn {
+      display: block;
+      background: var(--card-neutral);
+      border-radius: var(--radius-lg);
+      padding: 18px 10px 16px;
+      text-decoration: none !important;
+      color: var(--ink) !important;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .followup-btn svg {
+      display: block;
+      margin: 0 auto 10px;
+    }
+
+    /* Footer */
+    .footer-top {
+      padding: 32px 24px 20px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: start;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-brand {
+      font: 700 18px/1.2 var(--font-serif);
+      margin: 0 0 8px;
+    }
+
+    .footer-address {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink-muted);
+    }
+
+    .social {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .social a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .footer-links {
+      padding: 0 24px 24px;
+      font-size: 14px;
+    }
+
+    .footer-links a {
+      margin-right: 18px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .legal {
+      padding: 0 24px 32px;
+      border-top: 1px solid var(--line);
+      margin-top: 8px;
+      padding-top: 24px;
+    }
+
+    .legal p {
+      margin: 0 0 14px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--ink-muted);
+    }
+
+    .legal a { color: var(--ink-muted); }
+
+    .copyright {
+      margin-top: 18px !important;
+      color: var(--ink-faint) !important;
+    }
+
+    @media (max-width: 620px) {
+      .metric-row,
+      .followup-grid,
+      .dev-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+      }
+
+      .logo { font-size: 24px; }
+      .section-head h2,
+      .table-title,
+      .numbered-title { font-size: 22px; }
+      .metric-card .value { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <details class="dev-panel" data-export-remove="true" open>
+    <summary>Personalize this outreach ↓</summary>
+    <div class="dev-grid">
+      <div>
+        <label for="f-first">First name</label>
+        <input id="f-first" data-bind="firstName" value="Sarah" />
+      </div>
+      <div>
+        <label for="f-company">Company</label>
+        <input id="f-company" data-bind="companyName" value="Northline Studio" />
+      </div>
+      <div>
+        <label for="f-industry">Industry</label>
+        <input id="f-industry" data-bind="industry" value="creative agency" />
+      </div>
+      <div>
+        <label for="f-market">Market</label>
+        <input id="f-market" data-bind="market" value="Montréal" />
+      </div>
+      <div>
+        <label for="f-focus">Focus area</label>
+        <select id="f-focus" data-bind="opportunityFocus">
+          <option value="automation">Automation &amp; AI</option>
+          <option value="revenue">Revenue systems</option>
+          <option value="marketing">Marketing &amp; growth</option>
+          <option value="product">Product &amp; MVP</option>
+        </select>
+      </div>
+      <div>
+        <label for="f-sender">Sender</label>
+        <input id="f-sender" data-bind="senderName" value="Alex Halloway" />
+      </div>
+    </div>
+    <div class="dev-actions">
+      <button type="button" class="primary" id="btn-export">Export static HTML</button>
+      <button type="button" id="btn-random">Random lead</button>
+    </div>
+  </details>
+
+  <div class="email" id="email-root">
+    <div class="preheader" data-text="preheader"></div>
+
+    <header class="logo-wrap">
+      <h1 class="logo">Halloway <span>&amp;</span> Associates</h1>
+    </header>
+
+    <section class="hero">
+      <img src="assets/halloway-hero-muted.png" width="552" height="310" alt="" />
+    </section>
+
+    <section class="intro block">
+      <p data-text="intro1"></p>
+      <p data-text="intro2"></p>
+    </section>
+
+    <div class="cta-wrap">
+      <a class="btn-primary" id="cta-primary" href="https://www.hallowayassociates.com/contact">Start a conversation</a>
+    </div>
+
+    <section class="section-head block">
+      <h2 data-text="metricsTitle"></h2>
+      <p data-text="metricsSub"></p>
+    </section>
+
+    <div class="metric-row" id="metric-row"></div>
+
+    <section class="table-wrap">
+      <h2 class="table-title" data-text="tableTitle"></h2>
+      <table class="compare-table" id="compare-table" role="table">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Typical competitor</th>
+            <th scope="col">Your opportunity</th>
+          </tr>
+        </thead>
+        <tbody id="compare-body"></tbody>
+      </table>
+    </section>
+
+    <section class="numbered-section block">
+      <h2 class="numbered-title" data-text="numberedTitle"></h2>
+      <ol class="numbered-list" id="numbered-list"></ol>
+    </section>
+
+    <div class="cta-wrap cta-wrap--secondary">
+      <a class="btn-primary" id="cta-secondary" href="https://www.hallowayassociates.com/contact">Book a discovery call</a>
+    </div>
+
+    <section class="feature-card-wrap">
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="18" y="12" width="52" height="64" rx="4" fill="#D8D0E4"/>
+          <rect x="26" y="22" width="28" height="3" rx="1.5" fill="#3D3450"/>
+          <rect x="26" y="30" width="36" height="3" rx="1.5" fill="#9A8555"/>
+          <rect x="26" y="38" width="32" height="3" rx="1.5" fill="#3D3450" opacity="0.35"/>
+          <rect x="26" y="46" width="36" height="3" rx="1.5" fill="#3D3450" opacity="0.35"/>
+          <path d="M44 58 L38 68 H50 L44 58Z" fill="#9A8555"/>
+        </svg>
+        <h3>Questions about your growth brief?</h3>
+        <p>Visit our site or reply to this email — we’re happy to walk through what we found for <span data-bind-text="companyName">Northline Studio</span> and whether it’s worth exploring together.</p>
+        <a class="text-link" href="https://www.hallowayassociates.com">Visit hallowayassociates.com →</a>
+      </div>
+    </section>
+
+    <section class="followup-wrap block">
+      <h3>Want us to follow up?</h3>
+      <div class="followup-grid">
+        <a class="followup-btn" href="#">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 2v2M9 14v2M2 9h2M14 9h2M4.2 4.2l1.4 1.4M12.4 12.4l1.4 1.4M4.2 13.8l1.4-1.4M12.4 5.6l1.4-1.4" stroke="#1A1A1A" stroke-width="1.4" stroke-linecap="round"/></svg>
+          In 1 week
+        </a>
+        <a class="followup-btn" href="#">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 2v2M9 14v2M2 9h2M14 9h2M4.2 4.2l1.4 1.4M12.4 12.4l1.4 1.4M4.2 13.8l1.4-1.4M12.4 5.6l1.4-1.4" stroke="#1A1A1A" stroke-width="1.4" stroke-linecap="round"/></svg>
+          In 1 month
+        </a>
+        <a class="followup-btn" href="#">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 2v2M9 14v2M2 9h2M14 9h2M4.2 4.2l1.4 1.4M12.4 12.4l1.4 1.4M4.2 13.8l1.4-1.4M12.4 5.6l1.4-1.4" stroke="#1A1A1A" stroke-width="1.4" stroke-linecap="round"/></svg>
+          In 3 months
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-top block">
+        <div>
+          <p class="footer-brand">Halloway &amp; Associates</p>
+          <p class="footer-address">Production Lab · Growth &amp; Automation Studio<br />www.hallowayassociates.com</p>
+        </div>
+        <div class="social">
+          <a href="#">Li</a>
+          <a href="#">Ig</a>
+          <a href="#">X</a>
+        </div>
+      </div>
+      <div class="footer-links block">
+        <a href="https://www.hallowayassociates.com">Our work</a>
+        <a href="#">Privacy</a>
+        <a href="#">Unsubscribe</a>
+      </div>
+      <div class="legal block">
+        <p>This note is based on publicly available information about <span data-bind-text="companyName">Northline Studio</span> and its market in <span data-bind-text="market">Montréal</span>. It is not a formal audit. Outcomes depend on your business context, resources, and implementation choices.</p>
+        <p>We reach out when our research suggests a genuine fit. If this isn’t relevant, <a href="#">unsubscribe here</a> — no hard feelings.</p>
+        <p>Questions? Email <a href="mailto:hello@hallowayassociates.com">hello@hallowayassociates.com</a> or visit our <a href="https://www.hallowayassociates.com">website</a>.</p>
+        <p class="copyright">© 2026 Halloway &amp; Associates</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const PRESETS = {
+        automation: {
+          metricsTitle: "Growth levers we identified for you",
+          metricsSub: "Based on our review of your operations and digital footprint.",
+          metrics: [
+            { value: "38%", label: "Estimated ops time recoverable through automation", tone: "lavender" },
+            { value: "2.4×", label: "Potential follow-up velocity with connected systems", tone: "warm" }
+          ],
+          table: [
+            { label: "Lead response time", competitor: "24–48 hrs", yours: "Near-instant (automated)" },
+            { label: "Tool integration", competitor: "Siloed apps", yours: "Unified pipeline" },
+            { label: "After-hours capture", competitor: "Voicemail / forms", yours: "AI assistant 24/7" },
+            { label: "Manual handoffs", competitor: "Frequent", yours: "Minimal" },
+            { label: "CRM hygiene", competitor: "Inconsistent", yours: "Structured & automated" },
+            { label: "Halloway fit", competitor: "—", yours: "Strong", highlight: true }
+          ],
+          numbered: [
+            { title: "Connect your stack end-to-end", body: "We design n8n, Make, or Zapier workflows so CRM, sales, and billing move as one system — not three disconnected tools." },
+            { title: "Deploy an AI layer for leads & support", body: "Website, WhatsApp, or social bots that qualify, route, and follow up while your team focuses on closing." },
+            { title: "Start with a focused 2-week pilot", body: "We scope one high-impact workflow first. You see results before committing to a larger build." , link: { href: "https://www.hallowayassociates.com/contact", text: "Talk to our team →" } }
+          ]
+        },
+        revenue: {
+          metricsTitle: "Revenue opportunities we spotted",
+          metricsSub: "Small friction points that often compound into meaningful lift.",
+          metrics: [
+            { value: "12–28%", label: "Typical checkout conversion uplift after optimization", tone: "lavender" },
+            { value: "9%", label: "Failed payments often recoverable with automation", tone: "warm" }
+          ],
+          table: [
+            { label: "Checkout flow", competitor: "Multi-step / unclear", yours: "Streamlined" },
+            { label: "Subscriptions", competitor: "Manual billing", yours: "Automated (Stripe)" },
+            { label: "Failed payments", competitor: "Written off", yours: "Recovery flows" },
+            { label: "Invoicing", competitor: "Delayed", yours: "Instant & tracked" },
+            { label: "Offer structure", competitor: "Single tier", yours: "Optimized tiers" },
+            { label: "Halloway fit", competitor: "—", yours: "Strong", highlight: true }
+          ],
+          numbered: [
+            { title: "Audit your payment & billing flow", body: "We map where revenue leaks — checkout drop-off, failed charges, and manual invoicing gaps." },
+            { title: "Implement Stripe / subscription logic", body: "Clean checkout, recurring billing, and automated recovery without adding headcount." },
+            { title: "Restructure offers for higher LTV", body: "Tiered pricing and packaging that matches how your buyers actually decide.", link: { href: "https://www.hallowayassociates.com/contact", text: "Request a revenue brief →" } }
+          ]
+        },
+        marketing: {
+          metricsTitle: "Visibility gaps in your market",
+          metricsSub: "Where competitors are winning attention you could capture.",
+          metrics: [
+            { value: "3–5×", label: "Content reach possible with repurposing systems", tone: "lavender" },
+            { value: "Top 10", label: "Realistic SEO upside in your category", tone: "warm" }
+          ],
+          table: [
+            { label: "Search presence", competitor: "Sparse content", yours: "Structured SEO plan" },
+            { label: "Social output", competitor: "Inconsistent", yours: "Automated cadence" },
+            { label: "Landing pages", competitor: "Generic", yours: "Conversion-focused" },
+            { label: "Paid + organic loop", competitor: "Disconnected", yours: "Engineered funnel" },
+            { label: "Content reuse", competitor: "One-off posts", yours: "1 → many platforms" },
+            { label: "Halloway fit", competitor: "—", yours: "Strong", highlight: true }
+          ],
+          numbered: [
+            { title: "Build a content engine, not more one-offs", body: "AI-assisted workflows that turn one core asset into LinkedIn, Instagram, email, and blog — consistently." },
+            { title: "Fix the funnel before scaling ads", body: "Landing pages, CRO, and tracking so paid spend actually converts." },
+            { title: "Own your category in search", body: "Technical SEO + content mapped to how buyers in your market actually search.", link: { href: "https://www.hallowayassociates.com/contact", text: "See a growth plan →" } }
+          ]
+        },
+        product: {
+          metricsTitle: "Product & digital experience signals",
+          metricsSub: "Where a sharper product layer could unlock trust and revenue.",
+          metrics: [
+            { value: "2–6 wk", label: "Realistic window for a focused MVP build", tone: "lavender" },
+            { value: "↑40%", label: "Conversion impact from modern UX (industry avg.)", tone: "warm" }
+          ],
+          table: [
+            { label: "Web experience", competitor: "Dated / slow", yours: "Modern & fast" },
+            { label: "Mobile readiness", competitor: "Partial", yours: "Native-quality" },
+            { label: "Self-serve flows", competitor: "Manual onboarding", yours: "Productized" },
+            { label: "Integrations", competitor: "Limited", yours: "API-connected" },
+            { label: "New revenue tests", competitor: "Risky bets", yours: "Validated MVPs" },
+            { label: "Halloway fit", competitor: "—", yours: "Strong", highlight: true }
+          ],
+          numbered: [
+            { title: "Redesign the experience buyers judge you on", body: "Your site or app is often the first sales conversation. We make it fast, clear, and credible." },
+            { title: "Ship an MVP to test new revenue", body: "Two to six weeks to validate demand before a full platform investment." },
+            { title: "Connect product to operations", body: "Dashboards, admin tools, and APIs that scale with you — not spreadsheets.", link: { href: "https://www.hallowayassociates.com/contact", text: "Discuss your build →" } }
+          ]
+        }
+      };
+
+      const SAMPLES = [
+        { firstName: "Sarah", companyName: "Northline Studio", industry: "creative agency", market: "Montréal" },
+        { firstName: "Marcus", companyName: "Atlas Commerce", industry: "e-commerce brand", market: "North America" },
+        { firstName: "Priya", companyName: "Helix Health Co.", industry: "wellness startup", market: "Toronto" }
+      ];
+
+      const state = {
+        firstName: "Sarah",
+        companyName: "Northline Studio",
+        industry: "creative agency",
+        market: "Montréal",
+        opportunityFocus: "automation",
+        senderName: "Alex Halloway"
+      };
+
+      function readState() {
+        document.querySelectorAll("[data-bind]").forEach((el) => {
+          const key = el.getAttribute("data-bind");
+          if (key) state[key] = el.value.trim();
+        });
+      }
+
+      function copy() {
+        const p = PRESETS[state.opportunityFocus] || PRESETS.automation;
+        return {
+          preheader: `We reviewed ${state.companyName} and found meaningful room to grow in ${state.market}.`,
+          intro1: `Hi ${state.firstName} — we spent time looking at ${state.companyName}, how you show up in the ${state.industry} space, and what others in ${state.market} are doing differently. **One thing stood out: there’s a real opportunity to grow faster** — not with more hustle, but with better systems behind the business.`,
+          intro2: `We’re **Halloway & Associates**, a production lab for AI, automation, and growth engineering. We’re reaching out because our research suggests you’re leaving meaningful upside on the table. **No pitch deck attached** — we’d rather start with an honest conversation about what we found.`,
+          metricsTitle: p.metricsTitle,
+          metricsSub: p.metricsSub,
+          tableTitle: `How that compares in your market`,
+          numberedTitle: "3 ways we can help you grow",
+          metrics: p.metrics,
+          table: p.table,
+          numbered: p.numbered
+        };
+      }
+
+      function renderInlineBold(text) {
+        return text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      }
+
+      function render() {
+        readState();
+        const c = copy();
+        const preset = PRESETS[state.opportunityFocus] || PRESETS.automation;
+
+        document.querySelectorAll("[data-text]").forEach((node) => {
+          const key = node.getAttribute("data-text");
+          if (c[key]) node.innerHTML = renderInlineBold(c[key]);
+        });
+
+        document.querySelectorAll("[data-bind-text]").forEach((node) => {
+          const key = node.getAttribute("data-bind-text");
+          if (state[key]) node.textContent = state[key];
+        });
+
+        document.getElementById("metric-row").innerHTML = c.metrics
+          .map(
+            (m) => `
+            <div class="metric-card metric-card--${m.tone}">
+              <span class="value">${m.value}</span>
+              <span class="label">${m.label}</span>
+            </div>`
+          )
+          .join("");
+
+        document.getElementById("compare-body").innerHTML = c.table
+          .map(
+            (row) => `
+            <tr class="${row.highlight ? "highlight" : ""}">
+              <td>${row.label}</td>
+              <td class="muted">${row.competitor}</td>
+              <td>${row.yours}</td>
+            </tr>`
+          )
+          .join("");
+
+        document.getElementById("numbered-list").innerHTML = c.numbered
+          .map(
+            (item, i) => `
+            <li class="numbered-item">
+              <div class="num-circle" aria-hidden="true">${i + 1}</div>
+              <div>
+                <h3>${item.title}</h3>
+                <p>${item.body}${item.link ? ` <a href="${item.link.href}">${item.link.text}</a>` : ""}</p>
+              </div>
+            </li>`
+          )
+          .join("");
+
+        const q = new URLSearchParams({ company: state.companyName, focus: state.opportunityFocus, src: "email" });
+        const href = `https://www.hallowayassociates.com/contact?${q}`;
+        document.getElementById("cta-primary").href = href;
+        document.getElementById("cta-secondary").href = href;
+        document.title = `${state.companyName} — Halloway & Associates`;
+      }
+
+      function randomLead() {
+        const s = SAMPLES[Math.floor(Math.random() * SAMPLES.length)];
+        const focuses = Object.keys(PRESETS);
+        Object.assign(state, s, { opportunityFocus: focuses[Math.floor(Math.random() * focuses.length)] });
+        document.querySelectorAll("[data-bind]").forEach((el) => {
+          const key = el.getAttribute("data-bind");
+          if (state[key] !== undefined) el.value = state[key];
+        });
+        render();
+      }
+
+      function exportHtml() {
+        readState();
+        render();
+        const clone = document.documentElement.cloneNode(true);
+        clone.querySelectorAll("[data-export-remove]").forEach((n) => n.remove());
+        clone.querySelectorAll("script").forEach((n) => n.remove());
+        const html = "<!DOCTYPE html>\n" + clone.outerHTML;
+        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `halloway-${state.companyName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.html`;
+        a.click();
+      }
+
+      document.querySelectorAll("[data-bind]").forEach((el) => {
+        el.addEventListener("input", render);
+        el.addEventListener("change", render);
+      });
+      document.getElementById("btn-export")?.addEventListener("click", exportHtml);
+      document.getElementById("btn-random")?.addEventListener("click", randomLead);
+
+      render();
+    })();
+  </script>
+</body>
+</html>

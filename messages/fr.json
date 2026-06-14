@@ -1,0 +1,374 @@
+{
+  "metadata": {
+    "title": "Halloway & Associates — Laboratoire de production",
+    "description": "Studio d'ingénierie IA, automatisation et croissance. Nous construisons des systèmes prêts pour la production pour des entreprises ambitieuses au Maroc, en Europe, en Amérique du Nord et aux Émirats.",
+    "keywords": "automatisation IA|développement MVP|ingénierie croissance|systèmes revenus|Halloway & Associates|Laboratoire de production|livraison mondiale|automatisation n8n|intégration Stripe"
+  },
+  "seo": {
+    "learnMore": "En savoir plus",
+    "allServices": "Voir tous les services",
+    "notFoundTitle": "Page introuvable",
+    "notFoundBody": "La page demandée n'existe pas ou a été déplacée.",
+    "notFoundCta": "Retour à l'accueil"
+  },
+  "nav": {
+    "home": "Accueil",
+    "services": "Services",
+    "about": "À propos",
+    "contact": "Contact",
+    "work": "Réalisations",
+    "insights": "Perspectives",
+    "discuss": "Discutons",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "skipToContent": "Aller au contenu",
+    "language": "Langue"
+  },
+  "hero": {
+    "eyebrow": "Laboratoire de production",
+    "title": "Nous concevons des systèmes qui font croître les entreprises.",
+    "subtitle": "Halloway & Associates est un studio d'ingénierie IA, d'automatisation et de croissance. Nous concevons et livrons des flux de travail, des produits et des systèmes de revenus prêts pour la production — pas des présentations.",
+    "ctaPrimary": "Entamer une conversation",
+    "ctaSecondary": "Explorer nos capacités"
+  },
+  "stats": {
+    "pillars": { "value": "14", "label": "Piliers de service dans notre Laboratoire de production" },
+    "tracks": { "value": "4", "label": "Axes : Automatisation, Revenus, Croissance, Produit" },
+    "regions": { "value": "8", "label": "Marchés mondiaux en Afrique, Europe et Amérique du Nord" },
+    "mvpWeeks": { "value": "2–6", "label": "Délai typique de livraison MVP pour des builds ciblés" }
+  },
+  "thesis": {
+    "eyebrow": "Notre thèse",
+    "title": "La technologie doit se cumuler — pas créer du chaos.",
+    "body": "La plupart des organisations empilent des outils sans les connecter. Nous architecturons des systèmes intégrés : pipelines d'automatisation, couches IA, flux de paiement et produits numériques qui fonctionnent ensemble et évoluent avec votre entreprise."
+  },
+  "focusTracks": {
+    "eyebrow": "Axes de spécialisation",
+    "title": "Quatre disciplines. Un studio intégré.",
+    "subtitle": "Chaque mandat puise dans notre Laboratoire de production — des capacités modulaires qui se combinent selon vos besoins.",
+    "exploreLink": "Explorer les capacités",
+    "automation": {
+      "title": "Automatisation et IA",
+      "description": "Flux de bout en bout, agents intelligents et chaînes d'outils connectées qui éliminent les transferts manuels."
+    },
+    "revenue": {
+      "title": "Systèmes de revenus",
+      "description": "Stripe, abonnements, facturation et ingénierie d'offres conçus pour capturer et récupérer les revenus."
+    },
+    "growth": {
+      "title": "Marketing et croissance",
+      "description": "SEO, entonnoirs, moteurs de contenu et boucles d'acquisition payante conçus comme des systèmes — pas des campagnes."
+    },
+    "product": {
+      "title": "Produit et MVP",
+      "description": "Sites web, plateformes SaaS et MVPs rapides avec l'architecture pour dépasser la première version."
+    }
+  },
+  "servicesPreview": {
+    "eyebrow": "Laboratoire de production",
+    "title": "Quatorze capacités. Une exigence : prêt pour la production.",
+    "subtitle": "De l'automatisation n8n au développement MVP — chaque service est conçu pour la fiabilité, la clarté et l'échelle.",
+    "viewAll": "Voir tous les services"
+  },
+  "regions": {
+    "eyebrow": "Couverture mondiale",
+    "title": "Huit marchés. Un standard de livraison.",
+    "subtitle": "Nous accompagnons des équipes au Maroc, en Europe du Sud, au Royaume-Uni, en Amérique du Nord et aux Émirats — sur place quand c'est essentiel, à distance quand ça scale.",
+    "selectorLabel": "Sélectionner un marché",
+    "mapLegend": "Carte de couverture mondiale",
+    "mapAriaLabel": "Carte mondiale interactive des marchés Halloway & Associates au Maroc, en Europe, en Amérique du Nord et aux Émirats",
+    "mapFootnote": "Les marqueurs indiquent nos marchés actifs. Les arcs en pointillés montrent les routes de livraison depuis le marché sélectionné vers le reste du réseau.",
+    "mapAttribution": "Données cartographiques : Natural Earth et world-atlas (domaine public).",
+    "mapLoadError": "Impossible de charger la carte. Veuillez actualiser la page.",
+    "legendMarket": "Marché actif",
+    "legendNetwork": "Réseau de livraison",
+    "detailCoverage": "Couverture",
+    "detailDelivery": "Modes de livraison",
+    "detailTimezone": "Fuseau horaire",
+    "detailLanguages": "Langues",
+    "morocco": {
+      "city": "Maroc",
+      "shortLabel": "MA",
+      "detail": "Hub Afrique du Nord et de l'Ouest",
+      "role": "Marché actif",
+      "mapLabel": "Maroc — marché actif",
+      "coverage": "Casablanca, Rabat et mandats entreprise & croissance en Afrique du Nord",
+      "delivery": "Sur place · À distance · Hybride",
+      "timezone": "WET / CET (UTC+0 à +1)",
+      "languages": "Arabe · Français · Anglais",
+      "note": "Notre pratique au Maroc couvre l'automatisation, les produits et les systèmes de croissance pour les opérateurs régionaux en expansion vers la MENA et l'Europe."
+    },
+    "greece": {
+      "city": "Grèce",
+      "shortLabel": "GR",
+      "detail": "Europe du Sud · Méditerranée",
+      "role": "Marché actif",
+      "mapLabel": "Grèce — marché actif",
+      "coverage": "Athènes, Thessalonique et travaux produit & automatisation adjacents à l'UE",
+      "delivery": "À distance · Sur place périodique",
+      "timezone": "EET (UTC+2)",
+      "languages": "Grec · Anglais",
+      "note": "Les mandats en Grèce portent sur les MVP SaaS, l'automatisation des flux et les systèmes go-to-market pour le marché européen."
+    },
+    "spain": {
+      "city": "Espagne",
+      "shortLabel": "ES",
+      "detail": "Ibérie · Marché UE",
+      "role": "Marché actif",
+      "mapLabel": "Espagne — marché actif",
+      "coverage": "Madrid, Barcelone et ingénierie croissance & revenus ibérique",
+      "delivery": "À distance · Ateliers sur place",
+      "timezone": "CET (UTC+1)",
+      "languages": "Espagnol · Anglais",
+      "note": "Nous livrons systèmes de paiement, automatisation marketing et lancements produit pour les équipes espagnoles et transfrontalières UE."
+    },
+    "italy": {
+      "city": "Italie",
+      "shortLabel": "IT",
+      "detail": "Europe du Sud · Entreprise",
+      "role": "Marché actif",
+      "mapLabel": "Italie — marché actif",
+      "coverage": "Milan, Rome et programmes nationaux automatisation & produit numérique",
+      "delivery": "À distance · Hybride",
+      "timezone": "CET (UTC+1)",
+      "languages": "Italien · Anglais",
+      "note": "Les projets en Italie couvrent l'automatisation CRM, les assistants IA et les intégrations prêtes pour la production."
+    },
+    "uk": {
+      "city": "Royaume-Uni",
+      "shortLabel": "UK",
+      "detail": "Londres et couverture nationale",
+      "role": "Marché actif",
+      "mapLabel": "Royaume-Uni — marché actif",
+      "coverage": "Londres, Manchester et ingénierie produit & croissance à l'échelle nationale",
+      "delivery": "À distance · Sprints sur place",
+      "timezone": "GMT / BST (UTC+0 à +1)",
+      "languages": "Anglais",
+      "note": "Les clients britanniques nous engagent pour les systèmes de revenus, les couches IA et les plateformes web scalables."
+    },
+    "usa": {
+      "city": "États-Unis",
+      "shortLabel": "US",
+      "detail": "Amérique du Nord · À distance d'abord",
+      "role": "Marché actif",
+      "mapLabel": "États-Unis — marché actif",
+      "coverage": "Côte Est, SaaS national et programmes automatisation & croissance US",
+      "delivery": "À distance · Collaboration asynchrone",
+      "timezone": "Aligné au client (HE / HP)",
+      "languages": "Anglais",
+      "note": "Les mandats US sont entièrement à distance avec découverte structurée, revues de sprint et passation en production."
+    },
+    "canada": {
+      "city": "Canada",
+      "shortLabel": "CA",
+      "detail": "Amérique du Nord · Livraison bilingue",
+      "role": "Marché actif",
+      "mapLabel": "Canada — marché actif",
+      "coverage": "Toronto, Montréal et mandats nationaux produit & automatisation",
+      "delivery": "Sur place · À distance · Hybride",
+      "timezone": "HE / HP (UTC−5 à −8)",
+      "languages": "Anglais · Français",
+      "note": "Le Canada reste un marché clé pour la livraison bilingue, les programmes provinciaux et les builds transfrontaliers nord-américains."
+    },
+    "uae": {
+      "city": "Émirats arabes unis",
+      "shortLabel": "UAE",
+      "detail": "Golfe · Porte d'entrée MENA",
+      "role": "Marché actif",
+      "mapLabel": "Émirats arabes unis — marché actif",
+      "coverage": "Dubaï, Abu Dhabi et automatisation & produit entreprise dans le Golfe",
+      "delivery": "Sur place · À distance · Hybride",
+      "timezone": "GST (UTC+4)",
+      "languages": "Arabe · Anglais",
+      "note": "Les projets aux Émirats mettent l'accent sur l'infrastructure de paiement, l'automatisation IA et les produits numériques pour l'expansion régionale."
+    }
+  },
+  "cta": {
+    "title": "Prêt à discuter de ce que nous pourrions construire ensemble?",
+    "subtitle": "Un appel de découverte de 15 minutes suffit pour explorer la compatibilité — aucune présentation requise.",
+    "button": "Réserver un appel de découverte"
+  },
+  "discussBar": {
+    "text": "Un projet en tête?",
+    "action": "Discutons"
+  },
+  "servicesPage": {
+    "eyebrow": "Laboratoire de production — Liste complète",
+    "title": "Toutes les capacités de notre studio",
+    "subtitle": "Filtrez par axe ou parcourez le catalogue complet. Sélectionnez une capacité pour voir comment nous la livrons.",
+    "filterAll": "Tous",
+    "filterAutomation": "Automatisation et IA",
+    "filterRevenue": "Revenus",
+    "filterGrowth": "Croissance",
+    "filterProduct": "Produit",
+    "discussCapability": "Discuter de cette capacité",
+    "items": {
+      "ai-automation": {
+        "title": "Ingénierie IA et automatisation",
+        "summary": "n8n, Make, Zapier — pipelines CRM vers ventes vers paiements, entièrement connectés.",
+        "details": "Nous concevons des systèmes d'automatisation de bout en bout : routage de leads, opérations internes, flux financiers et intégrations multi-outils. Conçus pour la fiabilité, l'observabilité et l'échelle."
+      },
+      "ai-chatbots": {
+        "title": "Chatbots IA et systèmes intelligents",
+        "summary": "Bots web, WhatsApp et réseaux sociaux pour ventes, support et suivi.",
+        "details": "Assistants IA qui qualifient les leads, répondent au support et assurent le suivi 24/7 — sur le web, les messageries et les outils internes."
+      },
+      "payments": {
+        "title": "Systèmes de paiement et revenus",
+        "summary": "Stripe, abonnements, facturation et récupération des paiements échoués.",
+        "details": "Flux de paiement, facturation SaaS, facturation automatisée et systèmes de récupération de revenus sans ajouter d'effectifs."
+      },
+      "content-social": {
+        "title": "Contenu et automatisation des médias sociaux",
+        "summary": "Publication multi-plateforme, flux de contenu IA et systèmes de repurposing.",
+        "details": "Transformez un actif central en LinkedIn, Instagram, TikTok et courriel — avec planification, suivi et automatisation stratégique."
+      },
+      "marketing-seo": {
+        "title": "Marketing, SEO et ingénierie de croissance",
+        "summary": "SEO, CRO, entonnoirs, publicités payantes et systèmes de génération de leads.",
+        "details": "SEO technique, optimisation de pages d'atterrissage, entonnoirs de conversion et boucles de croissance mesurables et reproductibles."
+      },
+      "web-mvp": {
+        "title": "Sites web, applications et développement MVP",
+        "summary": "Plateformes sur mesure, builds SaaS et livraison rapide de produits.",
+        "details": "Des sites marketing aux produits SaaS complets — UX moderne, intégrations API, tableaux de bord admin et architectures marketplace."
+      },
+      "data-crm": {
+        "title": "Données, CRM et intelligence d'affaires",
+        "summary": "Configuration CRM, enrichissement, segmentation et tableaux de bord KPI.",
+        "details": "HubSpot, Airtable, migrations CRM sur mesure, déduplication de leads, analytique prédictive et veille concurrentielle automatisée."
+      },
+      "community": {
+        "title": "Communautés et engagement",
+        "summary": "Discord, Circle, monétisation, gamification et systèmes de rétention.",
+        "details": "Plateformes communautaires avec engagement automatisé, niveaux d'accès payants, fidélisation et infrastructure pour créateurs."
+      },
+      "branding": {
+        "title": "Image de marque, contenu et réputation",
+        "summary": "Positionnement, autorité, narration et surveillance de réputation.",
+        "details": "Identité de marque, personal branding pour fondateurs, leadership éclairé, stratégie virale et gestion de réputation en ligne."
+      },
+      "consulting": {
+        "title": "Croissance d'affaires et conseil",
+        "summary": "Stratégie GTM, ingénierie d'offres, tarification et expansion.",
+        "details": "Redesign de modèle d'affaires, expansion de marché, optimisation des prix et audits de performance pour organisations en croissance."
+      },
+      "startup-mvp": {
+        "title": "Studio MVP et produit startup",
+        "summary": "Builds 0→produit, systèmes de validation et expériences PMF.",
+        "details": "Cycles MVP rapides de 2 à 6 semaines, validation par page d'atterrissage, architecture technique et expérimentation PMF structurée."
+      },
+      "fundraising": {
+        "title": "Levée de fonds et préparation investisseurs",
+        "summary": "Pitch decks, narration, projections et préparation de démo.",
+        "details": "Matériel pitch investisseur, modélisation financière, design narratif startup et préparation de démo MVP pour la levée de fonds."
+      },
+      "training": {
+        "title": "Formation TI et transformation numérique",
+        "summary": "Montée en compétence des équipes sur automatisation, CRM et outils IA.",
+        "details": "Ateliers et programmes pour n8n, Zapier, HubSpot, outils IA et transformation numérique pour équipes et fondateurs."
+      },
+      "revenue-engineering": {
+        "title": "Ingénierie des revenus et croissance",
+        "summary": "Design d'entonnoir, tests A/B, modèles d'abonnement et restructuration d'offres.",
+        "details": "Optimisation de conversion, architecture d'entonnoir de ventes, expériences de tarification et modèles de croissance par abonnement."
+      }
+    }
+  },
+  "aboutPage": {
+    "eyebrow": "À propos",
+    "title": "Un laboratoire de production pour opérateurs ambitieux.",
+    "intro": "Halloway & Associates n'est pas une agence traditionnelle. Nous sommes un studio technique qui conçoit, construit et intègre des systèmes — automatisation, IA, infrastructure de revenus et produits numériques — avec la rigueur d'une équipe d'ingénierie et la clarté d'un partenaire stratégique.",
+    "mission": {
+      "title": "Notre mission",
+      "body": "Transformer les idées en systèmes opérationnels, évolutifs et générateurs de revenus. Nous existons pour les fondateurs et opérateurs qui ont besoin d'une exécution prête pour la production — pas d'un autre fournisseur qui disparaît après l'appel de lancement."
+    },
+    "methodology": {
+      "eyebrow": "Comment nous livrons",
+      "title": "Découvrir → Concevoir → Construire → Mettre à l'échelle",
+      "steps": {
+        "discover": { "title": "Découvrir", "body": "Nous cartographions vos opérations, votre stack et vos contraintes de croissance. Pas d'hypothèses — nous validons avant de construire." },
+        "design": { "title": "Concevoir", "body": "Architecture, flux de travail et UX définis avec un scope clair. Vous savez exactement ce qui sera livré et pourquoi." },
+        "build": { "title": "Construire", "body": "Code de production, intégrations testées et systèmes documentés — pas des prototypes qui n'atteignent jamais la production." },
+        "scale": { "title": "Mettre à l'échelle", "body": "Surveillance, itération et chemins d'expansion intégrés dès le premier jour." }
+      }
+    },
+    "principles": {
+      "title": "Principes opérationnels",
+      "items": {
+        "modularity": { "title": "Modularité", "body": "Chaque système est composé de modules isolés et maintenables — jamais de boîtes noires monolithiques." },
+        "production": { "title": "Production d'abord", "body": "Gestion d'erreurs, journalisation, sécurité et observabilité par défaut — pas en option." },
+        "honesty": { "title": "Scope honnête", "body": "Nous vous disons ce qui fonctionnera, ce qui ne fonctionnera pas, et quoi construire en premier pour un impact maximal." }
+      }
+    },
+    "locations": {
+      "title": "Marchés mondiaux",
+      "subtitle": "Livraison active au Maroc, en Europe du Sud, au Royaume-Uni, en Amérique du Nord et aux Émirats."
+    }
+  },
+  "contactPage": {
+    "eyebrow": "Contact",
+    "title": "Discutons de votre prochain système.",
+    "subtitle": "Parlez-nous de votre entreprise et de ce que vous souhaitez construire. Nous répondons sous un jour ouvrable.",
+    "form": {
+      "name": "Nom complet",
+      "company": "Entreprise",
+      "email": "Courriel professionnel",
+      "focus": "Intérêt principal",
+      "focusOptions": {
+        "automation": "Automatisation et IA",
+        "revenue": "Systèmes de revenus",
+        "growth": "Marketing et croissance",
+        "product": "Produit et MVP",
+        "other": "Pas encore certain"
+      },
+      "message": "Que souhaitez-vous construire ou corriger?",
+      "submit": "Envoyer le message",
+      "sending": "Envoi en cours…",
+      "success": "Message envoyé. Nous vous contacterons sous peu.",
+      "error": "Une erreur est survenue. Écrivez-nous à hello@hallowayassociates.com.",
+      "validation": {
+        "name": "Veuillez entrer votre nom.",
+        "email": "Veuillez entrer une adresse courriel valide.",
+        "message": "Parlez-nous un peu de votre projet."
+      }
+    },
+    "direct": {
+      "title": "Vous préférez le courriel?",
+      "email": "hello@hallowayassociates.com",
+      "website": "www.hallowayassociates.com"
+    }
+  },
+  "futurePage": {
+    "eyebrow": "Bientôt disponible",
+    "title": "Cette section est en préparation.",
+    "work": "Études de cas et réalisations apparaîtront ici au fur et à mesure de nos publications.",
+    "insights": "Articles, recherches et couverture média apparaîtront ici.",
+    "backHome": "Retour à l'accueil"
+  },
+  "footer": {
+    "tagline": "Laboratoire de production · IA · Automatisation · Ingénierie de croissance",
+    "ourWork": "Nos réalisations",
+    "privacy": "Confidentialité",
+    "contact": "Contact",
+    "copyright": "© {year} Halloway & Associates"
+  },
+  "chat": {
+    "title": "Conseiller Halloway",
+    "subtitle": "Services · Découverte · Contact",
+    "open": "Clavardez avec nous",
+    "close": "Fermer le clavardage",
+    "welcome": "Bonjour — je peux vous aider à comprendre nos services du Laboratoire de production et trouver le chemin le plus rapide vers un appel de découverte. Que souhaitez-vous construire ou améliorer?",
+    "placeholder": "Posez une question sur l'automatisation, la croissance, le produit…",
+    "send": "Envoyer",
+    "thinking": "Réflexion…",
+    "error": "Je suis temporairement indisponible. Écrivez à hello@hallowayassociates.com ou utilisez notre page contact.",
+    "contactNudge": "Prêt? Réserver un appel de découverte",
+    "quick": {
+      "services": "Quels services offrez-vous?",
+      "automation": "Nous avons besoin d'automatisation et d'IA",
+      "contact": "Je voudrais parler à votre équipe",
+      "regions": "Où opérez-vous?"
+    }
+  }
+}

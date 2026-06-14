@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ink: #1a1a1a;
+  --color-ink-secondary: #4a4a4a;
+  --color-ink-muted: #767676;
+  --color-ink-faint: #999999;
+  --color-plum: #3d3450;
+  --color-gold: #9a8555;
+  --color-lavender: #ebe6f2;
+  --color-warm: #f0ebe3;
+  --color-surface: #ffffff;
+  --color-page: #f7f7f7;
+  --color-line: #e8e8e8;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --radius-xl: 24px;
+  --radius-lg: 16px;
+}
+
+@layer base {
+  * {
+    @apply border-line;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    @apply bg-surface font-sans text-ink antialiased;
+    font-family: var(--font-sans);
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-lavender) 80%, var(--color-plum));
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .section-padding {
+    @apply px-6 py-20 md:px-10 md:py-28 lg:px-16;
+  }
+
+  .container-narrow {
+    @apply mx-auto max-w-6xl;
+  }
+
+  .container-wide {
+    @apply mx-auto max-w-7xl;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-gold;
+  }
+
+  .headline {
+    @apply text-balance text-3xl font-semibold tracking-tight text-ink md:text-4xl lg:text-5xl;
+  }
+
+  .subhead {
+    @apply text-lg leading-relaxed text-ink-secondary md:text-xl;
+  }
+}
