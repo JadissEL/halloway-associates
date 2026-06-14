@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { isFeatureEnabled } from "@/lib/features";
@@ -43,22 +42,8 @@ export function SiteHeader() {
       )}
     >
       <div className="container-wide flex h-16 items-center justify-between px-6 md:h-[72px] md:px-10 lg:px-16">
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 no-underline md:gap-3"
-          aria-label="Halloway & Associates"
-        >
-          <Image
-            src="/brand/logo-mark.png"
-            alt=""
-            width={40}
-            height={40}
-            className="h-9 w-9 shrink-0 rounded-[10px] md:h-10 md:w-10"
-            priority
-          />
-          <span className="text-lg font-semibold tracking-tight text-ink md:text-xl">
-            Halloway <span className="font-semibold">& Associates</span>
-          </span>
+        <Link href="/" className="text-lg font-semibold tracking-tight text-ink no-underline md:text-xl">
+          Halloway <span className="font-semibold">& Associates</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
