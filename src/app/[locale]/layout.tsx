@@ -35,8 +35,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     metadataBase: new URL(SITE_URL),
     applicationName: SITE_NAME,
     icons: {
-      icon: [{ url: "/brand/logo-mark.svg", type: "image/svg+xml" }],
-      apple: [{ url: "/brand/logo-mark.svg", type: "image/svg+xml" }],
+      icon: [
+        { url: "/brand/logo-mark.png", type: "image/png", sizes: "512x512" },
+      ],
+      apple: [
+        { url: "/brand/logo-mark.png", type: "image/png", sizes: "512x512" },
+      ],
     },
     manifest: "/manifest.webmanifest",
     formatDetection: {
