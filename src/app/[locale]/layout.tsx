@@ -5,6 +5,7 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/react";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { routing } from "@/i18n/routing";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -83,6 +84,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <DiscussCTA />
           <SalesChatbot />
           <VisitorTracker />
+          <ConsentBanner />
         </NextIntlClientProvider>
         <Analytics />
       </body>

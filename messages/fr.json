@@ -353,6 +353,12 @@
     "contact": "Contact",
     "copyright": "© {year} Halloway & Associates"
   },
+  "consent": {
+    "title": "Préférences cookies",
+    "body": "Nous utilisons des cookies analytiques pour comprendre l'utilisation du site et améliorer nos services. Vous pouvez les accepter ou continuer avec les cookies essentiels uniquement.",
+    "accept": "Accepter l'analytique",
+    "reject": "Essentiels seulement"
+  },
   "chat": {
     "title": "Conseiller Halloway",
     "subtitle": "Services · Découverte · Contact",

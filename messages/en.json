@@ -353,6 +353,12 @@
     "contact": "Contact",
     "copyright": "© {year} Halloway & Associates"
   },
+  "consent": {
+    "title": "Cookie preferences",
+    "body": "We use analytics cookies to understand how visitors use our site and improve our services. You can accept analytics cookies or continue with essential cookies only.",
+    "accept": "Accept analytics",
+    "reject": "Essential only"
+  },
   "chat": {
     "title": "Halloway Advisor",
     "subtitle": "Services · Discovery · Contact",
