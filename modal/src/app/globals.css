@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #07080b;
+  --color-panel: #0e1016;
+  --color-panel-hover: #141820;
+  --color-line: #1e2430;
+  --color-muted: #6b7280;
+  --color-silver: #c0c5ce;
+  --color-silver-bright: #e8eaed;
+  --color-chrome: #9aa3ad;
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(192, 197, 206, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(100, 110, 130, 0.06), transparent),
+    var(--color-void);
+  color: var(--color-silver-bright);
+  font-family: var(--font-sans);
+}
+
+.silver-text {
+  background: linear-gradient(
+    135deg,
+    #f4f6f8 0%,
+    #c0c5ce 35%,
+    #8a939e 55%,
+    #d8dce2 75%,
+    #aeb6c0 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.silver-ring {
+  box-shadow:
+    0 0 0 1px rgba(192, 197, 206, 0.12),
+    0 0 24px rgba(192, 197, 206, 0.04);
+}
+
+.tool-card {
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(192, 197, 206, 0.28);
+  background-color: var(--color-panel-hover);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
