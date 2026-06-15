@@ -7,8 +7,8 @@ import {
   LayoutDashboard,
   Mail,
   Search,
+  Send,
   Server,
-  Sheet,
   ShoppingBag,
 } from "lucide-react";
 
@@ -24,6 +24,9 @@ export type ToolLink = {
 function envUrl(key: string, fallback: string): string {
   return process.env[key]?.trim() || fallback;
 }
+
+const EMAIL_AUTOMATION_SHEET =
+  "https://docs.google.com/spreadsheets/d/1tmJS2EiLdZr9hdYNA3gJHijFInU3vAae2urP-em4_AE/edit?gid=0#gid=0";
 
 export function getToolLinks(): ToolLink[] {
   const siteUrl = envUrl("MODAL_SITE_URL", "https://hallowayassociates.com");
@@ -89,11 +92,11 @@ export function getToolLinks(): ToolLink[] {
       category: "analytics",
     },
     {
-      id: "sheets",
-      name: "Google Sheets",
-      description: "Shared ops & tracking spreadsheets",
-      href: envUrl("MODAL_SHEETS_URL", "https://docs.google.com/spreadsheets/"),
-      icon: Sheet,
+      id: "email-automation",
+      name: "Email Automation",
+      description: "Auto mail system — leads, status & outreach",
+      href: envUrl("MODAL_EMAIL_AUTOMATION_SHEET_URL", EMAIL_AUTOMATION_SHEET),
+      icon: Send,
       category: "productivity",
     },
     {
