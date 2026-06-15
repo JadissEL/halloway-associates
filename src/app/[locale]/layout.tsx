@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/react";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { routing } from "@/i18n/routing";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -68,6 +69,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={`${inter.variable} font-sans`} suppressHydrationWarning>
       <body className="min-h-screen bg-surface font-sans" suppressHydrationWarning>
+        <GoogleAnalytics />
         <JsonLd data={[organizationJsonLd(locale), websiteJsonLd(locale)]} />        <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-ink focus:px-4 focus:py-2 focus:text-white"
