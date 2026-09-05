@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { ModalLogo } from "@/components/ModalLogo";
 import { ToolCard } from "@/components/ToolCard";
 import { logoutAction } from "@/app/actions/auth";
 import { categoryLabels, getToolLinks, type ToolLink } from "@/lib/tools";
-import { LogOut } from "lucide-react";
+import { LogOut, ShieldCheck, Gauge } from "lucide-react";
 
 function groupByCategory(tools: ToolLink[]) {
   const order: ToolLink["category"][] = [
@@ -44,6 +45,42 @@ export function Dashboard() {
       </p>
 
       <div className="space-y-12">
+        <section>
+          <h2 className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-[#9aa3ad]">
+            Platform Operations
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Link
+              href="/moderation"
+              className="flex flex-col gap-4 rounded-2xl border border-[#1e2430] bg-[#0e1016] p-5"
+            >
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#c0c5ce]/15 bg-[#141820]">
+                <ShieldCheck className="h-5 w-5 text-[#c0c5ce]" strokeWidth={1.5} />
+              </div>
+              <div>
+                <h3 className="font-medium text-[#e8eaed]">Moderation Center</h3>
+                <p className="mt-1 text-sm leading-relaxed text-[#6b7280]">
+                  Approve, reject, or escalate pending listings.
+                </p>
+              </div>
+            </Link>
+            <Link
+              href="/ai-usage"
+              className="flex flex-col gap-4 rounded-2xl border border-[#1e2430] bg-[#0e1016] p-5"
+            >
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#c0c5ce]/15 bg-[#141820]">
+                <Gauge className="h-5 w-5 text-[#c0c5ce]" strokeWidth={1.5} />
+              </div>
+              <div>
+                <h3 className="font-medium text-[#e8eaed]">AI Usage</h3>
+                <p className="mt-1 text-sm leading-relaxed text-[#6b7280]">
+                  Token spend and deterministic-vs-reasoning split.
+                </p>
+              </div>
+            </Link>
+          </div>
+        </section>
+
         {groups.map(({ category, label, tools }) => (
           <section key={category}>
             <h2 className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-[#9aa3ad]">

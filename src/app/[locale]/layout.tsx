@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
@@ -19,6 +19,16 @@ import "../globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+// Serif headline face for the new Greece marketplace shell (AntaY-co design
+// system, section 1.3). Studio pages don't reference --font-serif, so their
+// Inter-only look is unaffected — this only adds a font, it doesn't switch one.
+const playfair = Playfair_Display({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -68,7 +78,11 @@ export default async function LocaleLayout({ children, params }: Props) {
   const tNav = await getTranslations("nav");
 
   return (
-    <html lang={locale} className={`${inter.variable} font-sans`} suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={`${inter.variable} ${playfair.variable} font-sans`}
+      suppressHydrationWarning
+    >
       <body className="min-h-screen bg-surface font-sans" suppressHydrationWarning>
         <GoogleAnalytics />
         <JsonLd data={[organizationJsonLd(locale), websiteJsonLd(locale)]} />        <a

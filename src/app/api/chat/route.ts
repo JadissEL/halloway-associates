@@ -15,7 +15,7 @@ const requestSchema = z.object({
     )
     .min(1)
     .max(30),
-  locale: z.enum(["en", "fr"]),
+  locale: z.enum(["en", "el", "fr"]),
   visitor: z.object({
     sessionId: z.string().min(8).max(64),
     locale: z.string(),

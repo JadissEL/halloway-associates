@@ -7,9 +7,15 @@
     "dev:webpack": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
     "@vercel/analytics": "^1.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -19,6 +25,8 @@
     "lucide-react": "^0.577.0",
     "next": "^16.2.9",
     "next-intl": "^4.8.3",
+    "pg": "^8.23.0",
+    "prisma": "^7.10.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "resend": "^6.9.3",
@@ -30,12 +38,15 @@
     "@tailwindcss/postcss": "^4.2.2",
     "@types/d3-geo": "^3.1.0",
     "@types/node": "^25.3.5",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/topojson-client": "^3.1.5",
+    "dotenv": "^17.4.2",
     "eslint": "^9.39.3",
     "eslint-config-next": "^16.2.9",
     "tailwindcss": "^4.2.2",
+    "tsx": "^4.23.13",
     "typescript": "^5.9.3"
   }
 }

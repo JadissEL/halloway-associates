@@ -28,21 +28,38 @@ const regionCopyFr: Record<string, string> = {
   uae: "Émirats arabes unis — Dubaï, Abu Dhabi, Golfe. Sur place + à distance. AR/EN.",
 };
 
+const regionCopyEl: Record<string, string> = {
+  morocco: "Μαρόκο — κόμβος Βόρειας & Δυτικής Αφρικής. Επιτόπου, εξ αποστάσεως, υβριδικά. AR/FR/EN.",
+  greece: "Ελλάδα — Νότια Ευρώπη. Εξ αποστάσεως + περιοδικά επιτόπου. EL/EN.",
+  spain: "Ισπανία — Ιβηρική & ΕΕ. Εξ αποστάσεως + εργαστήρια. ES/EN.",
+  italy: "Ιταλία — Νότια Ευρώπη, επιχειρήσεις. Εξ αποστάσεως + υβριδικά. IT/EN.",
+  uk: "Ηνωμένο Βασίλειο — Λονδίνο & εθνικά. Εξ αποστάσεως + sprints. EN.",
+  usa: "Ηνωμένες Πολιτείες — κυρίως εξ αποστάσεως, εθνική παράδοση. EN.",
+  canada: "Καναδάς — Τορόντο, Μόντρεαλ, δίγλωσσα EN/FR. Επιτόπου + εξ αποστάσεως.",
+  uae: "ΗΑΕ — Ντουμπάι, Άμπου Ντάμπι, Κόλπος. Επιτόπου + εξ αποστάσεως. AR/EN.",
+};
+
+function regionCopyFor(locale: string): Record<string, string> {
+  if (locale === "fr") return regionCopyFr;
+  if (locale === "el") return regionCopyEl;
+  return regionCopyEn;
+}
+
 export function buildKnowledgeBase(
   locale: string,
   serviceItems: ServiceCopy,
 ): string {
+  const activeRegionCopy = regionCopyFor(locale);
   const regionLines = regions
-    .map((r) => {
-      const copy = locale === "fr" ? regionCopyFr[r.id] : regionCopyEn[r.id];
-      return `- ${copy}`;
-    })
+    .map((r) => `- ${activeRegionCopy[r.id]}`)
     .join("\n");
 
   const methodology =
     locale === "fr"
       ? "Découvrir → Concevoir → Construire → Mettre à l'échelle"
-      : "Discover → Design → Build → Scale";
+      : locale === "el"
+        ? "Διερεύνηση → Σχεδιασμός → Υλοποίηση → Κλιμάκωση"
+        : "Discover → Design → Build → Scale";
 
   const serviceLines = services
     .map((s) => {

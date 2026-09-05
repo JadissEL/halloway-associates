@@ -1,0 +1,422 @@
+// Halloway & Associates — Greece AI Platform
+// Prisma schema (Phase 1). See PLATFORM.md at repo root for the architecture
+// this schema implements (Request Rooms, moderation, multilingual knowledge, etc).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Identity & roles
+// ---------------------------------------------------------------------------
+
+enum Role {
+  CUSTOMER
+  PROPERTY_OWNER
+  AGENT
+  BUSINESS
+  PROFESSIONAL
+  ADMINISTRATOR
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String?
+  role            Role      @default(CUSTOMER)
+  preferredLocale String    @default("en")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  magicLinkTokens MagicLinkToken[]
+  requestRooms    RequestRoom[]
+  notifications   Notification[]
+  savedItems      SavedItem[]
+  properties      Property[]
+  callBookings    CallBooking[]
+  requestMessages RequestMessage[]
+}
+
+model MagicLinkToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Request Rooms — the generic "bundle everything about this request" entity
+// (spec section 11.1). Every workflow (lawyer request, property search,
+// arrival call, ...) creates one of these.
+// ---------------------------------------------------------------------------
+
+enum RequestRoomType {
+  LAWYER
+  ACCOUNTANT
+  ARCHITECT_ENGINEER
+  PROPERTY_SEARCH
+  PROPERTY_SALE
+  RENOVATION
+  MOVING
+  CLEANING
+  ARRIVAL_CALL
+  OTHER
+}
+
+enum RequestRoomStatus {
+  REQUESTED
+  UNDER_REVIEW
+  MATCHING
+  PROFESSIONAL_SELECTED
+  APPOINTMENT_PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model RequestRoom {
+  id             String            @id @default(cuid())
+  userId         String
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           RequestRoomType
+  status         RequestRoomStatus @default(REQUESTED)
+  // Structured, language-neutral representation of the request (spec section 15) —
+  // e.g. { category, location, budgetMax, currency, moveInDate, ... }
+  structuredData Json              @default("{}")
+  professionalId String?
+  professional   Professional?     @relation(fields: [professionalId], references: [id])
+  propertyId     String?
+  property       Property?         @relation(fields: [propertyId], references: [id])
+  callBookingId  String?           @unique
+  callBooking    CallBooking?      @relation(fields: [callBookingId], references: [id])
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  messages    RequestMessage[]
+  attachments RequestAttachment[]
+  statusEvents StatusEvent[]
+  notifications Notification[]
+
+  @@index([userId])
+  @@index([type, status])
+}
+
+enum MessageSender {
+  USER
+  AI
+  PROFESSIONAL
+  SYSTEM
+}
+
+model RequestMessage {
+  id                String        @id @default(cuid())
+  roomId            String
+  room              RequestRoom   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  senderType        MessageSender
+  senderUserId      String?
+  senderUser        User?         @relation(fields: [senderUserId], references: [id])
+  content           String
+  // BCP-47 code of the language the message was actually written in
+  // (spec section 16 — never silently overwrite the original).
+  originalLocale    String
+  // { "<locale>": "translated text" } — populated on demand, original always kept.
+  translations      Json?
+  createdAt         DateTime      @default(now())
+
+  @@index([roomId])
+}
+
+model RequestAttachment {
+  id         String      @id @default(cuid())
+  roomId     String
+  room       RequestRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  url        String
+  filename   String
+  mimeType   String
+  uploadedBy String
+  createdAt  DateTime    @default(now())
+
+  @@index([roomId])
+}
+
+model StatusEvent {
+  id         String      @id @default(cuid())
+  roomId     String
+  room       RequestRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  fromStatus String?
+  toStatus   String
+  note       String?
+  createdAt  DateTime    @default(now())
+
+  @@index([roomId])
+}
+
+model Notification {
+  id            String       @id @default(cuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  requestRoomId String?
+  requestRoom   RequestRoom? @relation(fields: [requestRoomId], references: [id])
+  message       String
+  isRead        Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+
+  @@index([userId, isRead])
+}
+
+model SavedItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemType  String
+  itemId    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, itemType, itemId])
+}
+
+// ---------------------------------------------------------------------------
+// Property (rooms/apartments/houses) — reference vertical #1
+// ---------------------------------------------------------------------------
+
+enum PropertyType {
+  ROOM
+  APARTMENT
+  HOUSE
+  LAND
+  COMMERCIAL
+}
+
+enum ListingIntent {
+  RENT
+  SALE
+}
+
+enum ModerationStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  PUBLISHED
+  REJECTED
+  CHANGES_REQUESTED
+  SUSPENDED
+  FLAGGED
+  ESCALATED
+}
+
+model Property {
+  id            String            @id @default(cuid())
+  ownerId       String?
+  owner         User?             @relation(fields: [ownerId], references: [id])
+  title         String
+  description   String
+  propertyType  PropertyType
+  listingIntent ListingIntent
+  city          String
+  area          String?
+  priceAmount   Int
+  currency      String            @default("EUR")
+  bedrooms      Int?
+  furnished     Boolean?
+  images        String[]
+  status        ModerationStatus  @default(PENDING_REVIEW)
+  isDemo        Boolean           @default(false)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  requestRooms    RequestRoom[]
+  moderationItems ModerationItem[]
+
+  @@index([status])
+  @@index([city, propertyType, listingIntent])
+}
+
+// ---------------------------------------------------------------------------
+// Professionals & partner platforms (spec sections 5.1, 9, and the
+// shopthebarber.app requirement — never recommend a competing platform).
+// ---------------------------------------------------------------------------
+
+enum ProfessionalCategory {
+  LAWYER
+  ACCOUNTANT
+  ARCHITECT
+  ENGINEER
+  CLEANER
+  MOVER
+  PROPERTY_MANAGER
+  BARBER_GROOMING
+  OTHER
+}
+
+model Professional {
+  id               String               @id @default(cuid())
+  name             String
+  category         ProfessionalCategory
+  languages        String[]
+  bio              String
+  // True for approved external platforms we route users to instead of building
+  // our own workflow (e.g. shopthebarber.app for grooming/barber bookings).
+  isPartnerPlatform Boolean             @default(false)
+  externalUrl      String?
+  isDemo           Boolean              @default(false)
+  status           ModerationStatus     @default(APPROVED)
+  createdAt        DateTime             @default(now())
+
+  requestRooms RequestRoom[]
+
+  @@index([category])
+}
+
+// ---------------------------------------------------------------------------
+// Arrival & Information Calls (spec section 12)
+// ---------------------------------------------------------------------------
+
+enum CallType {
+  ORIENTATION
+  RELOCATION
+  PROPERTY
+  BUSINESS
+  WORK_LIFE
+  INVESTMENT
+  CUSTOM
+  UNSURE
+}
+
+model AvailabilitySlot {
+  id          String        @id @default(cuid())
+  callType    CallType?
+  startTime   DateTime
+  endTime     DateTime
+  isBooked    Boolean       @default(false)
+  callBooking CallBooking?
+
+  @@index([startTime, isBooked])
+}
+
+model CallBooking {
+  id                String     @id @default(cuid())
+  userId            String
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  callType          CallType
+  reason            String?
+  topics            String[]
+  preferredLanguage String
+  countryOfOrigin   String?
+  arrivalDate       DateTime?
+  cityOfInterest    String?
+  slotId            String?    @unique
+  slot              AvailabilitySlot? @relation(fields: [slotId], references: [id])
+  createdAt         DateTime   @default(now())
+
+  requestRoom RequestRoom?
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Moderation & Trust layer (spec section 6) — generic across content types.
+// ---------------------------------------------------------------------------
+
+enum ModeratedContentType {
+  PROPERTY
+  PROFESSIONAL
+  JOB
+  VEHICLE
+  BUSINESS
+  OFFER
+  ARTICLE
+}
+
+enum ModerationAction {
+  APPROVE
+  REJECT
+  REQUEST_CHANGES
+  SUSPEND
+  FLAG
+  ESCALATE
+}
+
+model ModerationItem {
+  id            String                @id @default(cuid())
+  contentType   ModeratedContentType
+  propertyId    String?
+  property      Property?             @relation(fields: [propertyId], references: [id])
+  status        ModerationStatus      @default(PENDING_REVIEW)
+  lastAction    ModerationAction?
+  moderatorNote String?
+  createdAt     DateTime              @default(now())
+  decidedAt     DateTime?
+
+  @@index([contentType, status])
+}
+
+// ---------------------------------------------------------------------------
+// Knowledge layer (spec sections 8, 13, 14) — the AI's structured,
+// source-attributed knowledge base. Never a single blob.
+// ---------------------------------------------------------------------------
+
+enum KnowledgeCategory {
+  PLATFORM
+  GREECE
+  PROFESSIONALS
+  CALCULATORS
+  ARTICLES
+  OPERATIONS
+}
+
+model KnowledgeArticle {
+  id              String            @id @default(cuid())
+  category        KnowledgeCategory
+  slug            String            @unique
+  canonicalLocale String            @default("en")
+  canonicalText   String
+  // { "<locale>": "translated text" }
+  translations    Json              @default("{}")
+  sourceUrl       String?
+  effectiveDate   DateTime?
+  lastReviewed    DateTime?
+  version         Int               @default(1)
+  isApproved      Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([category, isApproved])
+}
+
+// ---------------------------------------------------------------------------
+// AI usage tracking (spec section 18) — token/cost/layer accounting.
+// ---------------------------------------------------------------------------
+
+enum AiLayer {
+  DETERMINISTIC
+  RETRIEVAL
+  LIGHT_AI
+  REASONING
+}
+
+model AiUsageLog {
+  id                String   @id @default(cuid())
+  sessionId         String
+  userId            String?
+  layer             AiLayer
+  model             String?
+  promptTokens      Int      @default(0)
+  completionTokens  Int      @default(0)
+  latencyMs         Int      @default(0)
+  toolCalls         Json?
+  costEstimateUsd   Float    @default(0)
+  createdAt         DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([layer])
+}

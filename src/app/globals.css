@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* --- Halloway Studio tokens (existing site, kept as-is) ---------------
+     These stay dominant on every legacy "Studio" page (/studio, /about,
+     /contact, /services, /work, /insights) exactly as they render today. */
   --color-ink: #1a1a1a;
   --color-ink-secondary: #4a4a4a;
   --color-ink-muted: #767676;
@@ -15,6 +18,33 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --radius-xl: 24px;
   --radius-lg: 16px;
+
+  /* --- AntaY-co "luxury" tokens (merged in, additive) --------------------
+     Used only by the new Greece marketplace shell (home, properties, request
+     rooms, book-a-call, etc.) — never applied to Studio pages, so nothing
+     already live changes appearance. Where the two systems would clash we
+     made a deliberate per-element call rather than a blanket override:
+       - Studio keeps its existing --color-gold (#9a8555, muted brass) as its
+         own accent; the marketplace adopts AntaY-co's brighter --luxury-gold
+         as ITS primary accent — they coexist as two named tokens rather than
+         one being silently replaced.
+       - Studio keeps its rounded --radius-xl/--radius-lg cards; marketplace
+         components use explicit `rounded-none` (AntaY-co's signature
+         zero-radius, sharp-edged look) instead of a global radius override,
+         so existing rounded Studio cards never lose their corners.
+       - Studio stays light-themed (white/ivory); the marketplace is
+         dark-themed (near-black/graphite) by design, per the AntaY-co brief.
+     Halloway's existing wordmark and page chrome are untouched everywhere. */
+  --color-luxury-black: hsl(0 0% 5%);
+  --color-luxury-graphite: hsl(210 5% 12.5%);
+  --color-luxury-gold: hsl(38 62% 60%);
+  --color-luxury-ivory: hsl(0 0% 97%);
+  --color-luxury-muted: hsl(210 5% 25%);
+  --color-luxury-muted-foreground: hsl(210 5% 70%);
+  --color-luxury-border: hsl(210 5% 20%);
+  --color-luxury-input: hsl(210 5% 18%);
+  --color-luxury-destructive: hsl(0 84.2% 60.2%);
+  --font-serif: var(--font-playfair), Georgia, serif;
 }
 
 @layer base {

@@ -9,11 +9,13 @@ export const OG_IMAGE_SIZE = { width: 1200, height: 630 } as const;
 
 export const LOCALE_OG: Record<(typeof routing.locales)[number], string> = {
   en: "en_CA",
+  el: "el_GR",
   fr: "fr_CA",
 };
 
 export const LOCALE_HREFLANG: Record<(typeof routing.locales)[number], string> = {
   en: "en",
+  el: "el",
   fr: "fr",
 };
 

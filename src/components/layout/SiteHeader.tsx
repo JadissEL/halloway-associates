@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { isFeatureEnabled } from "@/lib/features";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
+import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 
 export function SiteHeader() {
   const t = useTranslations("nav");
-  const locale = useLocale();
+  const tMarketplace = useTranslations("marketplaceNav");
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -26,13 +28,15 @@ export function SiteHeader() {
   }, [pathname]);
 
   const links = [
+    { href: "/properties", label: tMarketplace("properties") },
+    { href: "/professionals", label: tMarketplace("professionals") },
+    { href: "/jobs", label: tMarketplace("jobs") },
     { href: "/services", label: t("services") },
+    { href: "/studio", label: t("studio") },
     { href: "/about", label: t("about") },
     ...(isFeatureEnabled("showWork") ? [{ href: "/work", label: t("work") }] : []),
     ...(isFeatureEnabled("showInsights") ? [{ href: "/insights", label: t("insights") }] : []),
   ] as const;
-
-  const alternateLocale = locale === "en" ? "fr" : "en";
 
   return (
     <header
@@ -64,19 +68,31 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
+          <NotificationBell />
+          <LocaleSwitcher />
           <Link
-            href={pathname}
-            locale={alternateLocale}
-            className="rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-ink-muted no-underline hover:text-ink"
-            aria-label={t("language")}
+            href="/"
+            className="text-sm font-medium text-ink-secondary no-underline hover:text-ink"
           >
-            {alternateLocale}
+            {tMarketplace("needHelp")}
+          </Link>
+          <Link
+            href="/post"
+            className="text-sm font-medium text-ink-secondary no-underline hover:text-ink"
+          >
+            {tMarketplace("post")}
           </Link>
           <Link
             href="/contact"
-            className="rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white no-underline hover:opacity-90"
+            className="text-sm font-medium text-ink-secondary no-underline hover:text-ink"
           >
             {t("discuss")}
+          </Link>
+          <Link
+            href="/book-a-call"
+            className="rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white no-underline hover:opacity-90"
+          >
+            {tMarketplace("bookACall")}
           </Link>
         </div>
 
@@ -103,18 +119,24 @@ export function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href={pathname}
-              locale={alternateLocale}
-              className="py-2 text-sm font-semibold uppercase tracking-wider text-ink-muted no-underline"
-            >
-              {alternateLocale}
+            <LocaleSwitcher variant="mobile" />
+            <Link href="/" className="py-2 text-base font-medium text-ink no-underline">
+              {tMarketplace("needHelp")}
+            </Link>
+            <Link href="/post" className="py-2 text-base font-medium text-ink no-underline">
+              {tMarketplace("post")}
             </Link>
             <Link
               href="/contact"
-              className="mt-2 inline-flex justify-center rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white no-underline"
+              className="py-2 text-base font-medium text-ink no-underline"
             >
               {t("discuss")}
+            </Link>
+            <Link
+              href="/book-a-call"
+              className="mt-2 inline-flex justify-center rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white no-underline"
+            >
+              {tMarketplace("bookACall")}
             </Link>
           </nav>
         </div>

@@ -1,0 +1,267 @@
+import { prisma } from "@/lib/db/client";
+import { createLawyerRequestRoom } from "@/lib/workflows/lawyer-request";
+import { bookCall } from "@/lib/workflows/call-booking";
+import type {
+  PropertyType,
+  ListingIntent,
+  ProfessionalCategory,
+  CallType,
+} from "@prisma/client";
+
+export interface ToolContext {
+  userId: string | null;
+  locale: string;
+}
+
+// Groq's chat-completions API is OpenAI-tool-schema compatible.
+export const TOOL_SCHEMAS = [
+  {
+    type: "function" as const,
+    function: {
+      name: "search_properties",
+      description:
+        "Search published property listings (rooms, apartments, houses) by city, price, and type. Only returns real platform data — never invent listings.",
+      parameters: {
+        type: "object",
+        properties: {
+          city: { type: "string" },
+          maxPrice: { type: "number" },
+          propertyType: { type: "string", enum: ["ROOM", "APARTMENT", "HOUSE", "LAND", "COMMERCIAL"] },
+          listingIntent: { type: "string", enum: ["RENT", "SALE"] },
+        },
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "find_professionals",
+      description:
+        "Find approved professionals or partner platforms in a category (lawyer, accountant, architect, engineer, cleaner, mover, property manager, barber/grooming).",
+      parameters: {
+        type: "object",
+        properties: {
+          category: {
+            type: "string",
+            enum: [
+              "LAWYER", "ACCOUNTANT", "ARCHITECT", "ENGINEER", "CLEANER",
+              "MOVER", "PROPERTY_MANAGER", "BARBER_GROOMING", "OTHER",
+            ],
+          },
+        },
+        required: ["category"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "create_lawyer_request",
+      description:
+        "Create a lawyer/professional-request Request Room once the user has given enough detail (category, situation, consultation mode, availability, language, payment preference). Requires the user to be signed in.",
+      parameters: {
+        type: "object",
+        properties: {
+          category: { type: "string" },
+          situation: { type: "string" },
+          consultationMode: { type: "string" },
+          availability: { type: "string" },
+          language: { type: "string" },
+          paymentPreference: { type: "string" },
+          additionalInfo: { type: "string" },
+        },
+        required: ["category", "situation"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "get_user_requests",
+      description: "List the signed-in user's Request Rooms (recent, active, and history).",
+      parameters: { type: "object", properties: {} },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "get_request_status",
+      description: "Get the current status and timeline of a specific Request Room by id.",
+      parameters: {
+        type: "object",
+        properties: { roomId: { type: "string" } },
+        required: ["roomId"],
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "get_available_call_slots",
+      description: "List real available Arrival & Information Call slots, optionally filtered by call type.",
+      parameters: {
+        type: "object",
+        properties: {
+          callType: {
+            type: "string",
+            enum: ["ORIENTATION", "RELOCATION", "PROPERTY", "BUSINESS", "WORK_LIFE", "INVESTMENT", "CUSTOM", "UNSURE"],
+          },
+        },
+      },
+    },
+  },
+  {
+    type: "function" as const,
+    function: {
+      name: "create_call_booking",
+      description:
+        "Book an Arrival & Information Call once the user picked a real available slot (from get_available_call_slots) and a call type. Requires the user to be signed in.",
+      parameters: {
+        type: "object",
+        properties: {
+          callType: { type: "string" },
+          slotId: { type: "string" },
+          reason: { type: "string" },
+          topics: { type: "array", items: { type: "string" } },
+          preferredLanguage: { type: "string" },
+          countryOfOrigin: { type: "string" },
+          cityOfInterest: { type: "string" },
+        },
+        required: ["callType", "slotId"],
+      },
+    },
+  },
+];
+
+const SIGN_IN_REQUIRED = {
+  error: "sign_in_required",
+  message: "The user needs to sign in (via the magic-link sign-in page) before this action can be completed. Ask them to sign in, then offer to continue.",
+};
+
+async function searchProperties(args: {
+  city?: string; maxPrice?: number;
+  propertyType?: PropertyType; listingIntent?: ListingIntent;
+}) {
+  const properties = await prisma.property.findMany({
+    where: {
+      status: "PUBLISHED",
+      ...(args.city ? { city: { equals: args.city, mode: "insensitive" } } : {}),
+      ...(args.maxPrice ? { priceAmount: { lte: args.maxPrice } } : {}),
+      ...(args.propertyType ? { propertyType: args.propertyType } : {}),
+      ...(args.listingIntent ? { listingIntent: args.listingIntent } : {}),
+    },
+    take: 10,
+    orderBy: { createdAt: "desc" },
+  });
+  return {
+    count: properties.length,
+    properties: properties.map((p) => ({
+      id: p.id, title: p.title, city: p.city, area: p.area,
+      priceAmount: p.priceAmount, currency: p.currency,
+      propertyType: p.propertyType, listingIntent: p.listingIntent,
+      isDemo: p.isDemo,
+    })),
+  };
+}
+
+async function findProfessionals(args: { category: ProfessionalCategory }) {
+  const professionals = await prisma.professional.findMany({
+    where: { category: args.category, status: "APPROVED" },
+    take: 10,
+  });
+  return {
+    count: professionals.length,
+    professionals: professionals.map((p) => ({
+      id: p.id, name: p.name, category: p.category, languages: p.languages,
+      bio: p.bio, isPartnerPlatform: p.isPartnerPlatform, externalUrl: p.externalUrl,
+      isDemo: p.isDemo,
+    })),
+  };
+}
+
+async function createLawyerRequest(
+  args: { category: string; situation: string; consultationMode?: string; availability?: string; language?: string; paymentPreference?: string; additionalInfo?: string },
+  ctx: ToolContext,
+) {
+  if (!ctx.userId) return SIGN_IN_REQUIRED;
+  const room = await createLawyerRequestRoom(ctx.userId, args);
+  return { roomId: room.id, status: room.status };
+}
+
+async function getUserRequests(ctx: ToolContext) {
+  if (!ctx.userId) return SIGN_IN_REQUIRED;
+  const rooms = await prisma.requestRoom.findMany({
+    where: { userId: ctx.userId },
+    orderBy: { updatedAt: "desc" },
+    take: 20,
+  });
+  return {
+    rooms: rooms.map((r) => ({
+      id: r.id, type: r.type, status: r.status, updatedAt: r.updatedAt.toISOString(),
+    })),
+  };
+}
+
+async function getRequestStatus(args: { roomId: string }, ctx: ToolContext) {
+  const room = await prisma.requestRoom.findUnique({
+    where: { id: args.roomId },
+    include: { statusEvents: { orderBy: { createdAt: "asc" } } },
+  });
+  if (!room || room.userId !== ctx.userId) {
+    return { error: "not_found", message: "No such request for this user." };
+  }
+  return {
+    id: room.id, type: room.type, status: room.status,
+    timeline: room.statusEvents.map((e) => ({ toStatus: e.toStatus, note: e.note, at: e.createdAt.toISOString() })),
+  };
+}
+
+async function getAvailableCallSlots(args: { callType?: CallType }) {
+  const slots = await prisma.availabilitySlot.findMany({
+    where: { isBooked: false, startTime: { gte: new Date() }, ...(args.callType ? { callType: args.callType } : {}) },
+    orderBy: { startTime: "asc" },
+    take: 10,
+  });
+  return {
+    slots: slots.map((s) => ({ id: s.id, startTime: s.startTime.toISOString(), endTime: s.endTime.toISOString() })),
+  };
+}
+
+async function createCallBooking(
+  args: { callType: CallType; slotId: string; reason?: string; topics?: string[]; preferredLanguage?: string; countryOfOrigin?: string; cityOfInterest?: string },
+  ctx: ToolContext,
+) {
+  if (!ctx.userId) return SIGN_IN_REQUIRED;
+
+  const result = await bookCall(ctx.userId, { ...args, preferredLanguage: args.preferredLanguage ?? ctx.locale });
+  if ("error" in result) return result;
+  return { bookingId: result.bookingId, roomId: result.roomId, status: "CONFIRMED", slotStart: result.slotStart.toISOString() };
+}
+
+export async function executeTool(name: string, rawArgs: string, ctx: ToolContext): Promise<object> {
+  let args: Record<string, unknown> = {};
+  try {
+    args = JSON.parse(rawArgs || "{}");
+  } catch {
+    return { error: "invalid_arguments" };
+  }
+
+  switch (name) {
+    case "search_properties":
+      return searchProperties(args as never);
+    case "find_professionals":
+      return findProfessionals(args as never);
+    case "create_lawyer_request":
+      return createLawyerRequest(args as never, ctx);
+    case "get_user_requests":
+      return getUserRequests(ctx);
+    case "get_request_status":
+      return getRequestStatus(args as never, ctx);
+    case "get_available_call_slots":
+      return getAvailableCallSlots(args as never);
+    case "create_call_booking":
+      return createCallBooking(args as never, ctx);
+    default:
+      return { error: "unknown_tool" };
+  }
+}

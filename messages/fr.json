@@ -4,6 +4,11 @@
     "description": "Studio d'ingénierie IA, automatisation et croissance. Nous construisons des systèmes prêts pour la production pour des entreprises ambitieuses au Maroc, en Europe, en Amérique du Nord et aux Émirats.",
     "keywords": "automatisation IA|développement MVP|ingénierie croissance|systèmes revenus|Halloway & Associates|Laboratoire de production|livraison mondiale|automatisation n8n|intégration Stripe"
   },
+  "homeMetadata": {
+    "title": "Halloway & Associates — Tout ce dont vous avez besoin en Grèce",
+    "description": "Propriétés, professionnels, emplois, et une conciergerie IA qui comprend ce dont vous avez besoin — dans votre langue. Dites-nous ce que vous voulez faire en Grèce, on s'occupe du reste.",
+    "keywords": "relocalisation Grèce|immobilier Grèce|trouver un avocat Grèce|appartements Athènes|déménager en Grèce|plateforme de services Grèce|Halloway & Associates"
+  },
   "seo": {
     "learnMore": "En savoir plus",
     "allServices": "Voir tous les services",
@@ -18,11 +23,13 @@
     "contact": "Contact",
     "work": "Réalisations",
     "insights": "Perspectives",
+    "studio": "Studio",
     "discuss": "Discutons",
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu",
     "skipToContent": "Aller au contenu",
-    "language": "Langue"
+    "language": "Langue",
+    "chooseLanguage": "Choisir la langue"
   },
   "hero": {
     "eyebrow": "Laboratoire de production",
@@ -376,5 +383,267 @@
       "contact": "Je voudrais parler à votre équipe",
       "regions": "Où opérez-vous?"
     }
+  },
+  "marketplaceNav": {
+    "properties": "Propriétés",
+    "jobs": "Emplois",
+    "professionals": "Professionnels",
+    "vehicles": "Véhicules",
+    "travel": "Voyage",
+    "greece": "Grèce",
+    "deals": "Bons plans",
+    "post": "Publier",
+    "needHelp": "J'ai besoin d'aide",
+    "bookACall": "Réserver un appel"
+  },
+  "marketplace": {
+    "exploreTitle": "Tout explorer",
+    "comingSoonTitle": "Cette catégorie arrive bientôt",
+    "comingSoonBody": "Nous construisons ce parcours prochainement. En attendant, dites à notre conciergerie ce dont vous avez besoin et nous vous aiderons du mieux possible.",
+    "comingSoonCta": "Parler à la conciergerie",
+    "demoBadge": "Annonce de démonstration — pas encore une vraie annonce"
+  },
+  "shell": {
+    "greeting": "Comment pouvons-nous vous aider?",
+    "inputPlaceholder": "Dites-nous ce dont vous avez besoin — dans n'importe quelle langue…",
+    "send": "Envoyer",
+    "activity": {
+      "title": "Mon activité",
+      "recent": "Récent",
+      "active": "En cours",
+      "saved": "Enregistré",
+      "history": "Historique",
+      "empty": "Rien ici pour le moment.",
+      "signInPrompt": "Connectez-vous pour suivre vos demandes."
+    },
+    "workspace": {
+      "title": "Espace de travail",
+      "empty": "Les résultats apparaîtront ici au fil de votre conversation avec la conciergerie."
+    },
+    "viewModes": {
+      "full": "Espace complet",
+      "conversation": "Conversation",
+      "results": "Résultats",
+      "history": "Historique"
+    },
+    "quickAccess": {
+      "rentRoom": "Louer une chambre",
+      "rentHouse": "Louer une maison",
+      "buyProperty": "Acheter un bien",
+      "sellProperty": "Vendre un bien",
+      "findJob": "Trouver un emploi",
+      "sellCar": "Vendre ma voiture",
+      "buyCar": "Acheter une voiture",
+      "sellFurniture": "Vendre des meubles",
+      "moveApartment": "Déménager",
+      "renovate": "Rénover",
+      "cleaning": "Ménage",
+      "propertyManagement": "Gestion locative",
+      "airbnbManagement": "Gestion Airbnb",
+      "findLawyer": "Trouver un avocat",
+      "findAccountant": "Trouver un comptable",
+      "findArchitect": "Trouver un architecte/ingénieur",
+      "calculateTaxes": "Calculer mes impôts",
+      "calculatePropertyCosts": "Calculer les frais d'achat",
+      "currencyConverter": "Convertisseur de devises",
+      "travel": "Voyage",
+      "businessForSale": "Commerce à vendre",
+      "landForSale": "Terrain à vendre",
+      "publishOffer": "Publier une offre",
+      "seeEverything": "Tout voir"
+    },
+    "mobileTabs": {
+      "home": "Accueil",
+      "explore": "Explorer",
+      "requests": "Demandes",
+      "messages": "Messages",
+      "profile": "Profil"
+    }
+  },
+  "aiConcierge": {
+    "name": "Conciergerie Halloway",
+    "outOfScope": "Je suis conçu pour vous aider avec les services, opportunités et informations disponibles via Halloway & Associates en Grèce. Je ne peux pas traiter de sujets sans rapport.",
+    "thinking": "Réflexion…",
+    "error": "Je suis temporairement indisponible. Merci de réessayer dans un instant.",
+    "awaitingModeration": "Votre annonce est prête — statut : en attente de modération.",
+    "submitted": "J'ai soumis votre demande.",
+    "escalate": "Je préfère ne pas deviner pour votre situation précise. Je peux transmettre votre demande à la bonne personne de notre équipe.",
+    "partnerBarber": "Pour les réservations chez le barbier, nous travaillons avec ShopTheBarber — vous pouvez réserver directement sur shopthebarber.app."
+  },
+  "requestRooms": {
+    "title": "Espace de demande",
+    "status": {
+      "REQUESTED": "Demandé",
+      "UNDER_REVIEW": "En cours d'examen",
+      "MATCHING": "Recherche du bon professionnel",
+      "PROFESSIONAL_SELECTED": "Professionnel sélectionné",
+      "APPOINTMENT_PENDING": "Rendez-vous en attente",
+      "CONFIRMED": "Confirmé",
+      "IN_PROGRESS": "En cours",
+      "COMPLETED": "Terminé",
+      "CANCELLED": "Annulé",
+      "PENDING_REVIEW": "En attente de modération",
+      "APPROVED": "Approuvé",
+      "PUBLISHED": "Publié",
+      "REJECTED": "Rejeté",
+      "CHANGES_REQUESTED": "Modifications demandées",
+      "SUSPENDED": "Suspendu",
+      "FLAGGED": "Signalé",
+      "ESCALATED": "Escaladé"
+    },
+    "timeline": "Chronologie",
+    "messages": "Messages",
+    "attachments": "Pièces jointes",
+    "sendMessage": "Envoyer",
+    "messagePlaceholder": "Écrire un message…",
+    "noRooms": "Vous n'avez encore aucune demande.",
+    "crossService": {
+      "title": "Souhaitez-vous de l'aide pour l'une de ces prochaines étapes?",
+      "dismiss": "Non merci"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "empty": "Aucune notification pour le moment.",
+    "viewRoom": "Voir la demande"
+  },
+  "bookACall": {
+    "eyebrow": "Vous venez en Grèce?",
+    "title": "Parlez à quelqu'un qui peut vous aider à comprendre la suite.",
+    "subtitle": "Dites-nous pourquoi vous venez. Nous vous aiderons à identifier ce dont vous avez besoin.",
+    "steps": {
+      "reason": {
+        "title": "Pourquoi venez-vous en Grèce?",
+        "options": {
+          "moving": "Déménager en Grèce",
+          "visiting": "Visiter la Grèce",
+          "accommodation": "Chercher un logement",
+          "job": "Chercher un emploi",
+          "business": "Créer une entreprise",
+          "property": "Acheter/louer un bien",
+          "investing": "Investir",
+          "studying": "Étudier",
+          "family": "Déménager en famille",
+          "dailyLife": "Organiser la vie quotidienne",
+          "procedures": "Comprendre les démarches locales",
+          "services": "Trouver des services/professionnels de confiance",
+          "opportunities": "Explorer des opportunités en Grèce",
+          "orientation": "Orientation générale avant l'arrivée"
+        }
+      },
+      "topics": { "title": "Quels sujets devons-nous aborder?" },
+      "callType": {
+        "title": "Quel type d'appel vous aiderait le plus?",
+        "options": {
+          "ORIENTATION": "Appel d'orientation Grèce",
+          "RELOCATION": "Appel relocalisation",
+          "PROPERTY": "Appel immobilier",
+          "BUSINESS": "Appel affaires",
+          "WORK_LIFE": "Appel travail et vie quotidienne",
+          "INVESTMENT": "Appel investissement",
+          "CUSTOM": "Appel personnalisé",
+          "UNSURE": "Je ne sais pas encore"
+        }
+      },
+      "slot": { "title": "Choisissez une date et une heure" },
+      "details": {
+        "title": "Quelques détails optionnels",
+        "countryOfOrigin": "Pays d'origine",
+        "arrivalDate": "Date d'arrivée prévue",
+        "cityOfInterest": "Ville d'intérêt",
+        "language": "Langue préférée pour l'appel",
+        "notes": "Autre chose à nous signaler?"
+      },
+      "confirm": { "title": "Confirmez votre appel", "button": "Réserver l'appel" }
+    },
+    "confirmation": {
+      "title": "Votre appel est réservé.",
+      "body": "Nous avons créé un espace de demande pour vous — vous y retrouverez la confirmation et tout ce qui concerne cet appel.",
+      "viewRoom": "Voir ma demande"
+    }
+  },
+  "lawyerRequest": {
+    "title": "Trouver un avocat",
+    "steps": {
+      "category": {
+        "title": "De quoi avez-vous besoin?",
+        "options": {
+          "property": "Immobilier",
+          "immigration": "Immigration",
+          "business": "Affaires",
+          "tax": "Fiscalité",
+          "employment": "Emploi",
+          "family": "Famille",
+          "contract": "Contrat",
+          "dispute": "Litige",
+          "other": "Autre"
+        }
+      },
+      "situation": { "title": "Parlez-nous de votre situation" },
+      "consultationMode": {
+        "title": "Mode de consultation préféré",
+        "options": {
+          "remote": "À distance",
+          "office": "Au cabinet",
+          "phone": "Téléphone",
+          "online": "Réunion en ligne"
+        }
+      },
+      "availability": { "title": "Quelles sont vos disponibilités?" },
+      "language": { "title": "Langue de communication préférée" },
+      "payment": { "title": "Préférence de paiement" },
+      "additional": { "title": "Autre chose? Vous pouvez joindre des documents ou photos." },
+      "submit": { "title": "Envoyer votre demande", "button": "Envoyer" }
+    }
+  },
+  "properties": {
+    "title": "Propriétés",
+    "searchPlaceholder": "Ville, quartier ou zone",
+    "postListing": "Publier un bien",
+    "mapView": "Carte",
+    "listView": "Liste",
+    "filters": {
+      "city": "Ville",
+      "priceMax": "Prix maximum",
+      "bedrooms": "Chambres",
+      "furnished": "Meublé",
+      "type": "Type",
+      "intent": "Location ou vente"
+    },
+    "types": {
+      "ROOM": "Chambre",
+      "APARTMENT": "Appartement",
+      "HOUSE": "Maison",
+      "LAND": "Terrain",
+      "COMMERCIAL": "Local commercial"
+    },
+    "intents": { "RENT": "À louer", "SALE": "À vendre" },
+    "noResults": "Aucun bien ne correspond à vos filtres pour le moment.",
+    "form": {
+      "title": "Publier un bien",
+      "titleField": "Titre",
+      "description": "Description",
+      "type": "Type de bien",
+      "intent": "Location ou vente",
+      "city": "Ville",
+      "area": "Quartier / zone",
+      "price": "Prix",
+      "bedrooms": "Chambres",
+      "furnished": "Meublé",
+      "images": "Photos",
+      "submit": "Soumettre pour modération",
+      "submitted": "Merci — votre annonce est en attente de modération."
+    }
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "emailLabel": "Adresse e-mail",
+    "sendLink": "M'envoyer un lien de connexion",
+    "sending": "Envoi…",
+    "checkEmail": "Consultez votre e-mail — nous vous avons envoyé un lien de connexion.",
+    "invalidLink": "Ce lien est invalide ou a expiré. Merci d'en demander un nouveau.",
+    "signedInAs": "Connecté en tant que {email}",
+    "signOut": "Se déconnecter"
   }
 }

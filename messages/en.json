@@ -4,6 +4,11 @@
     "description": "AI, automation, and growth engineering studio. We build production-grade systems for ambitious companies across Morocco, Europe, North America, and the UAE.",
     "keywords": "AI automation|MVP development|growth engineering|revenue systems|Halloway & Associates|Production Lab|global delivery|n8n automation|Stripe integration"
   },
+  "homeMetadata": {
+    "title": "Halloway & Associates — Everything you need in Greece",
+    "description": "Properties, professionals, jobs, and an AI concierge that understands what you need — in your own language. Tell us what you're trying to do in Greece, we'll take it from there.",
+    "keywords": "Greece relocation|Greece property|find a lawyer Greece|Athens apartments|moving to Greece|Greece services platform|Halloway & Associates"
+  },
   "seo": {
     "learnMore": "Learn more",
     "allServices": "View all services",
@@ -18,11 +23,13 @@
     "contact": "Contact",
     "work": "Work",
     "insights": "Insights",
+    "studio": "Studio",
     "discuss": "Discuss with us",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "skipToContent": "Skip to content",
-    "language": "Language"
+    "language": "Language",
+    "chooseLanguage": "Choose language"
   },
   "hero": {
     "eyebrow": "Production Lab",
@@ -376,5 +383,267 @@
       "contact": "I'd like to talk to your team",
       "regions": "Where do you operate?"
     }
+  },
+  "marketplaceNav": {
+    "properties": "Properties",
+    "jobs": "Jobs",
+    "professionals": "Professionals",
+    "vehicles": "Vehicles",
+    "travel": "Travel",
+    "greece": "Greece",
+    "deals": "Deals",
+    "post": "Post",
+    "needHelp": "I Need Help",
+    "bookACall": "Book a Call"
+  },
+  "marketplace": {
+    "exploreTitle": "Explore everything",
+    "comingSoonTitle": "This category is coming soon",
+    "comingSoonBody": "We're building this workflow next. In the meantime, tell our concierge what you need and we'll help however we can.",
+    "comingSoonCta": "Talk to the concierge",
+    "demoBadge": "Demo listing — not a real listing yet"
+  },
+  "shell": {
+    "greeting": "What can we help you with?",
+    "inputPlaceholder": "Tell us what you need — in any language…",
+    "send": "Send",
+    "activity": {
+      "title": "My Activity",
+      "recent": "Recent",
+      "active": "Active",
+      "saved": "Saved",
+      "history": "History",
+      "empty": "Nothing here yet.",
+      "signInPrompt": "Sign in to keep track of your requests."
+    },
+    "workspace": {
+      "title": "Workspace",
+      "empty": "Results will appear here as you talk to the concierge."
+    },
+    "viewModes": {
+      "full": "Full workspace",
+      "conversation": "Conversation",
+      "results": "Results",
+      "history": "History"
+    },
+    "quickAccess": {
+      "rentRoom": "Rent a room",
+      "rentHouse": "Rent a house",
+      "buyProperty": "Buy property",
+      "sellProperty": "Sell property",
+      "findJob": "Find a job",
+      "sellCar": "Sell my car",
+      "buyCar": "Buy a car",
+      "sellFurniture": "Sell furniture",
+      "moveApartment": "Move apartment",
+      "renovate": "Renovate",
+      "cleaning": "Cleaning",
+      "propertyManagement": "Property management",
+      "airbnbManagement": "Airbnb management",
+      "findLawyer": "Find a lawyer",
+      "findAccountant": "Find an accountant",
+      "findArchitect": "Find an architect/engineer",
+      "calculateTaxes": "Calculate my taxes",
+      "calculatePropertyCosts": "Calculate property costs",
+      "currencyConverter": "Currency converter",
+      "travel": "Travel",
+      "businessForSale": "Business for sale",
+      "landForSale": "Land for sale",
+      "publishOffer": "Publish an offer",
+      "seeEverything": "See everything"
+    },
+    "mobileTabs": {
+      "home": "Home",
+      "explore": "Explore",
+      "requests": "Requests",
+      "messages": "Messages",
+      "profile": "Profile"
+    }
+  },
+  "aiConcierge": {
+    "name": "Halloway Concierge",
+    "outOfScope": "I'm designed to help you with the services, opportunities and information available through Halloway & Associates in Greece. I can't assist with unrelated topics.",
+    "thinking": "Thinking…",
+    "error": "I'm temporarily unavailable. Please try again in a moment.",
+    "awaitingModeration": "Your listing is ready — status: awaiting moderation.",
+    "submitted": "I've submitted your request.",
+    "escalate": "I don't want to guess about your specific situation. I can help you submit a request to the right person on our team.",
+    "partnerBarber": "For barber and grooming bookings, we work with ShopTheBarber — you can book directly at shopthebarber.app."
+  },
+  "requestRooms": {
+    "title": "Request Room",
+    "status": {
+      "REQUESTED": "Requested",
+      "UNDER_REVIEW": "Under review",
+      "MATCHING": "Matching you with the right professional",
+      "PROFESSIONAL_SELECTED": "Professional selected",
+      "APPOINTMENT_PENDING": "Appointment pending",
+      "CONFIRMED": "Confirmed",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "PENDING_REVIEW": "Pending review",
+      "APPROVED": "Approved",
+      "PUBLISHED": "Published",
+      "REJECTED": "Rejected",
+      "CHANGES_REQUESTED": "Changes requested",
+      "SUSPENDED": "Suspended",
+      "FLAGGED": "Flagged",
+      "ESCALATED": "Escalated"
+    },
+    "timeline": "Timeline",
+    "messages": "Messages",
+    "attachments": "Attachments",
+    "sendMessage": "Send",
+    "messagePlaceholder": "Write a message…",
+    "noRooms": "You don't have any requests yet.",
+    "crossService": {
+      "title": "Would you like help with any of these next?",
+      "dismiss": "No thanks"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications yet.",
+    "viewRoom": "View request"
+  },
+  "bookACall": {
+    "eyebrow": "Coming to Greece?",
+    "title": "Talk to someone who can help you understand what to do next.",
+    "subtitle": "Tell us why you're coming. We'll help you figure out what you need.",
+    "steps": {
+      "reason": {
+        "title": "Why are you coming to Greece?",
+        "options": {
+          "moving": "Moving to Greece",
+          "visiting": "Visiting Greece",
+          "accommodation": "Looking for accommodation",
+          "job": "Looking for a job",
+          "business": "Starting a business",
+          "property": "Buying/renting property",
+          "investing": "Investing",
+          "studying": "Studying",
+          "family": "Relocating with family",
+          "dailyLife": "Setting up everyday life",
+          "procedures": "Understanding local procedures",
+          "services": "Finding trusted services/professionals",
+          "opportunities": "Exploring opportunities in Greece",
+          "orientation": "General orientation before arrival"
+        }
+      },
+      "topics": { "title": "What topics should we cover?" },
+      "callType": {
+        "title": "What kind of call would help most?",
+        "options": {
+          "ORIENTATION": "Greece Orientation Call",
+          "RELOCATION": "Relocation Call",
+          "PROPERTY": "Property Call",
+          "BUSINESS": "Business Call",
+          "WORK_LIFE": "Work & Life Call",
+          "INVESTMENT": "Investment Call",
+          "CUSTOM": "Custom Call",
+          "UNSURE": "I don't know what I need yet"
+        }
+      },
+      "slot": { "title": "Choose a date and time" },
+      "details": {
+        "title": "A few optional details",
+        "countryOfOrigin": "Country of origin",
+        "arrivalDate": "Expected arrival date",
+        "cityOfInterest": "City of interest",
+        "language": "Preferred language for the call",
+        "notes": "Anything else we should know?"
+      },
+      "confirm": { "title": "Confirm your call", "button": "Book the call" }
+    },
+    "confirmation": {
+      "title": "Your call is booked.",
+      "body": "We've created a request room for you — you'll find the confirmation, and everything from this call, in one place.",
+      "viewRoom": "View my request"
+    }
+  },
+  "lawyerRequest": {
+    "title": "Find a Lawyer",
+    "steps": {
+      "category": {
+        "title": "What do you need help with?",
+        "options": {
+          "property": "Property",
+          "immigration": "Immigration",
+          "business": "Business",
+          "tax": "Tax",
+          "employment": "Employment",
+          "family": "Family",
+          "contract": "Contract",
+          "dispute": "Dispute",
+          "other": "Other"
+        }
+      },
+      "situation": { "title": "Tell us about your situation" },
+      "consultationMode": {
+        "title": "Preferred consultation mode",
+        "options": {
+          "remote": "Remote",
+          "office": "Office",
+          "phone": "Phone",
+          "online": "Online meeting"
+        }
+      },
+      "availability": { "title": "When are you available?" },
+      "language": { "title": "Preferred communication language" },
+      "payment": { "title": "Payment preference" },
+      "additional": { "title": "Anything else? You can attach documents or photos." },
+      "submit": { "title": "Submit your request", "button": "Submit" }
+    }
+  },
+  "properties": {
+    "title": "Properties",
+    "searchPlaceholder": "City, area, or neighborhood",
+    "postListing": "Post a property",
+    "mapView": "Map",
+    "listView": "List",
+    "filters": {
+      "city": "City",
+      "priceMax": "Max price",
+      "bedrooms": "Bedrooms",
+      "furnished": "Furnished",
+      "type": "Type",
+      "intent": "Rent or sale"
+    },
+    "types": {
+      "ROOM": "Room",
+      "APARTMENT": "Apartment",
+      "HOUSE": "House",
+      "LAND": "Land",
+      "COMMERCIAL": "Commercial"
+    },
+    "intents": { "RENT": "For rent", "SALE": "For sale" },
+    "noResults": "No properties match your filters yet.",
+    "form": {
+      "title": "Post a property",
+      "titleField": "Title",
+      "description": "Description",
+      "type": "Property type",
+      "intent": "Rent or sale",
+      "city": "City",
+      "area": "Area / neighborhood",
+      "price": "Price",
+      "bedrooms": "Bedrooms",
+      "furnished": "Furnished",
+      "images": "Photos",
+      "submit": "Submit for review",
+      "submitted": "Thank you — your listing is awaiting moderation."
+    }
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "emailLabel": "Email address",
+    "sendLink": "Send me a sign-in link",
+    "sending": "Sending…",
+    "checkEmail": "Check your email — we've sent you a sign-in link.",
+    "invalidLink": "This link is invalid or has expired. Please request a new one.",
+    "signedInAs": "Signed in as {email}",
+    "signOut": "Sign out"
   }
 }

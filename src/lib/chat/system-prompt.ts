@@ -15,7 +15,9 @@ export function buildSystemPrompt(
   const language =
     locale === "fr"
       ? "Respond in French (Québec professional tone)."
-      : "Respond in English (clear, professional, concise).";
+      : locale === "el"
+        ? "Respond in Greek (clear, professional, concise)."
+        : "Respond in English (clear, professional, concise).";
 
   const visitorContext = `
 VISITOR SESSION (adapt implicitly — do not recite robotically):
