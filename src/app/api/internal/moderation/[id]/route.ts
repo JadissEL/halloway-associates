@@ -39,30 +39,35 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     return Response.json({ error: "invalid_request" }, { status: 400 });
   }
 
-  const item = await prisma.moderationItem.findUnique({ where: { id }, include: { property: true } });
-  if (!item) return Response.json({ error: "not_found" }, { status: 404 });
-
   const newStatus = ACTION_TO_STATUS[body.action];
 
-  await prisma.$transaction(async (tx) => {
-    await tx.moderationItem.update({
-      where: { id },
-      data: { status: newStatus, lastAction: body.action, moderatorNote: body.note, decidedAt: new Date() },
-    });
+  try {
+    const item = await prisma.moderationItem.findUnique({ where: { id }, include: { property: true } });
+    if (!item) return Response.json({ error: "not_found" }, { status: 404 });
 
-    if (item.propertyId) {
-      await tx.property.update({ where: { id: item.propertyId }, data: { status: newStatus } });
-    }
-
-    if (item.property?.ownerId) {
-      await tx.notification.create({
-        data: {
-          userId: item.property.ownerId,
-          message: NOTIFICATION_MESSAGE[body.action] ?? "Your listing status changed.",
-        },
+    await prisma.$transaction(async (tx) => {
+      await tx.moderationItem.update({
+        where: { id },
+        data: { status: newStatus, lastAction: body.action, moderatorNote: body.note, decidedAt: new Date() },
       });
-    }
-  });
+
+      if (item.propertyId) {
+        await tx.property.update({ where: { id: item.propertyId }, data: { status: newStatus } });
+      }
+
+      if (item.property?.ownerId) {
+        await tx.notification.create({
+          data: {
+            userId: item.property.ownerId,
+            message: NOTIFICATION_MESSAGE[body.action] ?? "Your listing status changed.",
+          },
+        });
+      }
+    });
+  } catch (error) {
+    console.error("[internal-moderation-action]", error);
+    return Response.json({ error: "service_unavailable" }, { status: 503 });
+  }
 
   return Response.json({ ok: true, status: newStatus });
 }

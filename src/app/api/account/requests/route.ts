@@ -9,17 +9,25 @@ export async function GET() {
     return Response.json({ error: "unauthenticated" }, { status: 401 });
   }
 
-  const rooms = await prisma.requestRoom.findMany({
-    where: { userId: session.userId },
-    orderBy: { updatedAt: "desc" },
-    take: 50,
-  });
-
-  const savedItems = await prisma.savedItem.findMany({
-    where: { userId: session.userId },
-    orderBy: { createdAt: "desc" },
-    take: 50,
-  });
+  let rooms: Awaited<ReturnType<typeof prisma.requestRoom.findMany>> = [];
+  let savedItems: Awaited<ReturnType<typeof prisma.savedItem.findMany>> = [];
+  try {
+    [rooms, savedItems] = await Promise.all([
+      prisma.requestRoom.findMany({
+        where: { userId: session.userId },
+        orderBy: { updatedAt: "desc" },
+        take: 50,
+      }),
+      prisma.savedItem.findMany({
+        where: { userId: session.userId },
+        orderBy: { createdAt: "desc" },
+        take: 50,
+      }),
+    ]);
+  } catch (error) {
+    console.error("[account-requests]", error);
+    return Response.json({ error: "service_unavailable" }, { status: 503 });
+  }
 
   const serialized = rooms.map((r) => ({
     id: r.id,

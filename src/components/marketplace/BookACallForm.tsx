@@ -84,6 +84,9 @@ export function BookACallForm({ slots }: { slots: { id: string; startTime: strin
       </button>
       {state.error === "invalid" && <p className="text-sm text-red-400">Please check the required fields.</p>}
       {state.error === "slot_unavailable" && <p className="text-sm text-red-400">That slot was just taken — pick another.</p>}
+      {state.error === "service_unavailable" && (
+        <p className="text-sm text-red-400">This part of the platform is temporarily unavailable. Please try again shortly.</p>
+      )}
     </form>
   );
 }

@@ -56,7 +56,15 @@ export async function POST(request: Request) {
   }
 
   // Layer 3 — retrieval, still no reasoning-model call yet, feeds the prompt.
-  const knowledgeHits = await retrieveKnowledge(lastUserMessage?.content ?? "", { locale: replyLocale });
+  // A knowledge-layer failure (e.g. DB unreachable) shouldn't block the whole
+  // reply — the concierge can still help without extra grounding, it just
+  // won't state anything it can't back up (see the system prompt's rules).
+  const knowledgeHits = await retrieveKnowledge(lastUserMessage?.content ?? "", { locale: replyLocale }).catch(
+    (error) => {
+      console.error("[ai-conversation:knowledge]", error);
+      return [];
+    },
+  );
 
   // Layer 4 — full reasoning + tool-calling, only now that layers 1-3 couldn't resolve it.
   const systemPrompt = buildConciergeSystemPrompt({

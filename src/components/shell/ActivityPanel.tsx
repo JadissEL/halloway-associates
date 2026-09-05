@@ -35,6 +35,10 @@ export function ActivityPanel() {
           setAuthState("signed-out");
           return null;
         }
+        if (!res.ok) {
+          setAuthState("signed-out");
+          return null;
+        }
         setAuthState("signed-in");
         return res.json();
       })

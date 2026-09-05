@@ -2,6 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/client";
+import { safeQuery } from "@/lib/db/safe-query";
+import { ServiceUnavailableNotice } from "@/components/marketplace/ServiceUnavailableNotice";
 import { getSuggestedQuickAccessKeys } from "@/lib/workflows/cross-service-suggestions";
 import { CrossServiceSuggestion } from "@/components/workflows/CrossServiceSuggestion";
 
@@ -15,14 +17,28 @@ export default async function RequestRoomPage({ params }: Props) {
   const session = await getSession();
   if (!session) redirect(`/${locale}/sign-in`);
 
-  const room = await prisma.requestRoom.findUnique({
-    where: { id },
-    include: {
-      statusEvents: { orderBy: { createdAt: "asc" } },
-      messages: { orderBy: { createdAt: "asc" } },
-      attachments: true,
-    },
-  });
+  const { data: room, error: dbError } = await safeQuery(
+    () =>
+      prisma.requestRoom.findUnique({
+        where: { id },
+        include: {
+          statusEvents: { orderBy: { createdAt: "asc" } },
+          messages: { orderBy: { createdAt: "asc" } },
+          attachments: true,
+        },
+      }),
+    null,
+  );
+
+  if (dbError) {
+    return (
+      <div className="min-h-screen bg-luxury-black px-4 py-10 text-luxury-ivory md:px-10">
+        <div className="mx-auto max-w-2xl">
+          <ServiceUnavailableNotice />
+        </div>
+      </div>
+    );
+  }
 
   if (!room || room.userId !== session.userId) notFound();
 

@@ -6,11 +6,20 @@ export async function GET(request: Request) {
     return Response.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  const items = await prisma.moderationItem.findMany({
-    where: { status: { in: ["PENDING_REVIEW", "FLAGGED", "ESCALATED"] } },
-    include: { property: true },
-    orderBy: { createdAt: "asc" },
-  });
+  const query = () =>
+    prisma.moderationItem.findMany({
+      where: { status: { in: ["PENDING_REVIEW", "FLAGGED", "ESCALATED"] } },
+      include: { property: true },
+      orderBy: { createdAt: "asc" },
+    });
+
+  let items: Awaited<ReturnType<typeof query>>;
+  try {
+    items = await query();
+  } catch (error) {
+    console.error("[internal-moderation]", error);
+    return Response.json({ error: "service_unavailable" }, { status: 503 });
+  }
 
   return Response.json({
     items: items.map((item) => ({

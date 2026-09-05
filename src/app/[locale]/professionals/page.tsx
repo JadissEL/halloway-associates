@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/db/client";
+import { safeQuery } from "@/lib/db/safe-query";
+import { ServiceUnavailableNotice } from "@/components/marketplace/ServiceUnavailableNotice";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -10,15 +12,20 @@ export default async function ProfessionalsPage({ params }: Props) {
   const t = await getTranslations("marketplaceNav");
   const tShell = await getTranslations("shell.quickAccess");
 
-  const professionals = await prisma.professional.findMany({
-    where: { status: "APPROVED" },
-    orderBy: { createdAt: "desc" },
-    take: 30,
-  });
+  const { data: professionals, error: dbError } = await safeQuery(
+    () =>
+      prisma.professional.findMany({
+        where: { status: "APPROVED" },
+        orderBy: { createdAt: "desc" },
+        take: 30,
+      }),
+    [],
+  );
 
   return (
     <div className="min-h-screen bg-luxury-black px-4 py-10 text-luxury-ivory md:px-10">
       <div className="mx-auto max-w-4xl">
+        {dbError && <ServiceUnavailableNotice />}
         <h1 className="mb-8 font-serif text-3xl">{t("professionals")}</h1>
 
         <div className="mb-10 grid gap-4 sm:grid-cols-2">

@@ -29,7 +29,14 @@ export async function submitLawyerRequest(
   if (!parsed.success) return { ok: false, error: "invalid" };
 
   const { locale, ...input } = parsed.data;
-  const room = await createLawyerRequestRoom(session.userId, input);
+  let roomId: string;
+  try {
+    const room = await createLawyerRequestRoom(session.userId, input);
+    roomId = room.id;
+  } catch (error) {
+    console.error("[submit-lawyer-request]", error);
+    return { ok: false, error: "service_unavailable" };
+  }
 
-  redirect(`/${locale}/account/requests/${room.id}`);
+  redirect(`/${locale}/account/requests/${roomId}`);
 }

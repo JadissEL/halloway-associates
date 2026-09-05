@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/db/client";
+import { safeQuery } from "@/lib/db/safe-query";
+import { ServiceUnavailableNotice } from "@/components/marketplace/ServiceUnavailableNotice";
 import type { PropertyType, ListingIntent } from "@prisma/client";
 
 type Props = {
@@ -14,23 +16,30 @@ export default async function PropertiesPage({ params, searchParams }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("properties");
 
-  const properties = await prisma.property.findMany({
-    where: {
-      status: "PUBLISHED",
-      ...(sp.city ? { city: { equals: sp.city, mode: "insensitive" } } : {}),
-      ...(sp.maxPrice ? { priceAmount: { lte: Number(sp.maxPrice) } } : {}),
-      ...(sp.type ? { propertyType: sp.type as PropertyType } : {}),
-      ...(sp.intent ? { listingIntent: sp.intent as ListingIntent } : {}),
-    },
-    orderBy: { createdAt: "desc" },
-    take: 30,
-  });
+  const { data: properties, error: dbError } = await safeQuery(
+    () =>
+      prisma.property.findMany({
+        where: {
+          status: "PUBLISHED",
+          ...(sp.city ? { city: { equals: sp.city, mode: "insensitive" } } : {}),
+          ...(sp.maxPrice ? { priceAmount: { lte: Number(sp.maxPrice) } } : {}),
+          ...(sp.type ? { propertyType: sp.type as PropertyType } : {}),
+          ...(sp.intent ? { listingIntent: sp.intent as ListingIntent } : {}),
+        },
+        orderBy: { createdAt: "desc" },
+        take: 30,
+      }),
+    [],
+  );
 
   return (
     <div className="min-h-screen bg-luxury-black px-4 py-10 text-luxury-ivory md:px-10">
       <div className="mx-auto max-w-5xl">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <h1 className="font-serif text-3xl">{t("title")}</h1>
+          <div>
+            {dbError && <ServiceUnavailableNotice />}
+            <h1 className="font-serif text-3xl">{t("title")}</h1>
+          </div>
           <Link
             href="/properties/new"
             className="rounded-none border border-luxury-gold px-4 py-2 text-sm font-semibold text-luxury-gold no-underline"

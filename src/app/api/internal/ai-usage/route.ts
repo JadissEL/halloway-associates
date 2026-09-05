@@ -7,9 +7,15 @@ export async function GET(request: Request) {
   }
 
   const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  const logs = await prisma.aiUsageLog.findMany({
-    where: { createdAt: { gte: since } },
-  });
+  let logs: Awaited<ReturnType<typeof prisma.aiUsageLog.findMany>>;
+  try {
+    logs = await prisma.aiUsageLog.findMany({
+      where: { createdAt: { gte: since } },
+    });
+  } catch (error) {
+    console.error("[internal-ai-usage]", error);
+    return Response.json({ error: "service_unavailable" }, { status: 503 });
+  }
 
   const byLayer: Record<string, { count: number; promptTokens: number; completionTokens: number; costEstimateUsd: number }> = {};
   for (const log of logs) {

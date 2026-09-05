@@ -636,6 +636,9 @@
       "submitted": "Merci — votre annonce est en attente de modération."
     }
   },
+  "common": {
+    "serviceUnavailable": "Cette partie de la plateforme est temporairement indisponible. Merci de réessayer bientôt."
+  },
   "auth": {
     "signIn": "Se connecter",
     "emailLabel": "Adresse e-mail",

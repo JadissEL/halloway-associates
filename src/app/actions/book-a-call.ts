@@ -29,10 +29,16 @@ export async function submitCallBooking(
   if (!parsed.success) return { ok: false, error: "invalid" };
 
   const { locale, topics, ...rest } = parsed.data;
-  const result = await bookCall(session.userId, {
-    ...rest,
-    topics: topics ? topics.split(",").map((t) => t.trim()).filter(Boolean) : [],
-  });
+  let result: Awaited<ReturnType<typeof bookCall>>;
+  try {
+    result = await bookCall(session.userId, {
+      ...rest,
+      topics: topics ? topics.split(",").map((t) => t.trim()).filter(Boolean) : [],
+    });
+  } catch (error) {
+    console.error("[submit-call-booking]", error);
+    return { ok: false, error: "service_unavailable" };
+  }
 
   if ("error" in result) return { ok: false, error: result.error };
 

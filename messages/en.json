@@ -636,6 +636,9 @@
       "submitted": "Thank you — your listing is awaiting moderation."
     }
   },
+  "common": {
+    "serviceUnavailable": "This part of the platform is temporarily unavailable. Please check back shortly."
+  },
   "auth": {
     "signIn": "Sign in",
     "emailLabel": "Email address",
