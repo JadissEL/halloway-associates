@@ -19,7 +19,7 @@ export function ConversationPanel() {
   }, [messages, loading]);
 
   return (
-    <div className="luxury-surface flex h-full flex-col text-luxury-ivory">
+    <div className="flex h-full flex-col text-luxury-ivory">
       {messages.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-5 px-6 text-center">
           <motion.div

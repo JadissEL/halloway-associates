@@ -124,14 +124,21 @@
 
   /* --- Marketplace luxury surface treatment ------------------------------
      A flat single-color fill read as "unstyled" rather than premium. This
-     gives every marketplace surface a slow-drifting, code-generated aurora
-     of blurred gold + blue/violet blobs (gold stays the brand's primary
-     accent; the cooler tones are there purely for atmospheric depth, the
-     same reason moody dark UIs rarely use one hue alone) plus a very fine
-     grain texture on top — no images, pure CSS gradients + keyframes, so
-     it's genuinely alive rather than a static picture. Kept subtle enough
-     (low opacity, heavy blur, content pinned above it via z-index) that
-     text contrast and legibility are untouched. */
+     gives every marketplace surface a continuously drifting, code-generated
+     aurora — seven independently-moving blurred blobs (gold stays the
+     brand's primary accent; blue/violet/teal are purely atmospheric, the
+     same reason moody dark UIs rarely lean on one hue) whose composite hue
+     also slowly rotates, so the whole field genuinely shifts color over
+     time rather than just repositioning — plus a fine starfield + grain
+     layer on top. No images: pure CSS gradients + keyframes.
+
+     Each blob is one layer of one multi-background gradient, and
+     `background-position`/`background-size` are animated PER LAYER (a
+     comma-separated value per gradient) rather than via one shared
+     `transform`, which is what makes the blobs drift asynchronously —
+     sporadic and unpredictable relative to each other — instead of all
+     sliding together as a single rigid shape. Kept legible (content pinned
+     above via z-index; blur + moderate opacity) despite the extra motion. */
   .luxury-surface {
     position: relative;
     isolation: isolate;
@@ -142,17 +149,27 @@
   .luxury-surface::before {
     content: "";
     position: absolute;
-    inset: -25%;
+    inset: -30%;
     z-index: 0;
     pointer-events: none;
+    background-repeat: no-repeat;
     background-image:
-      radial-gradient(38% 30% at 22% 28%, color-mix(in srgb, var(--color-luxury-gold) 24%, transparent), transparent 70%),
-      radial-gradient(34% 28% at 80% 15%, color-mix(in srgb, #3a56e8 22%, transparent), transparent 70%),
-      radial-gradient(40% 32% at 62% 82%, color-mix(in srgb, #7440d6 20%, transparent), transparent 70%),
-      radial-gradient(28% 24% at 12% 80%, color-mix(in srgb, var(--color-luxury-gold) 12%, transparent), transparent 70%);
-    filter: blur(70px) saturate(120%);
-    animation: luxury-drift 34s ease-in-out infinite alternate;
-    will-change: transform;
+      radial-gradient(circle, color-mix(in srgb, var(--color-luxury-gold) 30%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, #3a56e8 26%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, #7440d6 24%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, #1fb8a8 18%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, var(--color-luxury-gold) 16%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, #b23a8f 16%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, #3a56e8 14%, transparent), transparent 70%);
+    background-size:
+      42% 36%, 38% 32%, 46% 38%, 30% 26%, 34% 30%, 28% 24%, 40% 34%;
+    background-position:
+      22% 28%, 80% 15%, 62% 82%, 12% 80%, 50% 45%, 88% 60%, 8% 12%;
+    filter: blur(75px) saturate(135%) hue-rotate(0deg);
+    animation:
+      luxury-drift-1 52s ease-in-out infinite,
+      luxury-hue-shift 90s linear infinite;
+    will-change: background-position, filter;
   }
 
   .luxury-surface::after {
@@ -161,9 +178,24 @@
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.045;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      radial-gradient(1.6px 1.6px at 8% 15%, rgba(255,255,255,0.85), transparent),
+      radial-gradient(1.2px 1.2px at 22% 68%, rgba(255,255,255,0.55), transparent),
+      radial-gradient(1.8px 1.8px at 35% 22%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1px 1px at 48% 78%, rgba(255,255,255,0.45), transparent),
+      radial-gradient(1.4px 1.4px at 58% 12%, rgba(255,222,173,0.6), transparent),
+      radial-gradient(1.2px 1.2px at 68% 55%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(2px 2px at 78% 30%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 85% 72%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 92% 18%, rgba(255,222,173,0.55), transparent),
+      radial-gradient(1.3px 1.3px at 15% 42%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 30% 90%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.6px 1.6px at 44% 50%, rgba(255,255,255,0.65), transparent),
+      radial-gradient(1.1px 1.1px at 62% 88%, rgba(255,255,255,0.45), transparent),
+      radial-gradient(1.4px 1.4px at 95% 48%, rgba(255,255,255,0.55), transparent);
+    animation: luxury-twinkle 7s ease-in-out infinite alternate;
   }
 
   .luxury-surface > * {
@@ -171,16 +203,54 @@
     z-index: 1;
   }
 
-  @keyframes luxury-drift {
-    0% { transform: translate3d(0%, 0%, 0) scale(1) rotate(0deg); }
-    25% { transform: translate3d(3%, -4%, 0) scale(1.07) rotate(6deg); }
-    50% { transform: translate3d(-4%, 3%, 0) scale(0.96) rotate(-5deg); }
-    75% { transform: translate3d(2%, 4%, 0) scale(1.05) rotate(4deg); }
-    100% { transform: translate3d(-2%, -3%, 0) scale(1.02) rotate(-3deg); }
+  /* Position AND size animate together per blob layer — some blobs swell
+     while others shrink at the same keyframe stop, which is what reads as
+     blobs "forming shapes" rather than a uniform breathing pulse. */
+  @keyframes luxury-drift-1 {
+    0% {
+      background-position: 22% 28%, 80% 15%, 62% 82%, 12% 80%, 50% 45%, 88% 60%, 8% 12%;
+      background-size: 42% 36%, 38% 32%, 46% 38%, 30% 26%, 34% 30%, 28% 24%, 40% 34%;
+    }
+    18% {
+      background-position: 32% 42%, 68% 26%, 54% 68%, 24% 62%, 60% 30%, 78% 78%, 18% 24%;
+      background-size: 48% 40%, 32% 28%, 40% 34%, 36% 30%, 28% 24%, 34% 30%, 34% 30%;
+    }
+    36% {
+      background-position: 14% 55%, 86% 42%, 70% 58%, 6% 40%, 44% 65%, 92% 40%, 28% 8%;
+      background-size: 36% 30%, 44% 36%, 34% 30%, 26% 22%, 40% 34%, 24% 22%, 46% 38%;
+    }
+    54% {
+      background-position: 38% 18%, 58% 58%, 44% 88%, 28% 26%, 70% 50%, 66% 20%, 10% 46%;
+      background-size: 40% 34%, 30% 26%, 50% 40%, 32% 28%, 30% 26%, 38% 32%, 32% 28%;
+    }
+    72% {
+      background-position: 16% 66%, 74% 8%, 60% 36%, 16% 68%, 52% 20%, 82% 84%, 34% 60%;
+      background-size: 44% 38%, 36% 30%, 38% 32%, 28% 24%, 36% 30%, 26% 22%, 38% 32%;
+    }
+    88% {
+      background-position: 28% 32%, 90% 60%, 40% 78%, 34% 50%, 62% 72%, 54% 44%, 6% 20%;
+      background-size: 38% 32%, 40% 34%, 42% 36%, 30% 26%, 32% 28%, 30% 26%, 42% 36%;
+    }
+    100% {
+      background-position: 22% 28%, 80% 15%, 62% 82%, 12% 80%, 50% 45%, 88% 60%, 8% 12%;
+      background-size: 42% 36%, 38% 32%, 46% 38%, 30% 26%, 34% 30%, 28% 24%, 40% 34%;
+    }
+  }
+
+  @keyframes luxury-hue-shift {
+    0% { filter: blur(75px) saturate(135%) hue-rotate(0deg); }
+    100% { filter: blur(75px) saturate(135%) hue-rotate(360deg); }
+  }
+
+  @keyframes luxury-twinkle {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .luxury-surface::before {
+    .luxury-surface::before,
+    .luxury-surface::after {
       animation: none;
     }
   }

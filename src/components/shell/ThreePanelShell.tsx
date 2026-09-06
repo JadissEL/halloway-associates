@@ -27,7 +27,7 @@ function CollapsedRail({ onExpand, icon: Icon }: { onExpand: () => void; icon: t
     <button
       type="button"
       onClick={onExpand}
-      className="hidden h-full w-full flex-col items-center justify-start gap-4 border-luxury-border bg-luxury-graphite pt-4 text-luxury-muted-foreground transition-colors duration-200 hover:text-luxury-gold md:flex"
+      className="hidden h-full w-full flex-col items-center justify-start gap-4 border-luxury-border bg-luxury-graphite/50 pt-4 text-luxury-muted-foreground backdrop-blur-md transition-colors duration-200 hover:text-luxury-gold md:flex"
       aria-label="Expand panel"
     >
       <Icon size={18} />
@@ -43,8 +43,8 @@ function ShellInner() {
   const rightVisible = viewMode === "full" || viewMode === "results";
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col md:h-[calc(100vh-4.5rem)]">
-      <div className="hidden items-center gap-1.5 border-b border-luxury-border bg-luxury-black px-4 py-2 md:flex">
+    <div className="luxury-surface flex h-[calc(100vh-4rem)] flex-col md:h-[calc(100vh-4.5rem)]">
+      <div className="hidden items-center gap-1 border-b border-luxury-border bg-luxury-black/30 px-4 py-2 backdrop-blur-md md:flex">
         {(["full", "conversation", "results", "history"] as const).map((mode) => {
           const Icon = MODE_ICONS[mode];
           return (
@@ -53,10 +53,10 @@ function ShellInner() {
               type="button"
               onClick={() => setViewMode(mode)}
               className={cn(
-                "flex items-center gap-1.5 rounded-none px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors duration-200",
+                "flex items-center gap-1.5 border-b-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors duration-200",
                 viewMode === mode
-                  ? "bg-luxury-gold text-luxury-black"
-                  : "text-luxury-muted-foreground hover:text-luxury-ivory",
+                  ? "border-luxury-gold text-luxury-gold"
+                  : "border-transparent text-luxury-muted-foreground hover:text-luxury-ivory",
               )}
             >
               <Icon size={13} />
@@ -82,7 +82,7 @@ function ShellInner() {
 
       {/* Mobile: conversation is primary; results/activity reachable via the
           bottom tab bar rather than squeezed into three columns (spec 3.6). */}
-      <div className="flex items-center justify-around border-t border-luxury-border bg-luxury-black py-1.5 md:hidden">
+      <div className="flex items-center justify-around border-t border-luxury-border bg-luxury-black/30 py-1.5 backdrop-blur-md md:hidden">
         {(
           [
             { mode: "conversation" as const, icon: MessageSquare, label: t("conversation") },

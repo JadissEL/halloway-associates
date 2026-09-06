@@ -29,7 +29,7 @@ export function WorkspacePanel() {
   const { workspace } = useConversation();
 
   return (
-    <div className="flex h-full flex-col bg-luxury-graphite text-luxury-ivory">
+    <div className="flex h-full flex-col border-l border-luxury-border/60 bg-luxury-graphite/45 text-luxury-ivory backdrop-blur-xl">
       <div className="border-b border-luxury-border px-4 py-4">
         <span className="mb-1.5 block h-px w-6 bg-luxury-gold/60" />
         <h2 className="font-serif text-lg">{t("title")}</h2>
