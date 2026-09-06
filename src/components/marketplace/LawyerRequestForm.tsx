@@ -2,9 +2,9 @@
 
 import { useActionState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
 import { submitLawyerRequest, type LawyerRequestFormState } from "@/app/actions/lawyer-request";
 import { FormStep } from "./FormStep";
+import { GatedAction } from "./GatedAction";
 
 const initialState: LawyerRequestFormState = { ok: false };
 const inputClass =
@@ -16,12 +16,7 @@ export function LawyerRequestForm() {
   const [state, formAction, pending] = useActionState(submitLawyerRequest, initialState);
 
   if (state.error === "sign_in_required") {
-    return (
-      <div className="border border-luxury-border bg-luxury-graphite p-6 text-luxury-ivory">
-        <p className="mb-4">Please sign in first.</p>
-        <Link href="/sign-in" className="text-luxury-gold no-underline hover:underline">Sign in →</Link>
-      </div>
-    );
+    return <GatedAction />;
   }
 
   return (

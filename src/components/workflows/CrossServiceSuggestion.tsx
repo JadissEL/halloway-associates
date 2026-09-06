@@ -23,7 +23,7 @@ export function CrossServiceSuggestion({ roomId, keys }: { roomId: string; keys:
           <button
             key={key}
             type="button"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/app")}
             className="rounded-none border border-luxury-border px-3 py-1.5 text-xs font-medium text-luxury-ivory hover:border-luxury-gold hover:text-luxury-gold"
           >
             {tQuick(key)}

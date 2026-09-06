@@ -59,18 +59,18 @@ export function SiteHeader() {
             : "border-transparent bg-surface",
       )}
     >
-      <div className="container-wide flex h-16 items-center justify-between px-6 md:h-[72px] md:px-10 lg:px-16">
+      <div className="container-wide flex h-16 items-center justify-between gap-4 px-6 md:h-[72px] md:px-8 lg:px-10">
         <Link
           href="/"
           className={cn(
-            "text-lg font-semibold tracking-tight no-underline md:text-xl",
+            "whitespace-nowrap text-base font-semibold tracking-tight no-underline lg:text-lg",
             dark ? "text-luxury-ivory" : "text-ink",
           )}
         >
           Halloway <span className="font-semibold">& Associates</span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
+        <nav className="hidden items-center gap-5 lg:flex xl:gap-6" aria-label="Main">
           {links.map((link) => {
             const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
@@ -78,7 +78,7 @@ export function SiteHeader() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "text-sm font-medium no-underline transition-colors",
+                  "whitespace-nowrap text-sm font-medium no-underline transition-colors",
                   dark
                     ? active
                       ? "text-luxury-ivory"
@@ -94,50 +94,51 @@ export function SiteHeader() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-2 lg:flex xl:gap-3">
           <NotificationBell dark={dark} />
           <LocaleSwitcher dark={dark} />
           <Link
-            href="/"
-            className={cn(
-              "text-sm font-medium no-underline",
-              dark ? "text-luxury-muted-foreground hover:text-luxury-ivory" : "text-ink-secondary hover:text-ink",
-            )}
-          >
-            {tMarketplace("needHelp")}
-          </Link>
-          <Link
             href="/post"
             className={cn(
-              "text-sm font-medium no-underline",
+              "whitespace-nowrap text-sm font-medium no-underline",
               dark ? "text-luxury-muted-foreground hover:text-luxury-ivory" : "text-ink-secondary hover:text-ink",
             )}
           >
             {tMarketplace("post")}
           </Link>
-          <Link
-            href="/contact"
-            className={cn(
-              "text-sm font-medium no-underline",
-              dark ? "text-luxury-muted-foreground hover:text-luxury-ivory" : "text-ink-secondary hover:text-ink",
-            )}
-          >
-            {t("discuss")}
-          </Link>
+          {!dark && (
+            <Link
+              href="/contact"
+              className="whitespace-nowrap text-sm font-medium text-ink-secondary no-underline hover:text-ink"
+            >
+              {t("discuss")}
+            </Link>
+          )}
           <Link
             href="/book-a-call"
             className={cn(
-              "rounded-full px-5 py-2.5 text-sm font-semibold no-underline transition-opacity hover:opacity-90",
-              dark ? "rounded-none bg-luxury-gold text-luxury-black" : "bg-ink text-white",
+              "whitespace-nowrap px-3.5 py-2.5 text-sm font-semibold no-underline transition-colors duration-200",
+              dark
+                ? "border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-luxury-black"
+                : "rounded-full border border-line text-ink-secondary hover:border-ink hover:text-ink",
             )}
           >
             {tMarketplace("bookACall")}
+          </Link>
+          <Link
+            href="/app"
+            className={cn(
+              "whitespace-nowrap px-4 py-2.5 text-sm font-semibold text-white no-underline shadow-[0_4px_16px_rgba(59,111,235,0.3)] transition-colors duration-200 hover:bg-luxury-azure-hover",
+              dark ? "bg-luxury-azure" : "rounded-full bg-luxury-azure",
+            )}
+          >
+            {tMarketplace("needHelp")}
           </Link>
         </div>
 
         <button
           type="button"
-          className={cn("inline-flex items-center justify-center rounded-md p-2 md:hidden", dark ? "text-luxury-ivory" : "text-ink")}
+          className={cn("inline-flex items-center justify-center rounded-md p-2 lg:hidden", dark ? "text-luxury-ivory" : "text-ink")}
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? t("closeMenu") : t("openMenu")}
@@ -159,9 +160,6 @@ export function SiteHeader() {
               </Link>
             ))}
             <LocaleSwitcher variant="mobile" dark={dark} />
-            <Link href="/" className={cn("py-2 text-base font-medium no-underline", dark ? "text-luxury-ivory" : "text-ink")}>
-              {tMarketplace("needHelp")}
-            </Link>
             <Link href="/post" className={cn("py-2 text-base font-medium no-underline", dark ? "text-luxury-ivory" : "text-ink")}>
               {tMarketplace("post")}
             </Link>
@@ -174,11 +172,21 @@ export function SiteHeader() {
             <Link
               href="/book-a-call"
               className={cn(
-                "mt-2 inline-flex justify-center rounded-full px-5 py-3 text-sm font-semibold no-underline",
-                dark ? "rounded-none bg-luxury-gold text-luxury-black" : "bg-ink text-white",
+                "mt-2 inline-flex justify-center rounded-full border px-5 py-3 text-sm font-semibold no-underline",
+                dark ? "rounded-none border-luxury-gold text-luxury-gold" : "border-line text-ink-secondary",
               )}
             >
               {tMarketplace("bookACall")}
+            </Link>
+            <Link
+              href="/app"
+              className={cn(
+                "inline-flex justify-center rounded-full px-5 py-3 text-sm font-semibold text-white no-underline",
+                dark && "rounded-none",
+                "bg-luxury-azure",
+              )}
+            >
+              {tMarketplace("needHelp")}
             </Link>
           </nav>
         </div>

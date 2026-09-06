@@ -9,6 +9,51 @@
     "description": "Properties, professionals, jobs, and an AI concierge that understands what you need — in your own language. Tell us what you're trying to do in Greece, we'll take it from there.",
     "keywords": "Greece relocation|Greece property|find a lawyer Greece|Athens apartments|moving to Greece|Greece services platform|Halloway & Associates"
   },
+  "landingPage": {
+    "hero": {
+      "eyebrow": "Greece, made simple",
+      "title": "Everything you need in Greece. One platform, one conversation.",
+      "subtitle": "Properties, professionals, jobs, and everyday services — tell our AI concierge what you need, in your own language, and it takes care of the rest.",
+      "startNow": "Start now",
+      "browseServices": "Browse services"
+    },
+    "howItWorks": {
+      "eyebrow": "How it works",
+      "title": "Three steps. No forms to hunt through.",
+      "steps": {
+        "tell": { "title": "Tell us what you need", "body": "In any language — a room in Athens, a lawyer for a contract, help moving your furniture." },
+        "match": { "title": "We match you", "body": "To real listings, vetted professionals, and the right workflow — never invented prices or fake availability." },
+        "track": { "title": "Track everything in one place", "body": "Every request becomes its own Request Room: messages, documents, and status, all in one thread." }
+      }
+    },
+    "services": {
+      "eyebrow": "What we cover",
+      "title": "One studio for everything Greece.",
+      "properties": "Find a room, apartment, or house to rent or buy — or list your own.",
+      "professionals": "Lawyers, accountants, architects, and engineers, matched to your exact situation.",
+      "jobs": "Search current openings across Greece.",
+      "vehicles": "Buy or sell a car, no dealership required.",
+      "businesses": "Businesses for sale, plus everyday services like cleaning and renovation.",
+      "travel": "Plan a trip to Greece with local, accurate guidance.",
+      "bookACall": "Not sure where to start? Book a call with a real person.",
+      "post": "List a property, job, vehicle, or offer of your own."
+    },
+    "trust": {
+      "eyebrow": "Why Halloway",
+      "multilingual": { "title": "Speak your language", "body": "The concierge understands Greek, English, French, and more languages on the way." },
+      "humanReview": { "title": "Human-reviewed, always", "body": "Nothing publishes automatically. Every listing and request passes a real review before it goes live." },
+      "oneThread": { "title": "One thread per request", "body": "No scattered emails — every request keeps its full history in one place." }
+    },
+    "finalCta": {
+      "title": "Tell us what you need. We'll take it from there.",
+      "button": "Start now"
+    },
+    "gatedAction": {
+      "title": "Create your account to continue",
+      "body": "Browsing is always free. Signing in takes a few seconds and lets us keep track of this request for you.",
+      "cta": "Sign in to continue"
+    }
+  },
   "seo": {
     "learnMore": "Learn more",
     "allServices": "View all services",

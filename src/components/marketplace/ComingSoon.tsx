@@ -14,7 +14,7 @@ export async function ComingSoon({ title }: { title: string }) {
       <p className="font-serif text-3xl font-semibold tracking-tight md:text-4xl">{title}</p>
       <p className="max-w-md text-sm leading-relaxed text-luxury-muted-foreground">{t("comingSoonBody")}</p>
       <Link
-        href="/"
+        href="/app"
         className="border border-luxury-gold px-5 py-2.5 text-sm font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
       >
         {t("comingSoonCta")}

@@ -3,8 +3,13 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
-import { LandingPage } from "@/components/marketing/LandingPage";
+import { ThreePanelShell } from "@/components/shell/ThreePanelShell";
 
+// The three-panel AI concierge workspace — previously the site root, now
+// reached via the landing page's "Start now" CTA and every nav entry point
+// ("I Need Help", quick-access tags, etc.). Not indexed: this is the
+// product surface people are sent to, not a page meant to rank on its own
+// (the marketing landing page at `/` covers that job now).
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -13,22 +18,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return buildPageMetadata({
     locale,
-    path: "",
+    path: "app",
     title: t("title"),
     description: t("description"),
-    keywords: t("keywords").split("|").map((k) => k.trim()),
+    noindex: true,
   });
 }
 
-export default async function HomePage({ params }: Props) {
+export default async function AppPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const tNav = await getTranslations("nav");
 
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd(locale, [{ name: tNav("home"), path: "" }])} />
-      <LandingPage />
+      <JsonLd data={breadcrumbJsonLd(locale, [{ name: tNav("home"), path: "app" }])} />
+      <ThreePanelShell />
     </>
   );
 }

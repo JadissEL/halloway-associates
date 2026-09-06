@@ -9,6 +9,51 @@
     "description": "Propriétés, professionnels, emplois, et une conciergerie IA qui comprend ce dont vous avez besoin — dans votre langue. Dites-nous ce que vous voulez faire en Grèce, on s'occupe du reste.",
     "keywords": "relocalisation Grèce|immobilier Grèce|trouver un avocat Grèce|appartements Athènes|déménager en Grèce|plateforme de services Grèce|Halloway & Associates"
   },
+  "landingPage": {
+    "hero": {
+      "eyebrow": "La Grèce, en plus simple",
+      "title": "Tout ce dont vous avez besoin en Grèce. Une plateforme, une conversation.",
+      "subtitle": "Propriétés, professionnels, emplois et services du quotidien — dites à notre conciergerie IA ce dont vous avez besoin, dans votre langue, et elle s'occupe du reste.",
+      "startNow": "Commencer",
+      "browseServices": "Parcourir les services"
+    },
+    "howItWorks": {
+      "eyebrow": "Comment ça marche",
+      "title": "Trois étapes. Aucun formulaire à chercher.",
+      "steps": {
+        "tell": { "title": "Dites-nous ce dont vous avez besoin", "body": "Dans n'importe quelle langue — une chambre à Athènes, un avocat pour un contrat, de l'aide pour déménager vos meubles." },
+        "match": { "title": "Nous vous mettons en relation", "body": "Avec de vraies annonces, des professionnels vérifiés et le bon parcours — jamais de prix inventés ou de disponibilité fictive." },
+        "track": { "title": "Suivez tout au même endroit", "body": "Chaque demande devient son propre espace : messages, documents et statut, tout dans un seul fil." }
+      }
+    },
+    "services": {
+      "eyebrow": "Ce que nous couvrons",
+      "title": "Un studio pour tout ce qui concerne la Grèce.",
+      "properties": "Trouvez une chambre, un appartement ou une maison à louer ou à acheter — ou publiez la vôtre.",
+      "professionals": "Avocats, comptables, architectes et ingénieurs, adaptés à votre situation exacte.",
+      "jobs": "Recherchez les offres d'emploi actuelles partout en Grèce.",
+      "vehicles": "Achetez ou vendez une voiture, sans concessionnaire.",
+      "businesses": "Commerces à vendre, ainsi que des services du quotidien comme le ménage et la rénovation.",
+      "travel": "Planifiez votre voyage en Grèce avec des informations locales et fiables.",
+      "bookACall": "Vous ne savez pas par où commencer? Réservez un appel avec une vraie personne.",
+      "post": "Publiez une propriété, un emploi, un véhicule ou une offre."
+    },
+    "trust": {
+      "eyebrow": "Pourquoi Halloway",
+      "multilingual": { "title": "Parlez votre langue", "body": "La conciergerie comprend le grec, l'anglais, le français, et d'autres langues à venir." },
+      "humanReview": { "title": "Toujours vérifié par une personne", "body": "Rien n'est publié automatiquement. Chaque annonce et demande passe par une vraie vérification avant publication." },
+      "oneThread": { "title": "Un seul fil par demande", "body": "Plus d'e-mails éparpillés — chaque demande garde tout son historique au même endroit." }
+    },
+    "finalCta": {
+      "title": "Dites-nous ce dont vous avez besoin. On s'occupe du reste.",
+      "button": "Commencer"
+    },
+    "gatedAction": {
+      "title": "Créez votre compte pour continuer",
+      "body": "La navigation est toujours gratuite. La connexion prend quelques secondes et nous permet de suivre cette demande pour vous.",
+      "cta": "Se connecter pour continuer"
+    }
+  },
   "seo": {
     "learnMore": "En savoir plus",
     "allServices": "Voir tous les services",

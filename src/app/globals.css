@@ -49,6 +49,14 @@
   --color-luxury-border: hsl(210 6% 32%);
   --color-luxury-input: hsl(210 6% 17%);
   --color-luxury-destructive: hsl(0 84.2% 60.2%);
+  /* Primary-action accent, distinct from --color-luxury-gold on purpose:
+     gold stays the brand's decorative/luxury accent used throughout the
+     marketplace (labels, dividers, price badges); azure is reserved
+     specifically for the one "start/sign up" call to action, so it reads
+     as *the* button to click rather than blending into every other gold
+     accent on the page — a deliberate two-accent system, not a swap. */
+  --color-luxury-azure: hsl(217 91% 60%);
+  --color-luxury-azure-hover: hsl(217 91% 54%);
   --font-serif: var(--font-playfair), Georgia, serif;
 }
 
