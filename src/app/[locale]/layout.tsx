@@ -10,6 +10,7 @@ import { routing } from "@/i18n/routing";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { StudioWidgets } from "@/components/layout/StudioWidgets";
+import { MainSurface } from "@/components/layout/MainSurface";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/json-ld";
 import { SITE_NAME, SITE_URL } from "@/lib/seo/site";
@@ -91,7 +92,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         </a>
         <NextIntlClientProvider messages={messages}>
           <SiteHeader />
-          <main id="main-content">{children}</main>
+          <MainSurface>{children}</MainSurface>
           <SiteFooter />
           <StudioWidgets />
           <ConsentBanner />

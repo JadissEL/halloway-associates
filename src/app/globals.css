@@ -110,16 +110,49 @@
     @apply mx-auto max-w-7xl;
   }
 
+  /* The gold dash above every eyebrow label is the one motif shared by both
+     sub-brands (Studio's muted --color-gold here, the marketplace's
+     brighter --color-luxury-gold on its own eyebrows) — a single small
+     signature that ties the site together across the light/dark split.
+     Lives in ::before so every existing `.eyebrow` usage picks it up with
+     no JSX changes. */
   .eyebrow {
     @apply text-xs font-semibold uppercase tracking-[0.14em] text-gold;
   }
 
+  .eyebrow::before {
+    content: "";
+    display: block;
+    width: 2rem;
+    height: 1px;
+    margin-bottom: 0.75rem;
+    background-color: color-mix(in srgb, var(--color-gold) 60%, transparent);
+  }
+
+  /* font-serif (Playfair) matches the marketplace's display headlines —
+     one signature display face used everywhere is what makes the light
+     Studio pages and the dark marketplace read as the same product
+     instead of two unrelated sites bolted together. */
   .headline {
-    @apply text-balance text-3xl font-semibold tracking-tight text-ink md:text-4xl lg:text-5xl;
+    @apply text-balance font-serif text-3xl font-semibold tracking-tight text-ink md:text-4xl lg:text-5xl;
   }
 
   .subhead {
     @apply text-lg leading-relaxed text-ink-secondary md:text-xl;
+  }
+
+  /* Light-theme counterpart to .luxury-surface: Studio pages were a flat
+     white void with zero atmosphere next to the marketplace's animated
+     aurora. This is deliberately much quieter (static, no motion, very
+     low-saturation warm wash) — Studio keeps its own calmer identity, it
+     just no longer reads as unstyled. */
+  .studio-surface {
+    position: relative;
+    isolation: isolate;
+    background:
+      radial-gradient(60% 40% at 15% 0%, color-mix(in srgb, var(--color-lavender) 70%, transparent), transparent 70%),
+      radial-gradient(50% 35% at 100% 10%, color-mix(in srgb, var(--color-warm) 65%, transparent), transparent 70%),
+      var(--color-page);
   }
 
   /* --- Marketplace luxury surface treatment ------------------------------
