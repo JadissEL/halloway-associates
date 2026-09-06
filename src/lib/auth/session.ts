@@ -6,12 +6,22 @@ import { cookies } from "next/headers";
 // Next major (16.2.9) where compatibility risk is real. No passwords are
 // stored — see magic-link.ts for how a session actually gets created.
 export const SESSION_COOKIE = "halloway_session";
-export const SESSION_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
+export const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days (was 30 — shorter window if a token ever leaks)
+
+// Never accept an obviously-placeholder secret, even if it happens to be
+// long enough — a known dev value in a real deployment lets anyone forge a
+// valid session (including as an ADMINISTRATOR) by computing the same HMAC.
+const KNOWN_WEAK_SECRETS = new Set([
+  "dev-only-placeholder-change-me-32-chars-min",
+  "dev-only-placeholder-change-me",
+]);
 
 function getSecret(): string {
   const secret = process.env.AUTH_SESSION_SECRET;
-  if (!secret || secret.length < 16) {
-    throw new Error("AUTH_SESSION_SECRET must be set (16+ characters)");
+  if (!secret || secret.length < 32 || KNOWN_WEAK_SECRETS.has(secret) || secret.startsWith("dev-only")) {
+    throw new Error(
+      "AUTH_SESSION_SECRET must be set to a real random value (32+ chars, e.g. `openssl rand -hex 32`) — refusing to run with a placeholder.",
+    );
   }
   return secret;
 }

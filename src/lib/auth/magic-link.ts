@@ -61,19 +61,22 @@ export interface VerifiedToken {
 
 export async function consumeMagicLink(token: string): Promise<VerifiedToken | null> {
   const tokenHash = hashToken(token);
+
+  // Atomic claim: the conditional `where` means only one concurrent caller
+  // can ever flip `usedAt` from null, so two simultaneous requests with the
+  // same token (e.g. a legitimate click racing an email scanner's prefetch)
+  // can't both succeed — a plain findUnique-then-update would allow that.
+  const { count } = await prisma.magicLinkToken.updateMany({
+    where: { tokenHash, usedAt: null, expiresAt: { gt: new Date() } },
+    data: { usedAt: new Date() },
+  });
+  if (count === 0) return null;
+
   const record = await prisma.magicLinkToken.findUnique({
     where: { tokenHash },
     include: { user: true },
   });
-
-  if (!record || record.usedAt || record.expiresAt < new Date()) {
-    return null;
-  }
-
-  await prisma.magicLinkToken.update({
-    where: { id: record.id },
-    data: { usedAt: new Date() },
-  });
+  if (!record) return null;
 
   return { userId: record.user.id, email: record.user.email };
 }

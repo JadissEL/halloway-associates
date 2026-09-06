@@ -36,3 +36,15 @@ export const enabledLocales = locales.filter((l) => l.enabled).map((l) => l.code
 export function getLocaleDefinition(code: string): LocaleDefinition | undefined {
   return locales.find((l) => l.code === code);
 }
+
+export function isEnabledLocale(code: string): boolean {
+  return enabledLocales.includes(code);
+}
+
+// Server actions redirect to `/${locale}/...` using a client-submitted
+// hidden field — validate against the enabled roster before it ever reaches
+// a redirect() call, rather than trusting z.string() (which accepts
+// anything, including "//evil.com").
+export function safeLocaleOrDefault(code: string): string {
+  return isEnabledLocale(code) ? code : "en";
+}

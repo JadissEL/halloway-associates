@@ -4,15 +4,16 @@ import { z } from "zod";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
 import { createLawyerRequestRoom } from "@/lib/workflows/lawyer-request";
+import { safeLocaleOrDefault } from "@/i18n/locales-config";
 
 const schema = z.object({
-  category: z.string().min(1),
-  situation: z.string().min(5),
-  consultationMode: z.string().optional(),
-  availability: z.string().optional(),
-  language: z.string().optional(),
-  paymentPreference: z.string().optional(),
-  additionalInfo: z.string().optional(),
+  category: z.string().min(1).max(50),
+  situation: z.string().min(5).max(4000),
+  consultationMode: z.string().max(50).optional(),
+  availability: z.string().max(500).optional(),
+  language: z.string().max(50).optional(),
+  paymentPreference: z.string().max(200).optional(),
+  additionalInfo: z.string().max(2000).optional(),
   locale: z.string(),
 });
 
@@ -28,7 +29,8 @@ export async function submitLawyerRequest(
   const parsed = schema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { ok: false, error: "invalid" };
 
-  const { locale, ...input } = parsed.data;
+  const { locale: rawLocale, ...input } = parsed.data;
+  const locale = safeLocaleOrDefault(rawLocale);
   let roomId: string;
   try {
     const room = await createLawyerRequestRoom(session.userId, input);

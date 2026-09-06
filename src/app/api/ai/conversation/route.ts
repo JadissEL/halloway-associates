@@ -6,6 +6,7 @@ import { retrieveKnowledge } from "@/lib/ai/knowledge/retrieve";
 import { buildConciergeSystemPrompt } from "@/lib/ai/system-prompt";
 import { runConcierge } from "@/lib/ai/groq-client";
 import { logAiUsage } from "@/lib/ai/usage-log";
+import { isRateLimited, clientIp } from "@/lib/rate-limit";
 
 const requestSchema = z.object({
   messages: z
@@ -42,6 +43,17 @@ export async function POST(request: Request) {
     body = requestSchema.parse(await request.json());
   } catch {
     return Response.json({ error: "Invalid request." }, { status: 400 });
+  }
+
+  // This is a fully anonymous, unauthenticated endpoint that can fan out to
+  // several Groq completions per call — cap both per-session and per-IP so
+  // it can't become an unbounded way to spend the Groq budget.
+  const ip = clientIp(request);
+  if (
+    isRateLimited(`ai-session:${body.sessionId}`, 30, 5 * 60 * 1000) ||
+    isRateLimited(`ai-ip:${ip}`, 60, 5 * 60 * 1000)
+  ) {
+    return Response.json({ error: "Too many requests. Please slow down." }, { status: 429 });
   }
 
   const session = await getSession();

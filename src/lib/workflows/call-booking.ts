@@ -25,39 +25,61 @@ export async function bookCall(
   input: CallBookingInput,
 ): Promise<{ bookingId: string; roomId: string; slotStart: Date } | CallBookingError> {
   const slot = await prisma.availabilitySlot.findUnique({ where: { id: input.slotId } });
-  if (!slot || slot.isBooked) {
+  if (!slot) {
     return {
       error: "slot_unavailable",
       message: "That slot is no longer available. Please pick another one.",
     };
   }
 
-  const result = await prisma.$transaction(async (tx) => {
-    await tx.availabilitySlot.update({ where: { id: input.slotId }, data: { isBooked: true } });
-    const booking = await tx.callBooking.create({
-      data: {
-        userId,
-        callType: input.callType,
-        reason: input.reason,
-        topics: input.topics ?? [],
-        preferredLanguage: input.preferredLanguage ?? "en",
-        countryOfOrigin: input.countryOfOrigin,
-        cityOfInterest: input.cityOfInterest,
-        arrivalDate: input.arrivalDate,
-        slotId: input.slotId,
-      },
+  let result: { booking: { id: string }; room: { id: string } };
+  try {
+    result = await prisma.$transaction(async (tx) => {
+      // Conditional update, not a plain set: two concurrent bookings for the
+      // same slot can't both succeed — only the first `updateMany` actually
+      // matches a row (isBooked: false), so the second throws and rolls back
+      // instead of silently double-booking.
+      const { count } = await tx.availabilitySlot.updateMany({
+        where: { id: input.slotId, isBooked: false },
+        data: { isBooked: true },
+      });
+      if (count === 0) {
+        throw new Error("SLOT_ALREADY_BOOKED");
+      }
+
+      const booking = await tx.callBooking.create({
+        data: {
+          userId,
+          callType: input.callType,
+          reason: input.reason,
+          topics: input.topics ?? [],
+          preferredLanguage: input.preferredLanguage ?? "en",
+          countryOfOrigin: input.countryOfOrigin,
+          cityOfInterest: input.cityOfInterest,
+          arrivalDate: input.arrivalDate,
+          slotId: input.slotId,
+        },
+      });
+      const room = await tx.requestRoom.create({
+        data: {
+          userId,
+          type: "ARRIVAL_CALL",
+          status: "CONFIRMED",
+          callBookingId: booking.id,
+          structuredData: { ...input, slotId: undefined },
+        },
+      });
+      return { booking, room };
     });
-    const room = await tx.requestRoom.create({
-      data: {
-        userId,
-        type: "ARRIVAL_CALL",
-        status: "CONFIRMED",
-        callBookingId: booking.id,
-        structuredData: { ...input, slotId: undefined },
-      },
-    });
-    return { booking, room };
-  });
+  } catch (error) {
+    if (error instanceof Error && error.message === "SLOT_ALREADY_BOOKED") {
+      return {
+        error: "slot_unavailable",
+        message: "That slot was just taken. Please pick another one.",
+      };
+    }
+    throw error;
+  }
 
   await emitStatusChange(result.room.id, null, "CONFIRMED", "Call booked.");
   return { bookingId: result.booking.id, roomId: result.room.id, slotStart: slot.startTime };

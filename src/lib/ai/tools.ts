@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { prisma } from "@/lib/db/client";
 import { createLawyerRequestRoom } from "@/lib/workflows/lawyer-request";
 import { bookCall } from "@/lib/workflows/call-booking";
@@ -7,6 +8,55 @@ import type {
   ProfessionalCategory,
   CallType,
 } from "@prisma/client";
+
+// The model's tool-call arguments are untrusted input, same as any other
+// request body — the JSON-schema `parameters` above only shapes what the
+// model is *encouraged* to send, it doesn't validate what actually arrives.
+// Every tool gets a real Zod schema parsed before it touches Prisma.
+const PROPERTY_TYPES = ["ROOM", "APARTMENT", "HOUSE", "LAND", "COMMERCIAL"] as const;
+const LISTING_INTENTS = ["RENT", "SALE"] as const;
+const PROFESSIONAL_CATEGORIES = [
+  "LAWYER", "ACCOUNTANT", "ARCHITECT", "ENGINEER", "CLEANER",
+  "MOVER", "PROPERTY_MANAGER", "BARBER_GROOMING", "OTHER",
+] as const;
+const CALL_TYPES = ["ORIENTATION", "RELOCATION", "PROPERTY", "BUSINESS", "WORK_LIFE", "INVESTMENT", "CUSTOM", "UNSURE"] as const;
+
+const toolSchemas = {
+  search_properties: z.object({
+    city: z.string().max(100).optional(),
+    maxPrice: z.number().positive().max(1_000_000_000).optional(),
+    propertyType: z.enum(PROPERTY_TYPES).optional(),
+    listingIntent: z.enum(LISTING_INTENTS).optional(),
+  }),
+  find_professionals: z.object({
+    category: z.enum(PROFESSIONAL_CATEGORIES),
+  }),
+  create_lawyer_request: z.object({
+    category: z.string().min(1).max(50),
+    situation: z.string().min(1).max(4000),
+    consultationMode: z.string().max(50).optional(),
+    availability: z.string().max(500).optional(),
+    language: z.string().max(50).optional(),
+    paymentPreference: z.string().max(200).optional(),
+    additionalInfo: z.string().max(2000).optional(),
+  }),
+  get_user_requests: z.object({}),
+  get_request_status: z.object({
+    roomId: z.string().min(1).max(200),
+  }),
+  get_available_call_slots: z.object({
+    callType: z.enum(CALL_TYPES).optional(),
+  }),
+  create_call_booking: z.object({
+    callType: z.enum(CALL_TYPES),
+    slotId: z.string().min(1).max(200),
+    reason: z.string().max(500).optional(),
+    topics: z.array(z.string().max(100)).max(20).optional(),
+    preferredLanguage: z.string().max(50).optional(),
+    countryOfOrigin: z.string().max(100).optional(),
+    cityOfInterest: z.string().max(100).optional(),
+  }),
+} as const;
 
 export interface ToolContext {
   userId: string | null;
@@ -203,10 +253,14 @@ async function getUserRequests(ctx: ToolContext) {
 }
 
 async function getRequestStatus(args: { roomId: string }, ctx: ToolContext) {
+  if (!ctx.userId) return SIGN_IN_REQUIRED;
+
   const room = await prisma.requestRoom.findUnique({
     where: { id: args.roomId },
     include: { statusEvents: { orderBy: { createdAt: "asc" } } },
   });
+  // Explicit ctx.userId guard above means this can never compare null===null
+  // even if RequestRoom.userId ever became nullable in a future migration.
   if (!room || room.userId !== ctx.userId) {
     return { error: "not_found", message: "No such request for this user." };
   }
@@ -239,28 +293,39 @@ async function createCallBooking(
 }
 
 export async function executeTool(name: string, rawArgs: string, ctx: ToolContext): Promise<object> {
-  let args: Record<string, unknown> = {};
+  let rawJson: unknown;
   try {
-    args = JSON.parse(rawArgs || "{}");
+    rawJson = JSON.parse(rawArgs || "{}");
   } catch {
     return { error: "invalid_arguments" };
   }
 
+  if (!(name in toolSchemas)) {
+    return { error: "unknown_tool" };
+  }
+
+  const schema = toolSchemas[name as keyof typeof toolSchemas];
+  const parsed = schema.safeParse(rawJson);
+  if (!parsed.success) {
+    return { error: "invalid_arguments", message: parsed.error.issues.map((i) => i.message).join("; ") };
+  }
+  const args = parsed.data;
+
   switch (name) {
     case "search_properties":
-      return searchProperties(args as never);
+      return searchProperties(args as z.infer<typeof toolSchemas.search_properties>);
     case "find_professionals":
-      return findProfessionals(args as never);
+      return findProfessionals(args as z.infer<typeof toolSchemas.find_professionals>);
     case "create_lawyer_request":
-      return createLawyerRequest(args as never, ctx);
+      return createLawyerRequest(args as z.infer<typeof toolSchemas.create_lawyer_request>, ctx);
     case "get_user_requests":
       return getUserRequests(ctx);
     case "get_request_status":
-      return getRequestStatus(args as never, ctx);
+      return getRequestStatus(args as z.infer<typeof toolSchemas.get_request_status>, ctx);
     case "get_available_call_slots":
-      return getAvailableCallSlots(args as never);
+      return getAvailableCallSlots(args as z.infer<typeof toolSchemas.get_available_call_slots>);
     case "create_call_booking":
-      return createCallBooking(args as never, ctx);
+      return createCallBooking(args as z.infer<typeof toolSchemas.create_call_booking>, ctx);
     default:
       return { error: "unknown_tool" };
   }
