@@ -21,8 +21,22 @@ function createClient(): PrismaClient {
   return new PrismaClient({ adapter });
 }
 
-export const prisma: PrismaClient = globalThis.__prisma ?? createClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalThis.__prisma = prisma;
+// Lazy on purpose: importing this module must never throw, even when
+// DATABASE_URL isn't configured yet (e.g. before Render's env vars are
+// set). Every call site already wraps its actual query in try/catch
+// (safeQuery, or a route-level try/catch) — this Proxy defers the missing-
+// env-var error to the moment a query actually runs, inside those handlers,
+// instead of crashing at module load for every route that merely imports
+// `prisma`, which would otherwise take down the whole app.
+function getClient(): PrismaClient {
+  if (!globalThis.__prisma) {
+    globalThis.__prisma = createClient();
+  }
+  return globalThis.__prisma;
 }
+
+export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getClient(), prop, receiver);
+  },
+});
