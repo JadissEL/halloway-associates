@@ -27,29 +27,29 @@ export function SignInForm() {
         }
       }}
     >
-      <label className="flex flex-col gap-1.5 text-sm font-medium text-ink">
+      <label className="flex flex-col gap-1.5 text-sm font-medium text-luxury-ivory">
         {t("emailLabel")}
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-[12px] border border-line bg-surface px-4 py-2.5 text-base outline-none focus:border-plum/40"
+          className="rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-base text-luxury-ivory outline-none focus:border-luxury-gold"
           placeholder="you@example.com"
         />
       </label>
       <button
         type="submit"
         disabled={status === "sending" || status === "sent"}
-        className="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"
+        className="rounded-none bg-luxury-gold px-5 py-3 text-sm font-semibold text-luxury-black disabled:opacity-50"
       >
         {status === "sending" ? t("sending") : t("sendLink")}
       </button>
       {status === "sent" && (
-        <p className="text-sm text-ink-secondary">{t("checkEmail")}</p>
+        <p className="text-sm text-luxury-muted-foreground">{t("checkEmail")}</p>
       )}
       {status === "error" && (
-        <p className="text-sm text-red-600">{t("invalidLink")}</p>
+        <p className="text-sm text-red-400">{t("invalidLink")}</p>
       )}
     </form>
   );

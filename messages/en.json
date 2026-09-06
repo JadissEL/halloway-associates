@@ -404,7 +404,9 @@
     "demoBadge": "Demo listing — not a real listing yet"
   },
   "shell": {
+    "conciergeLabel": "Halloway Concierge",
     "greeting": "What can we help you with?",
+    "greetingSubtitle": "Properties, professionals, jobs, and everything else you need in Greece — describe what you're looking for below, in any language.",
     "inputPlaceholder": "Tell us what you need — in any language…",
     "send": "Send",
     "activity": {

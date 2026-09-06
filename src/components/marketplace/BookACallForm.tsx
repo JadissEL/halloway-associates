@@ -7,7 +7,7 @@ import { submitCallBooking, type BookCallFormState } from "@/app/actions/book-a-
 
 const initialState: BookCallFormState = { ok: false };
 const inputClass =
-  "rounded-none border border-luxury-border bg-luxury-graphite px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold";
+  "rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold";
 
 const REASON_KEYS = [
   "moving", "visiting", "accommodation", "job", "business", "property",

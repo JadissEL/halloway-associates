@@ -36,13 +36,18 @@
          dark-themed (near-black/graphite) by design, per the AntaY-co brief.
      Halloway's existing wordmark and page chrome are untouched everywhere. */
   --color-luxury-black: hsl(0 0% 5%);
-  --color-luxury-graphite: hsl(210 5% 12.5%);
+  --color-luxury-graphite: hsl(210 5% 14%);
   --color-luxury-gold: hsl(38 62% 60%);
   --color-luxury-ivory: hsl(0 0% 97%);
   --color-luxury-muted: hsl(210 5% 25%);
-  --color-luxury-muted-foreground: hsl(210 5% 70%);
-  --color-luxury-border: hsl(210 5% 20%);
-  --color-luxury-input: hsl(210 5% 18%);
+  --color-luxury-muted-foreground: hsl(210 8% 72%);
+  /* Bumped from 20%/18% -- against a 5% black backdrop those read as almost
+     no border/fill at all on real screens (confirmed visually: form inputs
+     and panel dividers were essentially invisible in production). These are
+     the two tokens every marketplace input/card border leans on, so the fix
+     here fixes visibility everywhere at once. */
+  --color-luxury-border: hsl(210 6% 32%);
+  --color-luxury-input: hsl(210 6% 17%);
   --color-luxury-destructive: hsl(0 84.2% 60.2%);
   --font-serif: var(--font-playfair), Georgia, serif;
 }

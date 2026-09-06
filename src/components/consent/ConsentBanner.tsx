@@ -37,33 +37,35 @@ export function ConsentBanner() {
       role="dialog"
       aria-labelledby="consent-title"
       aria-describedby="consent-description"
-      className="fixed inset-x-0 bottom-0 z-[60] border-t border-line bg-surface/98 p-4 shadow-[0_-8px_32px_rgba(26,26,26,0.08)] backdrop-blur-md md:p-6"
+      // A compact corner card, not a full-width bar: on the AI shell pages
+      // every edge of the viewport is claimed by something (chat input at
+      // bottom-center, results at right, notification/locale controls in
+      // the header) except the top-left, which only overlaps the low-stakes
+      // "My Activity" panel rather than any primary control. A full-width
+      // bottom bar previously hid the chat input completely on first visit.
+      className="fixed left-4 top-20 z-[60] w-[min(19rem,calc(100vw-2rem))] rounded-none border border-line bg-surface/98 p-4 shadow-[0_12px_40px_rgba(26,26,26,0.16)] backdrop-blur-md"
     >
-      <div className="container-wide mx-auto flex max-w-5xl flex-col gap-4 md:flex-row md:items-end md:justify-between md:gap-8">
-        <div className="min-w-0 flex-1">
-          <p id="consent-title" className="text-sm font-semibold text-ink">
-            {t("title")}
-          </p>
-          <p id="consent-description" className="mt-1.5 text-sm leading-relaxed text-ink-secondary">
-            {t("body")}
-          </p>
-        </div>
-        <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
-          <button
-            type="button"
-            onClick={() => choose("denied")}
-            className="rounded-full border border-line bg-page px-4 py-2.5 text-sm font-semibold text-ink-secondary transition-colors hover:text-ink"
-          >
-            {t("reject")}
-          </button>
-          <button
-            type="button"
-            onClick={() => choose("granted")}
-            className="rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-          >
-            {t("accept")}
-          </button>
-        </div>
+      <p id="consent-title" className="text-sm font-semibold text-ink">
+        {t("title")}
+      </p>
+      <p id="consent-description" className="mt-1.5 text-sm leading-relaxed text-ink-secondary">
+        {t("body")}
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => choose("granted")}
+          className="rounded-full bg-ink px-4 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+        >
+          {t("accept")}
+        </button>
+        <button
+          type="button"
+          onClick={() => choose("denied")}
+          className="rounded-full border border-line bg-page px-4 py-2 text-xs font-semibold text-ink-secondary transition-colors hover:text-ink"
+        >
+          {t("reject")}
+        </button>
       </div>
     </div>
   );

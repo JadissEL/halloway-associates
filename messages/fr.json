@@ -404,7 +404,9 @@
     "demoBadge": "Annonce de démonstration — pas encore une vraie annonce"
   },
   "shell": {
+    "conciergeLabel": "Conciergerie Halloway",
     "greeting": "Comment pouvons-nous vous aider?",
+    "greetingSubtitle": "Propriétés, professionnels, emplois, et tout ce dont vous avez besoin en Grèce — décrivez ce que vous cherchez ci-dessous, dans n'importe quelle langue.",
     "inputPlaceholder": "Dites-nous ce dont vous avez besoin — dans n'importe quelle langue…",
     "send": "Envoyer",
     "activity": {

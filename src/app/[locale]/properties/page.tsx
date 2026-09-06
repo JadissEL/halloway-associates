@@ -53,19 +53,19 @@ export default async function PropertiesPage({ params, searchParams }: Props) {
             name="city"
             defaultValue={sp.city}
             placeholder={t("searchPlaceholder")}
-            className="rounded-none border border-luxury-border bg-luxury-graphite px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold"
+            className="rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold"
           />
           <input
             name="maxPrice"
             defaultValue={sp.maxPrice}
             type="number"
             placeholder={t("filters.priceMax")}
-            className="w-36 rounded-none border border-luxury-border bg-luxury-graphite px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold"
+            className="w-36 rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold"
           />
           <select
             name="intent"
             defaultValue={sp.intent}
-            className="rounded-none border border-luxury-border bg-luxury-graphite px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold"
+            className="rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold"
           >
             <option value="">{t("filters.intent")}</option>
             <option value="RENT">{t("intents.RENT")}</option>

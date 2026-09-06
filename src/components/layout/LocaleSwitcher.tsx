@@ -10,7 +10,13 @@ import { cn } from "@/lib/utils";
 
 const enabledLocaleDefs = locales.filter((l) => l.enabled);
 
-export function LocaleSwitcher({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {
+export function LocaleSwitcher({
+  variant = "desktop",
+  dark = false,
+}: {
+  variant?: "desktop" | "mobile";
+  dark?: boolean;
+}) {
   const t = useTranslations("nav");
   const locale = useLocale();
   const pathname = usePathname();
@@ -38,8 +44,12 @@ export function LocaleSwitcher({ variant = "desktop" }: { variant?: "desktop" | 
             className={cn(
               "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-wide no-underline",
               l.code === locale
-                ? "border-ink bg-ink text-white"
-                : "border-line text-ink-muted hover:text-ink",
+                ? dark
+                  ? "border-luxury-gold bg-luxury-gold text-luxury-black"
+                  : "border-ink bg-ink text-white"
+                : dark
+                  ? "border-luxury-border text-luxury-muted-foreground hover:text-luxury-ivory"
+                  : "border-line text-ink-muted hover:text-ink",
             )}
           >
             {l.code}
@@ -57,7 +67,10 @@ export function LocaleSwitcher({ variant = "desktop" }: { variant?: "desktop" | 
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={t("chooseLanguage")}
-        className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-ink-muted hover:text-ink"
+        className={cn(
+          "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider",
+          dark ? "text-luxury-muted-foreground hover:text-luxury-ivory" : "text-ink-muted hover:text-ink",
+        )}
       >
         <Globe size={14} />
         {current?.code ?? locale}
@@ -65,7 +78,10 @@ export function LocaleSwitcher({ variant = "desktop" }: { variant?: "desktop" | 
       {open && (
         <div
           role="listbox"
-          className="absolute right-0 top-full z-50 mt-2 min-w-[10rem] rounded-[14px] border border-line bg-surface py-1.5 shadow-[0_12px_40px_rgba(26,26,26,0.12)]"
+          className={cn(
+            "absolute right-0 top-full z-50 mt-2 min-w-[10rem] rounded-none border py-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.3)]",
+            dark ? "border-luxury-border bg-luxury-graphite" : "border-line bg-surface",
+          )}
         >
           {enabledLocaleDefs.map((l) => (
             <Link
@@ -77,11 +93,19 @@ export function LocaleSwitcher({ variant = "desktop" }: { variant?: "desktop" | 
               aria-selected={l.code === locale}
               className={cn(
                 "flex items-center justify-between px-4 py-2 text-sm no-underline",
-                l.code === locale ? "font-semibold text-ink" : "text-ink-secondary hover:text-ink",
+                dark
+                  ? l.code === locale
+                    ? "font-semibold text-luxury-gold"
+                    : "text-luxury-ivory hover:text-luxury-gold"
+                  : l.code === locale
+                    ? "font-semibold text-ink"
+                    : "text-ink-secondary hover:text-ink",
               )}
             >
               <span>{l.nativeName}</span>
-              <span className="text-xs uppercase text-ink-faint">{l.code}</span>
+              <span className={cn("text-xs uppercase", dark ? "text-luxury-muted-foreground" : "text-ink-faint")}>
+                {l.code}
+              </span>
             </Link>
           ))}
         </div>

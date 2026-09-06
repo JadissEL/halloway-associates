@@ -9,9 +9,7 @@ import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { routing } from "@/i18n/routing";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
-import { DiscussCTA } from "@/components/layout/DiscussCTA";
-import { SalesChatbot } from "@/components/chat/SalesChatbot";
-import { VisitorTracker } from "@/lib/chat/visitor-client";
+import { StudioWidgets } from "@/components/layout/StudioWidgets";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/json-ld";
 import { SITE_NAME, SITE_URL } from "@/lib/seo/site";
@@ -69,7 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
-  if (!routing.locales.includes(locale as "en" | "fr")) {
+  if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
     notFound();
   }
 
@@ -95,9 +93,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <SiteHeader />
           <main id="main-content">{children}</main>
           <SiteFooter />
-          <DiscussCTA />
-          <SalesChatbot />
-          <VisitorTracker />
+          <StudioWidgets />
           <ConsentBanner />
         </NextIntlClientProvider>
         <Analytics />

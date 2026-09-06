@@ -67,7 +67,7 @@ export function PropertyForm() {
 }
 
 const inputClass =
-  "rounded-none border border-luxury-border bg-luxury-graphite px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold";
+  "rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold";
 
 function Field({
   label, name, type = "text", required,

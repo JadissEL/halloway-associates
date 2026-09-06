@@ -20,8 +20,14 @@ export function ConversationPanel() {
   return (
     <div className="flex h-full flex-col bg-luxury-black text-luxury-ivory">
       {messages.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
-          <h1 className="font-serif text-3xl font-semibold md:text-4xl">{t("greeting")}</h1>
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-luxury-gold">
+            {t("conciergeLabel")}
+          </p>
+          <h1 className="font-serif text-3xl font-semibold md:text-5xl">{t("greeting")}</h1>
+          <p className="max-w-md text-sm leading-relaxed text-luxury-muted-foreground md:text-base">
+            {t("greetingSubtitle")}
+          </p>
         </div>
       ) : (
         <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-6 md:px-8">
@@ -71,7 +77,7 @@ export function ConversationPanel() {
           }}
           rows={1}
           placeholder={t("inputPlaceholder")}
-          className="max-h-32 min-h-[44px] flex-1 resize-none rounded-none border border-luxury-border bg-luxury-graphite px-4 py-3 text-sm text-luxury-ivory outline-none placeholder:text-luxury-muted-foreground focus:border-luxury-gold"
+          className="max-h-32 min-h-[44px] flex-1 resize-none rounded-none border border-luxury-border bg-luxury-input px-4 py-3 text-sm text-luxury-ivory outline-none placeholder:text-luxury-muted-foreground focus:border-luxury-gold"
         />
         <button
           type="submit"

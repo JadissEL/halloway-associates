@@ -15,7 +15,7 @@ export function SignOutButton() {
         router.push("/");
         router.refresh();
       }}
-      className="rounded-full border border-line px-4 py-2 text-sm font-semibold text-ink-secondary hover:text-ink"
+      className="rounded-none border border-luxury-border px-4 py-2 text-sm font-semibold text-luxury-muted-foreground hover:text-luxury-ivory"
     >
       {t("signOut")}
     </button>
