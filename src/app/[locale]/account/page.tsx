@@ -16,7 +16,7 @@ export default async function AccountPage({ params }: Props) {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-luxury-black px-6 py-20 text-luxury-ivory md:min-h-[calc(100vh-4.5rem)]">
+    <div className="luxury-surface min-h-[calc(100vh-4rem)] px-6 py-20 text-luxury-ivory md:min-h-[calc(100vh-4.5rem)]">
       <div className="mx-auto flex max-w-2xl items-center justify-between">
         <p className="text-lg">{t("signedInAs", { email: user.email })}</p>
         <SignOutButton />

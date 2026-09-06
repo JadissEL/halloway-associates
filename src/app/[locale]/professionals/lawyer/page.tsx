@@ -9,9 +9,10 @@ export default async function LawyerRequestPage({ params }: Props) {
   const t = await getTranslations("lawyerRequest");
 
   return (
-    <div className="min-h-screen bg-luxury-black px-4 py-10 md:px-10">
+    <div className="luxury-surface min-h-screen px-4 py-14 md:px-10 md:py-20">
       <div className="mx-auto max-w-xl">
-        <h1 className="mb-8 font-serif text-3xl text-luxury-ivory">{t("title")}</h1>
+        <span className="mb-3 block h-px w-8 bg-luxury-gold/60" />
+        <h1 className="mb-8 font-serif text-4xl font-semibold tracking-tight text-luxury-ivory md:text-5xl">{t("title")}</h1>
         <LawyerRequestForm />
       </div>
     </div>

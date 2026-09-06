@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { PanelLeft, PanelRight, LayoutGrid, MessageSquare } from "lucide-react";
+import { PanelLeft, PanelRight, LayoutGrid, MessageSquare, LayoutPanelLeft } from "lucide-react";
 import { ConversationProvider, useConversation } from "./ConversationContext";
 import { ActivityPanel } from "./ActivityPanel";
 import { ConversationPanel } from "./ConversationPanel";
@@ -15,12 +15,19 @@ const GRID_BY_MODE: Record<string, string> = {
   history: "md:grid-cols-[280px_1fr_56px]",
 };
 
+const MODE_ICONS: Record<string, typeof LayoutPanelLeft> = {
+  full: LayoutPanelLeft,
+  conversation: MessageSquare,
+  results: LayoutGrid,
+  history: PanelLeft,
+};
+
 function CollapsedRail({ onExpand, icon: Icon }: { onExpand: () => void; icon: typeof PanelLeft }) {
   return (
     <button
       type="button"
       onClick={onExpand}
-      className="hidden h-full w-full flex-col items-center justify-start gap-4 border-luxury-border bg-luxury-graphite pt-4 text-luxury-muted-foreground hover:text-luxury-gold md:flex"
+      className="hidden h-full w-full flex-col items-center justify-start gap-4 border-luxury-border bg-luxury-graphite pt-4 text-luxury-muted-foreground transition-colors duration-200 hover:text-luxury-gold md:flex"
       aria-label="Expand panel"
     >
       <Icon size={18} />
@@ -37,22 +44,26 @@ function ShellInner() {
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col md:h-[calc(100vh-4.5rem)]">
-      <div className="hidden items-center gap-2 border-b border-luxury-border bg-luxury-black px-4 py-2 md:flex">
-        {(["full", "conversation", "results", "history"] as const).map((mode) => (
-          <button
-            key={mode}
-            type="button"
-            onClick={() => setViewMode(mode)}
-            className={cn(
-              "rounded-none px-3 py-1.5 text-xs font-semibold uppercase tracking-wide",
-              viewMode === mode
-                ? "bg-luxury-gold text-luxury-black"
-                : "text-luxury-muted-foreground hover:text-luxury-ivory",
-            )}
-          >
-            {t(mode)}
-          </button>
-        ))}
+      <div className="hidden items-center gap-1.5 border-b border-luxury-border bg-luxury-black px-4 py-2 md:flex">
+        {(["full", "conversation", "results", "history"] as const).map((mode) => {
+          const Icon = MODE_ICONS[mode];
+          return (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => setViewMode(mode)}
+              className={cn(
+                "flex items-center gap-1.5 rounded-none px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors duration-200",
+                viewMode === mode
+                  ? "bg-luxury-gold text-luxury-black"
+                  : "text-luxury-muted-foreground hover:text-luxury-ivory",
+              )}
+            >
+              <Icon size={13} />
+              {t(mode)}
+            </button>
+          );
+        })}
       </div>
 
       <div className={cn("grid flex-1 grid-cols-1 overflow-hidden", GRID_BY_MODE[viewMode])}>
@@ -71,28 +82,30 @@ function ShellInner() {
 
       {/* Mobile: conversation is primary; results/activity reachable via the
           bottom tab bar rather than squeezed into three columns (spec 3.6). */}
-      <div className="flex items-center justify-around border-t border-luxury-border bg-luxury-black py-2 md:hidden">
-        <button
-          type="button"
-          onClick={() => setViewMode("conversation")}
-          className="flex flex-col items-center gap-1 px-3 py-1 text-luxury-muted-foreground"
-        >
-          <MessageSquare size={18} />
-        </button>
-        <button
-          type="button"
-          onClick={() => setViewMode("results")}
-          className="flex flex-col items-center gap-1 px-3 py-1 text-luxury-muted-foreground"
-        >
-          <LayoutGrid size={18} />
-        </button>
-        <button
-          type="button"
-          onClick={() => setViewMode("history")}
-          className="flex flex-col items-center gap-1 px-3 py-1 text-luxury-muted-foreground"
-        >
-          <PanelLeft size={18} />
-        </button>
+      <div className="flex items-center justify-around border-t border-luxury-border bg-luxury-black py-1.5 md:hidden">
+        {(
+          [
+            { mode: "conversation" as const, icon: MessageSquare, label: t("conversation") },
+            { mode: "results" as const, icon: LayoutGrid, label: t("results") },
+            { mode: "history" as const, icon: PanelLeft, label: t("history") },
+          ]
+        ).map(({ mode, icon: Icon, label }) => {
+          const active = viewMode === mode || (mode === "conversation" && viewMode === "full");
+          return (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => setViewMode(mode)}
+              className={cn(
+                "flex flex-col items-center gap-1 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wide transition-colors duration-200",
+                active ? "text-luxury-gold" : "text-luxury-muted-foreground",
+              )}
+            >
+              <Icon size={18} />
+              {label}
+            </button>
+          );
+        })}
       </div>
       {/* Mobile stacked results/activity, shown under the conversation when selected */}
       <div className="border-t border-luxury-border md:hidden">

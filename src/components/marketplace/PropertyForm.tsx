@@ -15,44 +15,53 @@ export function PropertyForm() {
 
   if (state.error === "sign_in_required") {
     return (
-      <div className="rounded-none border border-luxury-border p-6 text-luxury-ivory">
+      <div className="border border-luxury-border bg-luxury-graphite p-6 text-luxury-ivory">
         <p className="mb-4">Please sign in first.</p>
-        <Link href="/sign-in" className="text-luxury-gold no-underline">Sign in →</Link>
+        <Link href="/sign-in" className="text-luxury-gold no-underline hover:underline">Sign in →</Link>
       </div>
     );
   }
 
   return (
-    <form action={formAction} className="flex max-w-xl flex-col gap-4 text-luxury-ivory">
+    <form
+      action={formAction}
+      className="flex max-w-xl flex-col gap-5 border border-luxury-border bg-luxury-graphite p-6 text-luxury-ivory md:p-8"
+    >
       <input type="hidden" name="locale" value={locale} />
       <Field label={t("titleField")} name="title" required />
       <label className="flex flex-col gap-1.5 text-sm font-medium">
         {t("description")}
         <textarea name="description" required rows={4} className={inputClass} />
       </label>
-      <label className="flex flex-col gap-1.5 text-sm font-medium">
-        {t("type")}
-        <select name="propertyType" required className={inputClass}>
-          {(["ROOM", "APARTMENT", "HOUSE", "LAND", "COMMERCIAL"] as const).map((v) => (
-            <option key={v} value={v}>{tTypes(v)}</option>
-          ))}
-        </select>
-      </label>
-      <label className="flex flex-col gap-1.5 text-sm font-medium">
-        {t("intent")}
-        <select name="listingIntent" required className={inputClass}>
-          <option value="RENT">Rent</option>
-          <option value="SALE">Sale</option>
-        </select>
-      </label>
-      <Field label={t("city")} name="city" required />
-      <Field label={t("area")} name="area" />
-      <Field label={t("price")} name="priceAmount" type="number" required />
-      <Field label={t("bedrooms")} name="bedrooms" type="number" />
+      <div className="grid gap-5 sm:grid-cols-2">
+        <label className="flex flex-col gap-1.5 text-sm font-medium">
+          {t("type")}
+          <select name="propertyType" required className={inputClass}>
+            {(["ROOM", "APARTMENT", "HOUSE", "LAND", "COMMERCIAL"] as const).map((v) => (
+              <option key={v} value={v}>{tTypes(v)}</option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1.5 text-sm font-medium">
+          {t("intent")}
+          <select name="listingIntent" required className={inputClass}>
+            <option value="RENT">Rent</option>
+            <option value="SALE">Sale</option>
+          </select>
+        </label>
+      </div>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label={t("city")} name="city" required />
+        <Field label={t("area")} name="area" />
+      </div>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label={t("price")} name="priceAmount" type="number" required />
+        <Field label={t("bedrooms")} name="bedrooms" type="number" />
+      </div>
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 rounded-none bg-luxury-gold px-5 py-3 text-sm font-semibold text-luxury-black disabled:opacity-50"
+        className="mt-2 bg-luxury-gold px-5 py-3 text-sm font-semibold text-luxury-black shadow-[0_4px_16px_rgba(201,162,74,0.2)] transition-all duration-200 hover:brightness-110 disabled:opacity-50 disabled:shadow-none"
       >
         {t("submit")}
       </button>
@@ -67,7 +76,7 @@ export function PropertyForm() {
 }
 
 const inputClass =
-  "rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none focus:border-luxury-gold";
+  "rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none transition-colors duration-200 focus:border-luxury-gold";
 
 function Field({
   label, name, type = "text", required,

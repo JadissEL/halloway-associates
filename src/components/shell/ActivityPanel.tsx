@@ -23,6 +23,7 @@ interface ActivityData {
 
 export function ActivityPanel() {
   const t = useTranslations("shell.activity");
+  const tAuth = useTranslations("auth");
   const tStatus = useTranslations("requestRooms.status");
   const [tab, setTab] = useState<Tab>("recent");
   const [data, setData] = useState<ActivityData | null>(null);
@@ -55,7 +56,10 @@ export function ActivityPanel() {
 
   return (
     <div className="flex h-full flex-col bg-luxury-graphite text-luxury-ivory">
-      <h2 className="border-b border-luxury-border px-4 py-4 font-serif text-lg">{t("title")}</h2>
+      <div className="border-b border-luxury-border px-4 py-4">
+        <span className="mb-1.5 block h-px w-6 bg-luxury-gold/60" />
+        <h2 className="font-serif text-lg">{t("title")}</h2>
+      </div>
       <div className="flex border-b border-luxury-border">
         {tabs.map((tabDef) => (
           <button
@@ -63,7 +67,7 @@ export function ActivityPanel() {
             type="button"
             onClick={() => setTab(tabDef.key)}
             className={cn(
-              "flex-1 px-2 py-2.5 text-xs font-semibold uppercase tracking-wide",
+              "flex-1 px-2 py-2.5 text-xs font-semibold uppercase tracking-wide transition-colors duration-200",
               tab === tabDef.key
                 ? "border-b-2 border-luxury-gold text-luxury-ivory"
                 : "text-luxury-muted-foreground hover:text-luxury-ivory",
@@ -75,7 +79,15 @@ export function ActivityPanel() {
       </div>
       <div className="flex-1 overflow-y-auto p-3">
         {authState === "signed-out" && (
-          <p className="p-2 text-sm text-luxury-muted-foreground">{t("signInPrompt")}</p>
+          <div className="flex flex-col items-start gap-3 p-2">
+            <p className="text-sm text-luxury-muted-foreground">{t("signInPrompt")}</p>
+            <Link
+              href="/sign-in"
+              className="border border-luxury-gold px-4 py-2 text-xs font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
+            >
+              {tAuth("signIn")}
+            </Link>
+          </div>
         )}
         {authState === "signed-in" && data && (
           <ActivityList tab={tab} data={data} emptyLabel={t("empty")} statusLabel={tStatus} />
@@ -99,9 +111,12 @@ function ActivityList({
   if (tab === "saved") {
     if (data.saved.length === 0) return <p className="p-2 text-sm text-luxury-muted-foreground">{emptyLabel}</p>;
     return (
-      <ul className="space-y-1">
+      <ul className="space-y-1.5">
         {data.saved.map((s) => (
-          <li key={`${s.itemType}-${s.itemId}`} className="rounded-none border border-luxury-border px-3 py-2 text-sm">
+          <li
+            key={`${s.itemType}-${s.itemId}`}
+            className="border border-luxury-border border-l-2 border-l-luxury-gold/40 bg-luxury-black/40 px-3 py-2 text-sm"
+          >
             {s.itemType} · {s.itemId}
           </li>
         ))}
@@ -118,9 +133,11 @@ function ActivityList({
         <li key={r.id}>
           <Link
             href={`/account/requests/${r.id}`}
-            className="block rounded-none border border-luxury-border px-3 py-2.5 text-sm no-underline hover:border-luxury-gold"
+            className="group block border border-luxury-border border-l-2 border-l-luxury-border bg-luxury-black/40 px-3 py-2.5 text-sm no-underline transition-colors duration-200 hover:border-luxury-gold hover:border-l-luxury-gold"
           >
-            <p className="font-medium text-luxury-ivory">{r.type.replace(/_/g, " ")}</p>
+            <p className="font-medium text-luxury-ivory transition-colors duration-200 group-hover:text-luxury-gold">
+              {r.type.replace(/_/g, " ")}
+            </p>
             <p className="text-xs text-luxury-muted-foreground">{statusLabel(r.status)}</p>
           </Link>
         </li>
