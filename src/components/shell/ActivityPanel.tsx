@@ -24,10 +24,11 @@ interface ActivityData {
 export function ActivityPanel() {
   const t = useTranslations("shell.activity");
   const tAuth = useTranslations("auth");
+  const tCommon = useTranslations("common");
   const tStatus = useTranslations("requestRooms.status");
   const [tab, setTab] = useState<Tab>("recent");
   const [data, setData] = useState<ActivityData | null>(null);
-  const [authState, setAuthState] = useState<"loading" | "signed-in" | "signed-out">("loading");
+  const [authState, setAuthState] = useState<"loading" | "signed-in" | "signed-out" | "error">("loading");
 
   useEffect(() => {
     fetch("/api/account/requests")
@@ -37,14 +38,14 @@ export function ActivityPanel() {
           return null;
         }
         if (!res.ok) {
-          setAuthState("signed-out");
+          setAuthState("error");
           return null;
         }
         setAuthState("signed-in");
         return res.json();
       })
       .then((json) => json && setData(json))
-      .catch(() => setAuthState("signed-out"));
+      .catch(() => setAuthState("error"));
   }, []);
 
   const tabs: { key: Tab; label: string }[] = [
@@ -87,6 +88,11 @@ export function ActivityPanel() {
             >
               {tAuth("signIn")}
             </Link>
+          </div>
+        )}
+        {authState === "error" && (
+          <div className="rounded-none border border-luxury-destructive/60 bg-luxury-destructive/10 px-4 py-3 text-sm text-luxury-ivory">
+            {tCommon("serviceUnavailable")}
           </div>
         )}
         {authState === "signed-in" && data && (

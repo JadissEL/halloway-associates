@@ -12,7 +12,7 @@ export function StatsBand() {
   useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="border-y border-line bg-surface section-padding">
+    <section ref={ref} className="border-y border-line section-padding">
       <div className="container-wide">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {statKeys.map((key, index) => (

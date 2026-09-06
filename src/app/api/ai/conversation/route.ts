@@ -63,7 +63,11 @@ export async function POST(request: Request) {
   // Layer 1 — deterministic, zero model tokens.
   const deterministic = routeDeterministically(lastUserMessage?.content ?? "", replyLocale);
   if (deterministic.handled) {
-    await logAiUsage({ sessionId: body.sessionId, userId: session?.userId, layer: "DETERMINISTIC" });
+    await logAiUsage({ sessionId: body.sessionId, userId: session?.userId, layer: "DETERMINISTIC" }).catch(
+      (error) => {
+        console.error("[ai-conversation:usage]", error);
+      },
+    );
     return Response.json({ reply: deterministic.reply, replyLocale, layer: "DETERMINISTIC", workspace: null });
   }
 

@@ -20,7 +20,7 @@ export function GatedAction() {
       <p className="text-sm leading-relaxed text-luxury-muted-foreground">{t("body")}</p>
       <Link
         href="/sign-in"
-        className="mt-2 bg-luxury-azure px-5 py-2.5 text-sm font-semibold text-white no-underline transition-colors duration-200 hover:bg-luxury-azure-hover"
+        className="mt-2 bg-luxury-gold px-5 py-3 text-sm font-semibold text-luxury-black shadow-[0_4px_16px_rgba(201,162,74,0.2)] transition-all duration-200 hover:brightness-110"
       >
         {t("cta")}
       </Link>

@@ -59,7 +59,7 @@ export default async function AboutPage({ params }: Props) {
           </header>
 
           <section className="mb-20 rounded-[24px] bg-lavender p-8 md:p-12">
-            <h2 className="mb-4 text-2xl font-semibold tracking-tight">{t("mission.title")}</h2>
+            <h2 className="headline mb-4">{t("mission.title")}</h2>
             <p className="max-w-3xl text-lg leading-relaxed text-ink-secondary">{t("mission.body")}</p>
           </section>
 
@@ -85,7 +85,7 @@ export default async function AboutPage({ params }: Props) {
             <h2 className="headline mb-8">{t("principles.title")}</h2>
             <div className="grid gap-4 md:grid-cols-3">
               {principles.map((item) => (
-                <article key={item} className="rounded-[16px] border border-line p-6">
+                <article key={item} className="rounded-[16px] border border-line bg-surface p-6">
                   <h3 className="mb-2 font-semibold">{t(`principles.items.${item}.title`)}</h3>
                   <p className="text-sm leading-relaxed text-ink-secondary">
                     {t(`principles.items.${item}.body`)}

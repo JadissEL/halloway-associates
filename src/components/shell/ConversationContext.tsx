@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export interface ShellMessage {
   role: "user" | "assistant";
@@ -26,6 +26,7 @@ const ConversationCtx = createContext<ConversationState | null>(null);
 
 const SESSION_KEY = "halloway-concierge-session-id";
 const MESSAGES_KEY = "halloway-concierge-messages";
+const PENDING_QUICK_ACCESS_KEY = "halloway-pending-quick-access";
 
 function getOrCreateSessionId(): string {
   if (typeof window === "undefined") return "";
@@ -49,6 +50,7 @@ function getOrCreateSessionId(): string {
 
 export function ConversationProvider({ children }: { children: React.ReactNode }) {
   const locale = useLocale();
+  const tQuickAccess = useTranslations("shell.quickAccess");
   const [messages, setMessages] = useState<ShellMessage[]>([]);
   const [workspace, setWorkspace] = useState<WorkspacePayload | null>(null);
   const [loading, setLoading] = useState(false);
@@ -109,6 +111,22 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
     },
     [loading, locale, messages, sessionId],
   );
+
+  useEffect(() => {
+    if (!sessionId) return;
+    let pendingKey: string | null = null;
+    try {
+      pendingKey = sessionStorage.getItem(PENDING_QUICK_ACCESS_KEY);
+      if (pendingKey) sessionStorage.removeItem(PENDING_QUICK_ACCESS_KEY);
+    } catch {
+      /* ignore */
+    }
+    if (pendingKey) {
+      void sendMessage(tQuickAccess(pendingKey));
+    }
+    // Only re-run when the session becomes ready; sendMessage/tQuickAccess are stable enough per session.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId]);
 
   const value = useMemo(
     () => ({ messages, workspace, loading, viewMode, setViewMode, sendMessage }),

@@ -106,7 +106,7 @@ export function GlobalCoverageMap({ selectedId, onSelect }: GlobalCoverageMapPro
       id="region-map-panel"
       role="tabpanel"
       aria-labelledby={`region-tab-${selectedId}`}
-      className="overflow-hidden rounded-[24px] border border-line bg-surface"
+      className="overflow-hidden rounded-[24px] border border-line/60 bg-surface shadow-sm shadow-ink/5"
     >
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line/80 bg-surface/60 px-4 py-3">
         <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">

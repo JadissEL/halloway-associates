@@ -14,7 +14,7 @@ export function ServicesPreview() {
   const preview = services.slice(0, 6);
 
   return (
-    <section className="bg-page section-padding">
+    <section className="section-padding">
       <div className="container-wide">
         <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">

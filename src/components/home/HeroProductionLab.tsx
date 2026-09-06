@@ -11,7 +11,7 @@ export function HeroProductionLab() {
   const gridPatternId = useId();
 
   return (
-    <section className="relative overflow-hidden bg-page section-padding">
+    <section className="relative overflow-hidden section-padding">
       <div className="container-wide relative">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.35]"

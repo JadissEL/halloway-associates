@@ -33,7 +33,7 @@ const toolSchemas = {
   }),
   create_lawyer_request: z.object({
     category: z.string().min(1).max(50),
-    situation: z.string().min(1).max(4000),
+    situation: z.string().min(5).max(4000),
     consultationMode: z.string().max(50).optional(),
     availability: z.string().max(500).optional(),
     language: z.string().max(50).optional(),
@@ -188,6 +188,11 @@ const SIGN_IN_REQUIRED = {
   message: "The user needs to sign in (via the magic-link sign-in page) before this action can be completed. Ask them to sign in, then offer to continue.",
 };
 
+const SERVICE_UNAVAILABLE = {
+  error: "service_unavailable",
+  message: "This information is temporarily unavailable. Let the user know just this one thing couldn't be completed right now and they can try again shortly.",
+};
+
 async function searchProperties(args: {
   city?: string; maxPrice?: number;
   propertyType?: PropertyType; listingIntent?: ListingIntent;
@@ -311,22 +316,31 @@ export async function executeTool(name: string, rawArgs: string, ctx: ToolContex
   }
   const args = parsed.data;
 
-  switch (name) {
-    case "search_properties":
-      return searchProperties(args as z.infer<typeof toolSchemas.search_properties>);
-    case "find_professionals":
-      return findProfessionals(args as z.infer<typeof toolSchemas.find_professionals>);
-    case "create_lawyer_request":
-      return createLawyerRequest(args as z.infer<typeof toolSchemas.create_lawyer_request>, ctx);
-    case "get_user_requests":
-      return getUserRequests(ctx);
-    case "get_request_status":
-      return getRequestStatus(args as z.infer<typeof toolSchemas.get_request_status>, ctx);
-    case "get_available_call_slots":
-      return getAvailableCallSlots(args as z.infer<typeof toolSchemas.get_available_call_slots>);
-    case "create_call_booking":
-      return createCallBooking(args as z.infer<typeof toolSchemas.create_call_booking>, ctx);
-    default:
-      return { error: "unknown_tool" };
+  try {
+    switch (name) {
+      case "search_properties":
+        return await searchProperties(args as z.infer<typeof toolSchemas.search_properties>);
+      case "find_professionals":
+        return await findProfessionals(args as z.infer<typeof toolSchemas.find_professionals>);
+      case "create_lawyer_request":
+        return await createLawyerRequest(args as z.infer<typeof toolSchemas.create_lawyer_request>, ctx);
+      case "get_user_requests":
+        return await getUserRequests(ctx);
+      case "get_request_status":
+        return await getRequestStatus(args as z.infer<typeof toolSchemas.get_request_status>, ctx);
+      case "get_available_call_slots":
+        return await getAvailableCallSlots(args as z.infer<typeof toolSchemas.get_available_call_slots>);
+      case "create_call_booking":
+        return await createCallBooking(args as z.infer<typeof toolSchemas.create_call_booking>, ctx);
+      default:
+        return { error: "unknown_tool" };
+    }
+  } catch (error) {
+    // A single tool failing (e.g. a transient Neon hiccup) must not throw
+    // uncaught up through groq-client.ts's per-round loop — that would
+    // discard every other tool result already gathered this round and abort
+    // the whole model turn. Degrade just this one tool instead.
+    console.error(`[ai-tools:${name}]`, error);
+    return SERVICE_UNAVAILABLE;
   }
 }

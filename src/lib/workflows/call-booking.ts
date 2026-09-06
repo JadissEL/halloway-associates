@@ -81,6 +81,13 @@ export async function bookCall(
     throw error;
   }
 
-  await emitStatusChange(result.room.id, null, "CONFIRMED", "Call booked.");
+  try {
+    await emitStatusChange(result.room.id, null, "CONFIRMED", "Call booked.");
+  } catch (error) {
+    // The slot and booking are already committed above; a notification/timeline
+    // hiccup here must not surface as a booking failure (that would invite a
+    // retry and a real double-booking). Log and continue.
+    console.error("emitStatusChange failed after call booking committed", error);
+  }
   return { bookingId: result.booking.id, roomId: result.room.id, slotStart: slot.startTime };
 }

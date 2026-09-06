@@ -37,9 +37,6 @@ export function SiteFooter() {
             >
               {t("contact")}
             </Link>
-            <a href="#" className={cn("font-medium no-underline hover:underline", dark ? "text-luxury-ivory" : "text-ink")}>
-              {t("privacy")}
-            </a>
           </div>
         </div>
         <p className={cn("mt-10 text-xs", dark ? "text-luxury-muted-foreground" : "text-ink-faint")}>

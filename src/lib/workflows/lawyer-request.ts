@@ -23,6 +23,12 @@ export async function createLawyerRequestRoom(userId: string, input: LawyerReque
       structuredData: { ...input },
     },
   });
-  await emitStatusChange(room.id, null, "REQUESTED", "Lawyer request submitted.");
+  try {
+    await emitStatusChange(room.id, null, "REQUESTED", "Lawyer request submitted.");
+  } catch (error) {
+    // The RequestRoom row is already committed above; a notification/timeline
+    // hiccup here must not surface as a request failure to the caller.
+    console.error("emitStatusChange failed after lawyer request room committed", error);
+  }
   return room;
 }

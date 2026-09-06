@@ -73,6 +73,18 @@ export default async function PropertiesPage({ params, searchParams }: Props) {
             className="w-36 rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none transition-colors duration-200 focus:border-luxury-gold"
           />
           <select
+            name="type"
+            defaultValue={sp.type}
+            className="rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none transition-colors duration-200 focus:border-luxury-gold"
+          >
+            <option value="">{t("filters.type")}</option>
+            {Object.keys(TYPE_ICONS).map((type) => (
+              <option key={type} value={type}>
+                {t(`types.${type}`)}
+              </option>
+            ))}
+          </select>
+          <select
             name="intent"
             defaultValue={sp.intent}
             className="rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none transition-colors duration-200 focus:border-luxury-gold"

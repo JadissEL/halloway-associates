@@ -44,7 +44,7 @@ export async function LandingPage() {
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
           <Link
             href="/app"
-            className="flex items-center gap-2 bg-luxury-azure px-7 py-3.5 text-sm font-semibold text-white no-underline shadow-[0_8px_28px_rgba(59,111,235,0.35)] transition-all duration-200 hover:bg-luxury-azure-hover"
+            className="flex items-center gap-2 bg-luxury-gold px-7 py-3.5 text-sm font-semibold text-luxury-black no-underline shadow-[0_8px_28px_rgba(201,162,74,0.3)] transition-all duration-200 hover:brightness-110"
           >
             {t("hero.startNow")}
             <ArrowRight size={16} />
@@ -150,7 +150,7 @@ export async function LandingPage() {
         </h2>
         <Link
           href="/app"
-          className="mt-10 inline-flex items-center gap-2 bg-luxury-azure px-8 py-4 text-sm font-semibold text-white no-underline shadow-[0_8px_28px_rgba(59,111,235,0.35)] transition-all duration-200 hover:bg-luxury-azure-hover"
+          className="mt-10 inline-flex items-center gap-2 bg-luxury-gold px-8 py-4 text-sm font-semibold text-luxury-black no-underline shadow-[0_8px_28px_rgba(201,162,74,0.3)] transition-all duration-200 hover:brightness-110"
         >
           {t("finalCta.button")}
           <ArrowRight size={16} />

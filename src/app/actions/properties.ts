@@ -39,11 +39,13 @@ export async function submitPropertyListing(
   const locale = safeLocaleOrDefault(rawLocale);
 
   try {
-    const property = await prisma.property.create({
-      data: { ...data, ownerId: session.userId, status: "PENDING_REVIEW" },
-    });
-    await prisma.moderationItem.create({
-      data: { contentType: "PROPERTY", propertyId: property.id, status: "PENDING_REVIEW" },
+    await prisma.$transaction(async (tx) => {
+      const property = await tx.property.create({
+        data: { ...data, ownerId: session.userId, status: "PENDING_REVIEW" },
+      });
+      await tx.moderationItem.create({
+        data: { contentType: "PROPERTY", propertyId: property.id, status: "PENDING_REVIEW" },
+      });
     });
   } catch (error) {
     console.error("[submit-property]", error);

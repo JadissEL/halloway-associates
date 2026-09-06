@@ -21,7 +21,7 @@ export function HomeCTA() {
   return (
     <section className="section-padding bg-ink text-white">
       <div className="container-narrow text-center">
-        <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
+        <h2 className="text-balance font-serif text-3xl font-semibold tracking-tight text-white md:text-4xl">
           {t("title")}
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-lg text-white/75">{t("subtitle")}</p>
