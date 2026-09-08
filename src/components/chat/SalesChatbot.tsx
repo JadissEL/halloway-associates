@@ -18,6 +18,7 @@ import {
   trackUserMessage,
 } from "@/lib/chat/visitor-client";
 import { cn } from "@/lib/utils";
+import { renderInlineMarkdown } from "@/lib/chat/render-inline-markdown";
 
 const QUICK_KEYS = ["services", "automation", "contact", "regions"] as const;
 
@@ -130,19 +131,19 @@ export function SalesChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ type: "spring", damping: 26, stiffness: 320 }}
-            className="fixed bottom-24 right-4 z-50 flex h-[min(560px,calc(100vh-7rem))] w-[min(400px,calc(100vw-2rem))] flex-col overflow-hidden rounded-[20px] border border-line bg-surface shadow-[0_20px_60px_rgba(26,26,26,0.12)] md:bottom-6 md:right-6"
+            className="fixed bottom-24 right-4 z-50 flex h-[min(560px,calc(100vh-7rem))] w-[min(400px,calc(100vw-2rem))] flex-col overflow-hidden border border-luxury-border bg-luxury-graphite shadow-[0_20px_60px_rgba(0,0,0,0.5)] md:bottom-6 md:right-6"
             role="dialog"
             aria-label={t("title")}
           >
-            <header className="flex items-center justify-between border-b border-line bg-page px-4 py-3">
+            <header className="flex items-center justify-between border-b border-luxury-border bg-luxury-black/60 px-4 py-3">
               <div>
-                <p className="text-sm font-semibold text-ink">{t("title")}</p>
-                <p className="text-xs text-ink-muted">{t("subtitle")}</p>
+                <p className="text-sm font-semibold text-luxury-ivory">{t("title")}</p>
+                <p className="text-xs text-luxury-muted-foreground">{t("subtitle")}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-full p-2 text-ink-secondary hover:bg-lavender/50"
+                className="rounded-full p-2 text-luxury-muted-foreground hover:bg-luxury-black hover:text-luxury-ivory"
                 aria-label={t("close")}
               >
                 <X size={18} />
@@ -154,28 +155,28 @@ export function SalesChatbot() {
                 <div
                   key={`${msg.role}-${i}`}
                   className={cn(
-                    "max-w-[92%] rounded-[14px] px-3.5 py-2.5 text-sm leading-relaxed",
+                    "max-w-[92%] px-3.5 py-2.5 text-sm leading-relaxed",
                     msg.role === "user"
-                      ? "ml-auto bg-ink text-white"
-                      : "bg-lavender/60 text-ink-secondary",
+                      ? "ml-auto bg-luxury-gold text-luxury-black"
+                      : "border border-luxury-border bg-luxury-black/40 text-luxury-muted-foreground",
                   )}
                 >
-                  {msg.content}
+                  {renderInlineMarkdown(msg.content)}
                 </div>
               ))}
               {loading && (
-                <div className="flex items-center gap-2 text-xs text-ink-muted">
-                  <Loader2 size={14} className="animate-spin" />
+                <div className="flex items-center gap-2 text-xs text-luxury-muted-foreground">
+                  <Loader2 size={14} className="animate-spin text-luxury-gold" />
                   {t("thinking")}
                 </div>
               )}
             </div>
 
             {showContactNudge && (
-              <div className="border-t border-line bg-warm/50 px-4 py-2">
+              <div className="border-t border-luxury-border bg-luxury-gold/5 px-4 py-2">
                 <Link
                   href={contactHref}
-                  className="inline-flex w-full items-center justify-center gap-1.5 text-center text-xs font-semibold text-ink no-underline hover:underline"
+                  className="inline-flex w-full items-center justify-center gap-1.5 text-center text-xs font-semibold text-luxury-gold no-underline hover:underline"
                 >
                   {t("contactNudge")}
                   <ArrowLink className="h-3.5 w-3.5" />
@@ -183,7 +184,7 @@ export function SalesChatbot() {
               </div>
             )}
 
-            <div className="border-t border-line px-3 py-2">
+            <div className="border-t border-luxury-border px-3 py-2">
               <div className="mb-2 flex flex-wrap gap-1.5">
                 {QUICK_KEYS.map((key) => (
                   <button
@@ -191,7 +192,7 @@ export function SalesChatbot() {
                     type="button"
                     onClick={() => sendMessage(t(`quick.${key}`))}
                     disabled={loading}
-                    className="rounded-full border border-line bg-page px-2.5 py-1 text-[11px] font-medium text-ink-secondary hover:text-ink disabled:opacity-50"
+                    className="border border-luxury-border bg-luxury-black px-2.5 py-1 text-[11px] font-medium text-luxury-muted-foreground transition-colors duration-200 hover:border-luxury-gold hover:text-luxury-gold disabled:opacity-50"
                   >
                     {t(`quick.${key}`)}
                   </button>
@@ -216,12 +217,12 @@ export function SalesChatbot() {
                   }}
                   rows={1}
                   placeholder={t("placeholder")}
-                  className="max-h-24 min-h-[40px] flex-1 resize-none rounded-[12px] border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-plum/40"
+                  className="max-h-24 min-h-[40px] flex-1 resize-none border border-luxury-border bg-luxury-input px-3 py-2 text-sm text-luxury-ivory outline-none focus:border-luxury-gold"
                 />
                 <button
                   type="submit"
                   disabled={loading || !input.trim()}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-white disabled:opacity-40"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center bg-luxury-gold text-luxury-black disabled:opacity-40"
                   aria-label={t("send")}
                 >
                   <Send size={16} />
@@ -238,7 +239,7 @@ export function SalesChatbot() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           onClick={() => setOpen(true)}
-          className="fixed bottom-24 right-4 z-50 flex items-center gap-2 rounded-full bg-ink px-4 py-3 text-sm font-semibold text-white shadow-[0_12px_40px_rgba(26,26,26,0.2)] md:bottom-6 md:right-6"
+          className="fixed bottom-24 right-4 z-50 flex items-center gap-2 bg-luxury-gold px-4 py-3 text-sm font-semibold text-luxury-black shadow-[0_12px_40px_rgba(0,0,0,0.5)] md:bottom-6 md:right-6"
           aria-label={t("open")}
         >
           <MessageCircle size={18} />

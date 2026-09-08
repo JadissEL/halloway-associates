@@ -12,7 +12,7 @@ export async function FutureStub({ params, variant }: Props) {
   const t = await getTranslations("futurePage");
 
   return (
-    <div className="section-padding">
+    <div className="luxury-surface min-h-screen section-padding text-luxury-ivory">
       <div className="container-narrow text-center">
         <p className="eyebrow mb-4">{t("eyebrow")}</p>
         <h1 className="headline mb-4">{t("title")}</h1>
@@ -21,7 +21,7 @@ export async function FutureStub({ params, variant }: Props) {
         </p>
         <Link
           href="/"
-          className="inline-flex rounded-full bg-ink px-6 py-3 text-sm font-semibold text-white no-underline"
+          className="inline-flex bg-luxury-gold px-6 py-3 text-sm font-semibold text-luxury-black no-underline transition-all duration-200 hover:brightness-110"
         >
           {t("backHome")}
         </Link>

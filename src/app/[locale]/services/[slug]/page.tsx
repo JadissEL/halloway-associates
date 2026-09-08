@@ -80,7 +80,7 @@ export default async function ServiceDetailPage({ params }: Props) {
           serviceJsonLd(locale, slug, title, summary),
         ]}
       />
-      <article className="section-padding">
+      <article className="luxury-surface min-h-screen section-padding text-luxury-ivory">
         <div className="container-wide max-w-3xl">
           <Breadcrumbs
             items={[
@@ -93,19 +93,19 @@ export default async function ServiceDetailPage({ params }: Props) {
           <p className="eyebrow mb-4">{tPage("eyebrow")}</p>
           <h1 className="headline mb-4">{title}</h1>
           <p className="subhead mb-8">{summary}</p>
-          <div className="prose-spacing space-y-4 text-base leading-relaxed text-ink-secondary">
+          <div className="prose-spacing space-y-4 text-base leading-relaxed text-luxury-muted-foreground">
             <p>{details}</p>
           </div>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href={`/contact?focus=${service.category}`}
-              className="inline-flex rounded-full bg-ink px-6 py-3 text-sm font-semibold text-white no-underline"
+              className="inline-flex bg-luxury-gold px-6 py-3 text-sm font-semibold text-luxury-black no-underline transition-all duration-200 hover:brightness-110"
             >
               {tPage("discussCapability")}
             </Link>
             <Link
               href="/services"
-              className="inline-flex rounded-full border border-line px-6 py-3 text-sm font-semibold text-ink no-underline hover:bg-lavender/30"
+              className="inline-flex border border-luxury-gold px-6 py-3 text-sm font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
             >
               {tSeo("allServices")}
             </Link>

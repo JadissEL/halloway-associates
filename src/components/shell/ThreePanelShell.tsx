@@ -66,16 +66,16 @@ function ShellInner() {
         })}
       </div>
 
-      <div className={cn("grid flex-1 grid-cols-1 overflow-hidden", GRID_BY_MODE[viewMode])}>
-        <div className="hidden md:block md:overflow-hidden">
+      <div className={cn("grid min-h-0 flex-1 grid-cols-1 grid-rows-1 overflow-hidden", GRID_BY_MODE[viewMode])}>
+        <div className="hidden min-h-0 md:block md:overflow-hidden">
           {leftVisible ? <ActivityPanel /> : <CollapsedRail icon={PanelLeft} onExpand={() => setViewMode("full")} />}
         </div>
 
-        <div className="overflow-hidden">
+        <div className="min-h-0 overflow-hidden">
           <ConversationPanel />
         </div>
 
-        <div className="hidden md:block md:overflow-hidden">
+        <div className="hidden min-h-0 md:block md:overflow-hidden">
           {rightVisible ? <WorkspacePanel /> : <CollapsedRail icon={PanelRight} onExpand={() => setViewMode("full")} />}
         </div>
       </div>

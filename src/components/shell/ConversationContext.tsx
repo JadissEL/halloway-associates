@@ -13,6 +13,12 @@ export interface WorkspacePayload {
   data: unknown;
 }
 
+export interface PendingConfirmation {
+  confirmationId: string;
+  toolName: string;
+  summary: string;
+}
+
 interface ConversationState {
   messages: ShellMessage[];
   workspace: WorkspacePayload | null;
@@ -20,6 +26,13 @@ interface ConversationState {
   viewMode: "full" | "conversation" | "results" | "history";
   setViewMode: (mode: ConversationState["viewMode"]) => void;
   sendMessage: (text: string) => Promise<void>;
+  // A MEDIUM+ risk action (e.g. creating a lawyer request or booking a call)
+  // the platform has validated and is proposing, not yet executed — set
+  // whenever a response carries one, cleared by confirming, cancelling, or
+  // sending a new message (which implicitly abandons a stale proposal).
+  pendingConfirmation: PendingConfirmation | null;
+  confirmPendingAction: () => Promise<void>;
+  cancelPendingAction: () => void;
 }
 
 const ConversationCtx = createContext<ConversationState | null>(null);
@@ -56,6 +69,7 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState<ConversationState["viewMode"]>("full");
   const [sessionId, setSessionId] = useState("");
+  const [pendingConfirmation, setPendingConfirmation] = useState<PendingConfirmation | null>(null);
 
   useEffect(() => {
     setSessionId(getOrCreateSessionId());
@@ -85,6 +99,7 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
       const next = [...messages, { role: "user" as const, content: trimmed }];
       setMessages(next);
       setLoading(true);
+      setPendingConfirmation(null);
       if (next.length === 1) setViewMode("full");
 
       try {
@@ -100,6 +115,7 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
           setWorkspace(data.workspace);
           setViewMode((v) => (v === "conversation" ? "full" : v));
         }
+        setPendingConfirmation(data.pendingConfirmation ?? null);
       } catch {
         setMessages((prev) => [
           ...prev,
@@ -111,6 +127,40 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
     },
     [loading, locale, messages, sessionId],
   );
+
+  const confirmPendingAction = useCallback(async () => {
+    if (!pendingConfirmation || loading || !sessionId) return;
+    const confirmationId = pendingConfirmation.confirmationId;
+    setLoading(true);
+    setPendingConfirmation(null);
+
+    try {
+      const res = await fetch("/api/ai/conversation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmationId, locale, sessionId }),
+      });
+      if (!res.ok) throw new Error("confirm failed");
+      const data = await res.json();
+      setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+      if (data.workspace) {
+        setWorkspace(data.workspace);
+        setViewMode((v) => (v === "conversation" ? "full" : v));
+      }
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "I'm temporarily unavailable. Please try again in a moment." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  }, [pendingConfirmation, loading, locale, sessionId]);
+
+  // Nothing was ever executed for a proposal that's merely dropped client-
+  // side — it just expires server-side after its TTL (mcp/pending-actions.ts)
+  // if never confirmed, so there's nothing to undo.
+  const cancelPendingAction = useCallback(() => setPendingConfirmation(null), []);
 
   useEffect(() => {
     if (!sessionId) return;
@@ -129,8 +179,8 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
   }, [sessionId]);
 
   const value = useMemo(
-    () => ({ messages, workspace, loading, viewMode, setViewMode, sendMessage }),
-    [messages, workspace, loading, viewMode, sendMessage],
+    () => ({ messages, workspace, loading, viewMode, setViewMode, sendMessage, pendingConfirmation, confirmPendingAction, cancelPendingAction }),
+    [messages, workspace, loading, viewMode, sendMessage, pendingConfirmation, confirmPendingAction, cancelPendingAction],
   );
 
   return <ConversationCtx.Provider value={value}>{children}</ConversationCtx.Provider>;

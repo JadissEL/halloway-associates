@@ -18,7 +18,7 @@ const HomePageSections = dynamic(
   {
     ssr: true,
     loading: () => (
-      <div className="min-h-[60vh] animate-pulse bg-page section-padding" aria-hidden />
+      <div className="min-h-[60vh] animate-pulse bg-luxury-graphite section-padding" aria-hidden />
     ),
   },
 );
@@ -48,7 +48,9 @@ export default async function StudioPage({ params }: Props) {
       <JsonLd
         data={breadcrumbJsonLd(locale, [{ name: tNav("studio"), path: "studio" }])}
       />
-      <HomePageSections />
+      <div className="luxury-surface min-h-screen text-luxury-ivory">
+        <HomePageSections />
+      </div>
     </>
   );
 }

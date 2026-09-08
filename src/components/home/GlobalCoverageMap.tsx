@@ -106,19 +106,19 @@ export function GlobalCoverageMap({ selectedId, onSelect }: GlobalCoverageMapPro
       id="region-map-panel"
       role="tabpanel"
       aria-labelledby={`region-tab-${selectedId}`}
-      className="overflow-hidden rounded-[24px] border border-line/60 bg-surface shadow-sm shadow-ink/5"
+      className="overflow-hidden border border-luxury-border bg-luxury-graphite"
     >
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line/80 bg-surface/60 px-4 py-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-luxury-border bg-luxury-black/40 px-4 py-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-luxury-muted-foreground">
           {t("mapLegend")}
         </p>
-        <div className="flex flex-wrap gap-4 text-xs text-ink-secondary">
+        <div className="flex flex-wrap gap-4 text-xs text-luxury-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-gold" aria-hidden />
+            <span className="h-2.5 w-2.5 rounded-full bg-luxury-gold" aria-hidden />
             {t("legendMarket")}
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-0.5 w-8 rounded-full bg-gold/80" aria-hidden />
+            <span className="h-0.5 w-8 rounded-full bg-luxury-gold/80" aria-hidden />
             {t("legendNetwork")}
           </span>
         </div>
@@ -138,7 +138,7 @@ export function GlobalCoverageMap({ selectedId, onSelect }: GlobalCoverageMapPro
               x={MAP_CONFIG.width / 2}
               y={MAP_CONFIG.height / 2}
               textAnchor="middle"
-              className="fill-ink-secondary text-sm"
+              className="fill-luxury-muted-foreground text-sm"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               {t("mapLoadError")}
@@ -257,7 +257,7 @@ export function GlobalCoverageMap({ selectedId, onSelect }: GlobalCoverageMapPro
                       paintOrder="stroke"
                       className={cn(
                         "pointer-events-none select-none text-[11px] font-bold tracking-wide",
-                        isSelected ? "fill-ink" : "fill-ink-secondary",
+                        isSelected ? "fill-luxury-ivory" : "fill-luxury-muted-foreground",
                       )}
                       style={{ fontFamily: "var(--font-sans)" }}
                     >
@@ -271,10 +271,10 @@ export function GlobalCoverageMap({ selectedId, onSelect }: GlobalCoverageMapPro
         </svg>
       </div>
 
-      <p className="border-t border-line/80 bg-surface/60 px-4 py-3 text-xs leading-relaxed text-ink-muted">
+      <p className="border-t border-luxury-border bg-luxury-black/40 px-4 py-3 text-xs leading-relaxed text-luxury-muted-foreground">
         {t("mapFootnote")}
         {!loadError && (
-          <span className="mt-1 block text-[11px] text-ink-faint">{t("mapAttribution")}</span>
+          <span className="mt-1 block text-[11px] text-luxury-muted-foreground/70">{t("mapAttribution")}</span>
         )}
       </p>
     </div>

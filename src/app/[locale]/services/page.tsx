@@ -56,7 +56,7 @@ export default async function ServicesPage({ params }: Props) {
           serviceListJsonLd(locale, listItems),
         ]}
       />
-      <div className="section-padding">
+      <div className="luxury-surface min-h-screen section-padding text-luxury-ivory">
         <div className="container-wide">
           <Breadcrumbs
             items={[
@@ -69,7 +69,7 @@ export default async function ServicesPage({ params }: Props) {
             <h1 className="headline mb-4">{t("title")}</h1>
             <p className="subhead">{t("subtitle")}</p>
           </div>
-          <Suspense fallback={<div className="h-40 animate-pulse rounded-[16px] bg-lavender" />}>
+          <Suspense fallback={<div className="h-40 animate-pulse border border-luxury-border bg-luxury-graphite" />}>
             <ServiceExplorer />
           </Suspense>
         </div>

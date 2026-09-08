@@ -1,40 +1,10 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* --- Halloway Studio tokens (existing site, kept as-is) ---------------
-     These stay dominant on every legacy "Studio" page (/studio, /about,
-     /contact, /services, /work, /insights) exactly as they render today. */
-  --color-ink: #1a1a1a;
-  --color-ink-secondary: #4a4a4a;
-  --color-ink-muted: #767676;
-  --color-ink-faint: #999999;
-  --color-plum: #3d3450;
-  --color-gold: #9a8555;
-  --color-lavender: #ebe6f2;
-  --color-warm: #f0ebe3;
-  --color-surface: #ffffff;
-  --color-page: #f7f7f7;
-  --color-line: #e8e8e8;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --radius-xl: 24px;
-  --radius-lg: 16px;
 
-  /* --- AntaY-co "luxury" tokens (merged in, additive) --------------------
-     Used only by the new Greece marketplace shell (home, properties, request
-     rooms, book-a-call, etc.) — never applied to Studio pages, so nothing
-     already live changes appearance. Where the two systems would clash we
-     made a deliberate per-element call rather than a blanket override:
-       - Studio keeps its existing --color-gold (#9a8555, muted brass) as its
-         own accent; the marketplace adopts AntaY-co's brighter --luxury-gold
-         as ITS primary accent — they coexist as two named tokens rather than
-         one being silently replaced.
-       - Studio keeps its rounded --radius-xl/--radius-lg cards; marketplace
-         components use explicit `rounded-none` (AntaY-co's signature
-         zero-radius, sharp-edged look) instead of a global radius override,
-         so existing rounded Studio cards never lose their corners.
-       - Studio stays light-themed (white/ivory); the marketplace is
-         dark-themed (near-black/graphite) by design, per the AntaY-co brief.
-     Halloway's existing wordmark and page chrome are untouched everywhere. */
+  /* --- "Luxury" design tokens ---------------------------------------------
+     The one dark, sharp-edged (rounded-none) visual system used sitewide. */
   --color-luxury-black: hsl(0 0% 5%);
   --color-luxury-graphite: hsl(210 5% 14%);
   --color-luxury-gold: hsl(38 62% 60%);
@@ -62,7 +32,7 @@
 
 @layer base {
   * {
-    @apply border-line;
+    @apply border-luxury-border;
   }
 
   html {
@@ -77,7 +47,7 @@
   }
 
   body {
-    @apply bg-surface font-sans text-ink antialiased;
+    @apply bg-luxury-black font-sans text-luxury-ivory antialiased;
     font-family: var(--font-sans);
   }
 
@@ -89,7 +59,7 @@
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--color-lavender) 80%, var(--color-plum));
+    background: color-mix(in srgb, var(--color-luxury-gold) 50%, transparent);
   }
 }
 
@@ -110,14 +80,11 @@
     @apply mx-auto max-w-7xl;
   }
 
-  /* The gold dash above every eyebrow label is the one motif shared by both
-     sub-brands (Studio's muted --color-gold here, the marketplace's
-     brighter --color-luxury-gold on its own eyebrows) — a single small
-     signature that ties the site together across the light/dark split.
+  /* The gold dash above every eyebrow label is the one motif shared sitewide.
      Lives in ::before so every existing `.eyebrow` usage picks it up with
      no JSX changes. */
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-[0.14em] text-gold;
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-luxury-gold;
   }
 
   .eyebrow::before {
@@ -126,33 +93,17 @@
     width: 2rem;
     height: 1px;
     margin-bottom: 0.75rem;
-    background-color: color-mix(in srgb, var(--color-gold) 60%, transparent);
+    background-color: color-mix(in srgb, var(--color-luxury-gold) 60%, transparent);
   }
 
-  /* font-serif (Playfair) matches the marketplace's display headlines —
-     one signature display face used everywhere is what makes the light
-     Studio pages and the dark marketplace read as the same product
-     instead of two unrelated sites bolted together. */
+  /* font-serif (Playfair) is the one signature display face used everywhere,
+     tying every page to the same dark luxury marketplace identity. */
   .headline {
-    @apply text-balance font-serif text-3xl font-semibold tracking-tight text-ink md:text-4xl lg:text-5xl;
+    @apply text-balance font-serif text-3xl font-semibold tracking-tight text-luxury-ivory md:text-4xl lg:text-5xl;
   }
 
   .subhead {
-    @apply text-lg leading-relaxed text-ink-secondary md:text-xl;
-  }
-
-  /* Light-theme counterpart to .luxury-surface: Studio pages were a flat
-     white void with zero atmosphere next to the marketplace's animated
-     aurora. This is deliberately much quieter (static, no motion, very
-     low-saturation warm wash) — Studio keeps its own calmer identity, it
-     just no longer reads as unstyled. */
-  .studio-surface {
-    position: relative;
-    isolation: isolate;
-    background:
-      radial-gradient(60% 40% at 15% 0%, color-mix(in srgb, var(--color-lavender) 70%, transparent), transparent 70%),
-      radial-gradient(50% 35% at 100% 10%, color-mix(in srgb, var(--color-warm) 65%, transparent), transparent 70%),
-      var(--color-page);
+    @apply text-lg leading-relaxed text-luxury-muted-foreground md:text-xl;
   }
 
   /* --- Marketplace luxury surface treatment ------------------------------
@@ -175,7 +126,18 @@
   .luxury-surface {
     position: relative;
     isolation: isolate;
-    overflow: hidden;
+    /* `clip`, not `hidden`: the ::before aurora blob layer bleeds 30% past
+       every edge (inset: -30%, for a soft blur bleed with no hard edge).
+       Both values clip it visually identically, but `overflow: hidden`
+       still makes this element a *scroll container* — programmatic/focus-
+       driven scrolling (e.g. a browser auto-scrolling a focused input into
+       view) can move its scrollTop through that invisible bled-out space,
+       shifting all real content out of the viewport with no visible
+       scrollbar to explain why. This broke the /app workspace shell:
+       focusing the message input silently scrolled the whole shell by the
+       aurora's bleed amount, pushing sent messages off-screen. `clip`
+       renders identically but is never scrollable by any mechanism. */
+    overflow: clip;
     background-color: var(--color-luxury-black);
   }
 

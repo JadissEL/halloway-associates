@@ -379,6 +379,7 @@
       "sending": "Envoi en cours…",
       "success": "Message envoyé. Nous vous contacterons sous peu.",
       "error": "Une erreur est survenue. Écrivez-nous à hello@hallowayassociates.com.",
+      "rateLimited": "Vous avez déjà envoyé plusieurs messages — veuillez patienter avant d'en envoyer un autre, ou écrivez directement à hello@hallowayassociates.com.",
       "validation": {
         "name": "Veuillez entrer votre nom.",
         "email": "Veuillez entrer une adresse courriel valide.",
@@ -455,6 +456,8 @@
     "greetingSubtitle": "Propriétés, professionnels, emplois, et tout ce dont vous avez besoin en Grèce — décrivez ce que vous cherchez ci-dessous, dans n'importe quelle langue.",
     "inputPlaceholder": "Dites-nous ce dont vous avez besoin — dans n'importe quelle langue…",
     "send": "Envoyer",
+    "confirmAction": "Confirmer",
+    "cancelAction": "Annuler",
     "activity": {
       "title": "Mon activité",
       "recent": "Récent",
@@ -645,6 +648,22 @@
       "submit": { "title": "Envoyer votre demande", "button": "Envoyer" }
     }
   },
+  "professionalsPage": {
+    "categoryLabel": "Catégorie",
+    "allCategories": "Toutes les catégories",
+    "categories": {
+      "LAWYER": "Avocat",
+      "ACCOUNTANT": "Comptable",
+      "ARCHITECT": "Architecte",
+      "ENGINEER": "Ingénieur",
+      "CLEANER": "Ménage",
+      "MOVER": "Déménagement",
+      "PROPERTY_MANAGER": "Gestion immobilière",
+      "BARBER_GROOMING": "Coiffeur & soins",
+      "OTHER": "Autre"
+    },
+    "noResults": "Aucun professionnel ne correspond encore à cette catégorie."
+  },
   "properties": {
     "title": "Propriétés",
     "searchPlaceholder": "Ville, quartier ou zone",
@@ -668,6 +687,11 @@
     },
     "intents": { "RENT": "À louer", "SALE": "À vendre" },
     "noResults": "Aucun bien ne correspond à vos filtres pour le moment.",
+    "detail": {
+      "furnished": "Meublé",
+      "unfurnished": "Non meublé",
+      "askAboutListing": "Se renseigner sur cette annonce"
+    },
     "form": {
       "title": "Publier un bien",
       "titleField": "Titre",
@@ -695,6 +719,7 @@
     "checkEmail": "Consultez votre e-mail — nous vous avons envoyé un lien de connexion.",
     "invalidLink": "Ce lien est invalide ou a expiré. Merci d'en demander un nouveau.",
     "signedInAs": "Connecté en tant que {email}",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "viewActivity": "Voir mes demandes"
   }
 }

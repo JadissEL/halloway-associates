@@ -6,8 +6,13 @@ import { getSession } from "@/lib/auth/session";
 import { createLawyerRequestRoom } from "@/lib/workflows/lawyer-request";
 import { safeLocaleOrDefault } from "@/i18n/locales-config";
 
+// Matches LawyerRequestForm.tsx's fixed <select> options exactly — without
+// this the schema accepted any 1-50 char string, so a direct/scripted POST
+// could store an arbitrary category value in RequestRoom.structuredData.
+const CATEGORIES = ["property", "immigration", "business", "tax", "employment", "family", "contract", "dispute", "other"] as const;
+
 const schema = z.object({
-  category: z.string().min(1).max(50),
+  category: z.enum(CATEGORIES),
   situation: z.string().min(5).max(4000),
   consultationMode: z.string().max(50).optional(),
   availability: z.string().max(500).optional(),

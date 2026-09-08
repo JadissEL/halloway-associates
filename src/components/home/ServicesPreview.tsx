@@ -24,7 +24,7 @@ export function ServicesPreview() {
           </div>
           <Link
             href="/services"
-            className="inline-flex shrink-0 items-center rounded-full border border-line bg-surface px-6 py-3 text-sm font-semibold text-ink no-underline hover:bg-lavender/30"
+            className="inline-flex shrink-0 items-center border border-luxury-gold px-6 py-3 text-sm font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
           >
             {t("viewAll")}
           </Link>
@@ -41,16 +41,16 @@ export function ServicesPreview() {
             >
               <Link
                 href={`/services/${service.id}`}
-                className="group block rounded-[16px] border border-line bg-surface p-6 no-underline transition-colors hover:border-plum/20"
+                className="group block border border-luxury-border bg-luxury-graphite p-6 no-underline transition-colors duration-200 hover:border-luxury-gold"
               >
                 <ServiceIcon name={service.icon} />
-                <h3 className="mb-2 font-semibold text-ink group-hover:text-plum">
+                <h3 className="mb-2 font-semibold text-luxury-ivory group-hover:text-luxury-gold">
                   {tItems(`${service.id}.title`)}
                 </h3>
-                <p className="text-sm leading-relaxed text-ink-secondary">
+                <p className="text-sm leading-relaxed text-luxury-muted-foreground">
                   {tItems(`${service.id}.summary`)}
                 </p>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-ink-secondary group-hover:text-ink">
+                <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-luxury-muted-foreground group-hover:text-luxury-gold">
                   {tSeo("learnMore")}
                   <ArrowLink className="h-3.5 w-3.5" />
                 </span>

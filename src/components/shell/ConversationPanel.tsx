@@ -3,14 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Send, ShieldCheck } from "lucide-react";
 import { useConversation } from "./ConversationContext";
 import { QuickAccessRow } from "./QuickAccessRow";
 import { cn } from "@/lib/utils";
+import { renderInlineMarkdown } from "@/lib/chat/render-inline-markdown";
 
 export function ConversationPanel() {
   const t = useTranslations("shell");
-  const { messages, loading, sendMessage } = useConversation();
+  const { messages, loading, sendMessage, pendingConfirmation, confirmPendingAction, cancelPendingAction } = useConversation();
   const [input, setInput] = useState("");
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -19,7 +20,7 @@ export function ConversationPanel() {
   }, [messages, loading]);
 
   return (
-    <div className="flex h-full flex-col text-luxury-ivory">
+    <div className="flex h-full min-h-0 flex-col text-luxury-ivory">
       {messages.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-5 px-6 text-center">
           <motion.div
@@ -43,7 +44,7 @@ export function ConversationPanel() {
           </motion.div>
         </div>
       ) : (
-        <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-6 md:px-8">
+        <div ref={listRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-6 md:px-8">
           <AnimatePresence initial={false}>
             {messages.map((msg, i) => (
               <motion.div
@@ -58,7 +59,7 @@ export function ConversationPanel() {
                     : "border border-luxury-border bg-luxury-graphite text-luxury-ivory",
                 )}
               >
-                {msg.content}
+                {renderInlineMarkdown(msg.content)}
               </motion.div>
             ))}
           </AnimatePresence>
@@ -69,6 +70,37 @@ export function ConversationPanel() {
             </div>
           )}
         </div>
+      )}
+
+      {pendingConfirmation && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-4 mb-3 flex items-start gap-3 border border-luxury-gold bg-luxury-gold/5 p-3.5 md:mx-8"
+        >
+          <ShieldCheck size={16} className="mt-0.5 shrink-0 text-luxury-gold" />
+          <div className="flex-1">
+            <p className="text-sm text-luxury-ivory">{pendingConfirmation.summary}</p>
+            <div className="mt-2.5 flex gap-2">
+              <button
+                type="button"
+                onClick={() => void confirmPendingAction()}
+                disabled={loading}
+                className="bg-luxury-gold px-4 py-1.5 text-xs font-semibold text-luxury-black transition-all duration-200 hover:brightness-110 disabled:opacity-50"
+              >
+                {t("confirmAction")}
+              </button>
+              <button
+                type="button"
+                onClick={cancelPendingAction}
+                disabled={loading}
+                className="border border-luxury-border px-4 py-1.5 text-xs font-semibold text-luxury-muted-foreground transition-colors duration-200 hover:text-luxury-ivory disabled:opacity-50"
+              >
+                {t("cancelAction")}
+              </button>
+            </div>
+          </div>
+        </motion.div>
       )}
 
       <QuickAccessRow />

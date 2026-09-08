@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { isFeatureEnabled } from "@/lib/features";
-import { isStudioRoute } from "@/lib/route-scope";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
@@ -16,13 +15,6 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
-  // The header stays Halloway's existing light chrome on Studio pages
-  // (kept as-is, per the design merge decision), but switches to the dark
-  // AntaY-co treatment on marketplace pages so it doesn't sit as a stark
-  // white bar directly on top of the shell's near-black body — the two were
-  // visually unrelated to each other before this.
-  const dark = !isStudioRoute(pathname);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -50,22 +42,15 @@ export function SiteHeader() {
     <header
       className={cn(
         "sticky top-0 z-40 border-b transition-colors duration-300",
-        dark
-          ? scrolled
-            ? "border-luxury-border bg-luxury-black/95 backdrop-blur-md"
-            : "border-luxury-border/60 bg-luxury-black"
-          : scrolled
-            ? "border-line bg-surface/95 backdrop-blur-md"
-            : "border-transparent bg-surface",
+        scrolled
+          ? "border-luxury-border bg-luxury-black/95 backdrop-blur-md"
+          : "border-luxury-border/60 bg-luxury-black",
       )}
     >
       <div className="container-wide flex h-16 items-center justify-between gap-4 px-6 md:h-[72px] md:px-8 lg:px-10">
         <Link
           href="/"
-          className={cn(
-            "whitespace-nowrap text-base font-semibold tracking-tight no-underline lg:text-lg",
-            dark ? "text-luxury-ivory" : "text-ink",
-          )}
+          className="whitespace-nowrap text-base font-semibold tracking-tight text-luxury-ivory no-underline lg:text-lg"
         >
           Halloway <span className="font-semibold">& Associates</span>
         </Link>
@@ -79,13 +64,7 @@ export function SiteHeader() {
                 href={link.href}
                 className={cn(
                   "whitespace-nowrap text-sm font-medium no-underline transition-colors",
-                  dark
-                    ? active
-                      ? "text-luxury-ivory"
-                      : "text-luxury-muted-foreground hover:text-luxury-ivory"
-                    : active
-                      ? "text-ink"
-                      : "text-ink-secondary hover:text-ink",
+                  active ? "text-luxury-ivory" : "text-luxury-muted-foreground hover:text-luxury-ivory",
                 )}
               >
                 {link.label}
@@ -95,42 +74,23 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex xl:gap-3">
-          <NotificationBell dark={dark} />
-          <LocaleSwitcher dark={dark} />
+          <NotificationBell />
+          <LocaleSwitcher />
           <Link
             href="/post"
-            className={cn(
-              "whitespace-nowrap text-sm font-medium no-underline",
-              dark ? "text-luxury-muted-foreground hover:text-luxury-ivory" : "text-ink-secondary hover:text-ink",
-            )}
+            className="whitespace-nowrap border border-luxury-gold px-3.5 py-2.5 text-sm font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
           >
             {tMarketplace("post")}
           </Link>
-          {!dark && (
-            <Link
-              href="/contact"
-              className="whitespace-nowrap text-sm font-medium text-ink-secondary no-underline hover:text-ink"
-            >
-              {t("discuss")}
-            </Link>
-          )}
           <Link
             href="/book-a-call"
-            className={cn(
-              "whitespace-nowrap px-3.5 py-2.5 text-sm font-semibold no-underline transition-colors duration-200",
-              dark
-                ? "border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-luxury-black"
-                : "rounded-full border border-line text-ink-secondary hover:border-ink hover:text-ink",
-            )}
+            className="whitespace-nowrap border border-luxury-gold px-3.5 py-2.5 text-sm font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
           >
             {tMarketplace("bookACall")}
           </Link>
           <Link
             href="/app"
-            className={cn(
-              "whitespace-nowrap px-4 py-2.5 text-sm font-semibold text-white no-underline shadow-[0_4px_16px_rgba(59,111,235,0.3)] transition-colors duration-200 hover:bg-luxury-azure-hover",
-              dark ? "bg-luxury-azure" : "rounded-full bg-luxury-azure",
-            )}
+            className="whitespace-nowrap bg-luxury-azure px-4 py-2.5 text-sm font-semibold text-white no-underline shadow-[0_4px_16px_rgba(59,111,235,0.3)] transition-colors duration-200 hover:bg-luxury-azure-hover"
           >
             {tMarketplace("needHelp")}
           </Link>
@@ -138,7 +98,7 @@ export function SiteHeader() {
 
         <button
           type="button"
-          className={cn("inline-flex items-center justify-center rounded-md p-2 lg:hidden", dark ? "text-luxury-ivory" : "text-ink")}
+          className="inline-flex items-center justify-center rounded-md p-2 text-luxury-ivory lg:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? t("closeMenu") : t("openMenu")}
@@ -148,43 +108,33 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <div className={cn("border-t px-6 py-4 md:hidden", dark ? "border-luxury-border bg-luxury-black" : "border-line bg-surface")}>
+        <div className="border-t border-luxury-border bg-luxury-black px-6 py-4 md:hidden">
           <nav className="flex flex-col gap-3" aria-label="Mobile">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={cn("py-2 text-base font-medium no-underline", dark ? "text-luxury-ivory" : "text-ink")}
+                className="py-2 text-base font-medium text-luxury-ivory no-underline"
               >
                 {link.label}
               </Link>
             ))}
-            <LocaleSwitcher variant="mobile" dark={dark} />
-            <Link href="/post" className={cn("py-2 text-base font-medium no-underline", dark ? "text-luxury-ivory" : "text-ink")}>
+            <LocaleSwitcher variant="mobile" />
+            <Link href="/post" className="py-2 text-base font-medium text-luxury-ivory no-underline">
               {tMarketplace("post")}
             </Link>
-            <Link
-              href="/contact"
-              className={cn("py-2 text-base font-medium no-underline", dark ? "text-luxury-ivory" : "text-ink")}
-            >
+            <Link href="/contact" className="py-2 text-base font-medium text-luxury-ivory no-underline">
               {t("discuss")}
             </Link>
             <Link
               href="/book-a-call"
-              className={cn(
-                "mt-2 inline-flex justify-center rounded-full border px-5 py-3 text-sm font-semibold no-underline",
-                dark ? "rounded-none border-luxury-gold text-luxury-gold" : "border-line text-ink-secondary",
-              )}
+              className="mt-2 inline-flex justify-center border border-luxury-gold px-5 py-3 text-sm font-semibold text-luxury-gold no-underline"
             >
               {tMarketplace("bookACall")}
             </Link>
             <Link
               href="/app"
-              className={cn(
-                "inline-flex justify-center rounded-full px-5 py-3 text-sm font-semibold text-white no-underline",
-                dark && "rounded-none",
-                "bg-luxury-azure",
-              )}
+              className="inline-flex justify-center bg-luxury-azure px-5 py-3 text-sm font-semibold text-white no-underline"
             >
               {tMarketplace("needHelp")}
             </Link>

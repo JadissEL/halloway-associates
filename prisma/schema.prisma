@@ -420,3 +420,53 @@ model AiUsageLog {
   @@index([createdAt])
   @@index([layer])
 }
+
+// ---------------------------------------------------------------------------
+// MCP capability layer audit trail — one row per MCP tool call, both proposed
+// (pre-confirmation) and executed. Deliberately NOT a foreign key to the
+// resource it touches (unlike ModerationItem.propertyId): an audit row must
+// keep meaning even if the underlying Property/RequestRoom/etc. is later
+// deleted, so resourceId is a soft, unconstrained reference. This is a
+// different concern from AiUsageLog (token/cost/layer accounting, which
+// already drops args/results) — this table exists specifically to answer
+// "who did what, to what, was it authorized, was it confirmed."
+// ---------------------------------------------------------------------------
+
+enum McpResourceType {
+  PROPERTY
+  PROFESSIONAL
+  REQUEST_ROOM
+  CALL_BOOKING
+}
+
+enum McpOutcome {
+  SUCCESS
+  DENIED
+  ERROR
+  PENDING_CONFIRMATION
+}
+
+model McpAuditLog {
+  id             String           @id @default(cuid())
+  // Who: null actorUserId means an anonymous/read-only caller (e.g. a public
+  // search) — still logged, just with no identity attached.
+  actorUserId    String?
+  actorRole      Role?
+  // Which transport/caller: "internal-concierge" for the platform's own AI,
+  // or an external MCP client's configured clientId.
+  clientId       String
+  toolName       String
+  resourceType   McpResourceType?
+  resourceId     String?
+  inputArgs      Json
+  authorized     Boolean
+  confirmed      Boolean?
+  outcome        McpOutcome
+  errorMessage   String?
+  latencyMs      Int              @default(0)
+  createdAt      DateTime         @default(now())
+
+  @@index([toolName, createdAt])
+  @@index([actorUserId])
+  @@index([outcome])
+}

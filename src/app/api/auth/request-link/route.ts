@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   }
 
   const normalizedEmail = body.email.trim().toLowerCase();
-  const ip = clientIp(request);
+  const ip = clientIp(request.headers);
   // Caps abuse of a fully unauthenticated, Resend-sending endpoint: at most
   // 5 links per email and 20 per IP in a 10-minute window.
   if (

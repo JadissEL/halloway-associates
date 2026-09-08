@@ -43,7 +43,7 @@ export default async function ContactPage({ params }: Props) {
       <JsonLd
         data={[breadcrumbJsonLd(locale, breadcrumbs), contactPageJsonLd(locale)]}
       />
-      <div className="section-padding">
+      <div className="luxury-surface min-h-screen section-padding text-luxury-ivory">
         <div className="container-wide grid gap-16 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div>
             <Breadcrumbs
@@ -56,21 +56,21 @@ export default async function ContactPage({ params }: Props) {
             <p className="eyebrow mb-4">{t("eyebrow")}</p>
             <h1 className="headline mb-4">{t("title")}</h1>
             <p className="subhead mb-10">{t("subtitle")}</p>
-            <div className="rounded-[16px] border border-line bg-page p-6">
-              <p className="mb-2 text-sm font-semibold text-ink">{t("direct.title")}</p>
-              <a href={`mailto:${t("direct.email")}`} className="block font-medium">
+            <div className="border border-luxury-border bg-luxury-graphite p-6">
+              <p className="mb-2 text-sm font-semibold text-luxury-ivory">{t("direct.title")}</p>
+              <a href={`mailto:${t("direct.email")}`} className="block font-medium text-luxury-gold">
                 {t("direct.email")}
               </a>
               <a
                 href="https://www.hallowayassociates.com"
-                className="mt-2 block text-sm text-ink-secondary"
+                className="mt-2 block text-sm text-luxury-muted-foreground"
               >
                 {t("direct.website")}
               </a>
             </div>
           </div>
-          <div className="rounded-[24px] border border-line bg-surface p-8 md:p-10">
-            <Suspense fallback={<div className="h-64 animate-pulse rounded-[12px] bg-lavender" />}>
+          <div className="border border-luxury-border bg-luxury-graphite p-8 md:p-10">
+            <Suspense fallback={<div className="h-64 animate-pulse border border-luxury-border bg-luxury-black/40" />}>
               <ContactForm />
             </Suspense>
           </div>

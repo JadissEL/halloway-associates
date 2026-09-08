@@ -14,18 +14,18 @@ type BreadcrumbsProps = {
 export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   return (
     <nav aria-label="Breadcrumb" className={cn("mb-6", className)}>
-      <ol className="flex flex-wrap items-center gap-2 text-sm text-ink-muted">
+      <ol className="flex flex-wrap items-center gap-2 text-sm text-luxury-muted-foreground">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (
             <li key={`${item.label}-${index}`} className="inline-flex items-center gap-2">
-              {index > 0 && <span aria-hidden className="text-ink-faint">/</span>}
+              {index > 0 && <span aria-hidden className="text-luxury-muted-foreground/60">/</span>}
               {isLast || !item.href ? (
-                <span className={isLast ? "font-medium text-ink-secondary" : undefined}>
+                <span className={isLast ? "font-medium text-luxury-ivory" : undefined}>
                   {item.label}
                 </span>
               ) : (
-                <Link href={item.href} className="font-medium text-ink-secondary no-underline hover:text-ink hover:underline">
+                <Link href={item.href} className="font-medium text-luxury-muted-foreground no-underline hover:text-luxury-gold hover:underline">
                   {item.label}
                 </Link>
               )}

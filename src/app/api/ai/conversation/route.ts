@@ -1,18 +1,24 @@
 import { z } from "zod";
-import { getSession } from "@/lib/auth/session";
+import { getCurrentUser } from "@/lib/auth/current-user";
 import { detectLanguage } from "@/lib/ai/language";
 import { routeDeterministically } from "@/lib/ai/router";
 import { retrieveKnowledge } from "@/lib/ai/knowledge/retrieve";
 import { buildConciergeSystemPrompt } from "@/lib/ai/system-prompt";
-import { runConcierge } from "@/lib/ai/groq-client";
+import { runConcierge, confirmConciergeAction } from "@/lib/ai/groq-client";
 import { logAiUsage } from "@/lib/ai/usage-log";
 import { isRateLimited, clientIp } from "@/lib/rate-limit";
+import { identityFromUser } from "@/mcp/authorize";
 
 const requestSchema = z.object({
   messages: z
     .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(4000) }))
     .min(1)
-    .max(30),
+    .max(30)
+    .optional(),
+  // Present instead of `messages` when the user is confirming a previously
+  // proposed action (see ConversationPanel.tsx's Confirm button) rather than
+  // sending a new chat message.
+  confirmationId: z.string().min(1).max(64).optional(),
   locale: z.enum(["en", "el", "fr"]),
   sessionId: z.string().min(8).max(64),
 });
@@ -28,6 +34,13 @@ function deriveWorkspacePayload(
   // Last matching tool call wins — the most recent thing the user asked about.
   for (let i = toolCalls.length - 1; i >= 0; i--) {
     const { name, result } = toolCalls[i];
+    // A MEDIUM-risk tool's result is a *proposal*, not a resource, until
+    // it's confirmed (tool-runtime.ts's confirmation gate) — WorkspacePanel's
+    // requestRoom/callBooking cards expect real {roomId,status}/
+    // {bookingId,...} fields, so showing a still-pending proposal there
+    // rendered them blank/"undefined" rather than the pendingConfirmation
+    // banner that's already shown above the input for this exact case.
+    if ("pendingConfirmation" in result) continue;
     if (name === "search_properties") return { type: "properties", data: result };
     if (name === "find_professionals") return { type: "professionals", data: result };
     if (name === "create_lawyer_request") return { type: "requestRoom", data: result };
@@ -44,11 +57,14 @@ export async function POST(request: Request) {
   } catch {
     return Response.json({ error: "Invalid request." }, { status: 400 });
   }
+  if (!body.messages && !body.confirmationId) {
+    return Response.json({ error: "Invalid request." }, { status: 400 });
+  }
 
   // This is a fully anonymous, unauthenticated endpoint that can fan out to
   // several Groq completions per call — cap both per-session and per-IP so
   // it can't become an unbounded way to spend the Groq budget.
-  const ip = clientIp(request);
+  const ip = clientIp(request.headers);
   if (
     isRateLimited(`ai-session:${body.sessionId}`, 30, 5 * 60 * 1000) ||
     isRateLimited(`ai-ip:${ip}`, 60, 5 * 60 * 1000)
@@ -56,19 +72,55 @@ export async function POST(request: Request) {
     return Response.json({ error: "Too many requests. Please slow down." }, { status: 429 });
   }
 
-  const session = await getSession();
-  const lastUserMessage = [...body.messages].reverse().find((m) => m.role === "user");
+  // Authorization-sensitive from here on (every path either calls an MCP
+  // tool or confirms one) — a fresh DB-backed identity, not just the session
+  // cookie's userId/email, per the documented pattern in current-user.ts.
+  const user = await getCurrentUser();
+  const identity = identityFromUser(user, body.locale);
+
+  // --- Confirming a previously proposed action -----------------------------
+  if (body.confirmationId) {
+    const outcome = await confirmConciergeAction(body.confirmationId, identity);
+    if (outcome.status === "not_found") {
+      return Response.json({
+        reply:
+          body.locale === "el"
+            ? "Αυτή η επιβεβαίωση έληξε ή δεν βρέθηκε. Πείτε μου ξανά τι θα θέλατε να κάνω."
+            : body.locale === "fr"
+              ? "Cette confirmation a expiré ou est introuvable. Dites-moi à nouveau ce que vous aimeriez faire."
+              : "That confirmation expired or wasn't found. Tell me again what you'd like to do.",
+        replyLocale: body.locale,
+        layer: "REASONING",
+        workspace: null,
+        pendingConfirmation: null,
+      });
+    }
+    const workspace = deriveWorkspacePayload([{ name: outcome.toolName, result: outcome.result }]);
+    return Response.json({
+      reply: outcome.isError
+        ? (body.locale === "el" ? "Δεν μπόρεσα να το ολοκληρώσω. Δοκιμάστε ξανά σε λίγο." : body.locale === "fr" ? "Je n'ai pas pu terminer cette action. Réessayez sous peu." : "I couldn't complete that — please try again shortly.")
+        : (body.locale === "el" ? "Έγινε." : body.locale === "fr" ? "C'est fait." : "Done."),
+      replyLocale: body.locale,
+      layer: "REASONING",
+      workspace,
+      pendingConfirmation: null,
+    });
+  }
+
+  // --- Normal chat turn ------------------------------------------------------
+  const messages = body.messages!;
+  const lastUserMessage = [...messages].reverse().find((m) => m.role === "user");
   const { replyLocale } = detectLanguage(lastUserMessage?.content ?? "", body.locale);
 
   // Layer 1 — deterministic, zero model tokens.
   const deterministic = routeDeterministically(lastUserMessage?.content ?? "", replyLocale);
   if (deterministic.handled) {
-    await logAiUsage({ sessionId: body.sessionId, userId: session?.userId, layer: "DETERMINISTIC" }).catch(
+    await logAiUsage({ sessionId: body.sessionId, userId: user?.id, layer: "DETERMINISTIC" }).catch(
       (error) => {
         console.error("[ai-conversation:usage]", error);
       },
     );
-    return Response.json({ reply: deterministic.reply, replyLocale, layer: "DETERMINISTIC", workspace: null });
+    return Response.json({ reply: deterministic.reply, replyLocale, layer: "DETERMINISTIC", workspace: null, pendingConfirmation: null });
   }
 
   // Layer 3 — retrieval, still no reasoning-model call yet, feeds the prompt.
@@ -85,20 +137,17 @@ export async function POST(request: Request) {
   // Layer 4 — full reasoning + tool-calling, only now that layers 1-3 couldn't resolve it.
   const systemPrompt = buildConciergeSystemPrompt({
     replyLocale,
-    isSignedIn: Boolean(session),
+    isSignedIn: Boolean(user),
     knowledgeHits,
   });
 
   const startedAt = Date.now();
   try {
-    const result = await runConcierge(systemPrompt, body.messages, {
-      userId: session?.userId ?? null,
-      locale: replyLocale,
-    });
+    const result = await runConcierge(systemPrompt, messages, { ...identity, locale: replyLocale });
 
     await logAiUsage({
       sessionId: body.sessionId,
-      userId: session?.userId,
+      userId: user?.id,
       layer: "REASONING",
       model: result.model,
       promptTokens: result.usage.promptTokens,
@@ -112,6 +161,7 @@ export async function POST(request: Request) {
       replyLocale,
       layer: "REASONING",
       workspace: deriveWorkspacePayload(result.toolCalls),
+      pendingConfirmation: result.pendingConfirmation,
     });
   } catch (error) {
     console.error("[ai-conversation]", error);

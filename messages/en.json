@@ -379,6 +379,7 @@
       "sending": "Sending…",
       "success": "Message sent. We'll be in touch shortly.",
       "error": "Something went wrong. Please email hello@hallowayassociates.com directly.",
+      "rateLimited": "You've sent several messages already — please wait a bit before sending another, or email hello@hallowayassociates.com directly.",
       "validation": {
         "name": "Please enter your name.",
         "email": "Please enter a valid email address.",
@@ -455,6 +456,8 @@
     "greetingSubtitle": "Properties, professionals, jobs, and everything else you need in Greece — describe what you're looking for below, in any language.",
     "inputPlaceholder": "Tell us what you need — in any language…",
     "send": "Send",
+    "confirmAction": "Confirm",
+    "cancelAction": "Cancel",
     "activity": {
       "title": "My Activity",
       "recent": "Recent",
@@ -645,6 +648,22 @@
       "submit": { "title": "Submit your request", "button": "Submit" }
     }
   },
+  "professionalsPage": {
+    "categoryLabel": "Category",
+    "allCategories": "All categories",
+    "categories": {
+      "LAWYER": "Lawyer",
+      "ACCOUNTANT": "Accountant",
+      "ARCHITECT": "Architect",
+      "ENGINEER": "Engineer",
+      "CLEANER": "Cleaner",
+      "MOVER": "Mover",
+      "PROPERTY_MANAGER": "Property manager",
+      "BARBER_GROOMING": "Barber & grooming",
+      "OTHER": "Other"
+    },
+    "noResults": "No professionals match this category yet."
+  },
   "properties": {
     "title": "Properties",
     "searchPlaceholder": "City, area, or neighborhood",
@@ -668,6 +687,11 @@
     },
     "intents": { "RENT": "For rent", "SALE": "For sale" },
     "noResults": "No properties match your filters yet.",
+    "detail": {
+      "furnished": "Furnished",
+      "unfurnished": "Unfurnished",
+      "askAboutListing": "Ask about this listing"
+    },
     "form": {
       "title": "Post a property",
       "titleField": "Title",
@@ -695,6 +719,7 @@
     "checkEmail": "Check your email — we've sent you a sign-in link.",
     "invalidLink": "This link is invalid or has expired. Please request a new one.",
     "signedInAs": "Signed in as {email}",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "viewActivity": "View my requests"
   }
 }

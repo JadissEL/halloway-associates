@@ -20,7 +20,7 @@ export function HeroProductionLab() {
           <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id={gridPatternId} width="48" height="48" patternUnits="userSpaceOnUse">
-                <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#e8e8e8" strokeWidth="1" />
+                <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#3a3d40" strokeWidth="1" />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill={`url(#${gridPatternId})`} />
@@ -39,13 +39,13 @@ export function HeroProductionLab() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center rounded-full bg-ink px-7 py-3.5 text-sm font-semibold text-white no-underline transition-opacity hover:opacity-90"
+                className="inline-flex items-center bg-luxury-gold px-7 py-3.5 text-sm font-semibold text-luxury-black no-underline transition-all duration-200 hover:brightness-110"
               >
                 {t("ctaPrimary")}
               </Link>
               <Link
                 href="/services"
-                className="inline-flex items-center rounded-full border border-line bg-surface px-7 py-3.5 text-sm font-semibold text-ink no-underline transition-colors hover:bg-lavender/40"
+                className="inline-flex items-center border border-luxury-gold px-7 py-3.5 text-sm font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
               >
                 {t("ctaSecondary")}
               </Link>
@@ -56,7 +56,7 @@ export function HeroProductionLab() {
             initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="relative aspect-[4/3] overflow-hidden rounded-[24px] bg-lavender"
+            className="relative aspect-[4/3] overflow-hidden border border-luxury-border bg-luxury-graphite"
           >
             <HeroCanvas reducedMotion={!!reduceMotion} />
           </motion.div>
@@ -69,7 +69,7 @@ export function HeroProductionLab() {
 function HeroCanvas({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <svg viewBox="0 0 400 300" className="h-full w-full" aria-hidden>
-      <rect width="400" height="300" fill="#ebe6f2" />
+      <rect width="400" height="300" fill="#202325" />
       {[
         [80, 120, 200, 80],
         [200, 80, 320, 140],
@@ -82,8 +82,8 @@ function HeroCanvas({ reducedMotion }: { reducedMotion: boolean }) {
           y1={y1}
           x2={x2}
           y2={y2}
-          stroke="#3d3450"
-          strokeOpacity="0.15"
+          stroke="#8a8f96"
+          strokeOpacity="0.25"
           strokeWidth="1"
         />
       ))}
@@ -100,8 +100,8 @@ function HeroCanvas({ reducedMotion }: { reducedMotion: boolean }) {
           cx={cx}
           cy={cy}
           r={i === 1 ? 10 : 7}
-          fill={i === 1 ? "#9a8555" : "#3d3450"}
-          fillOpacity={i === 1 ? 0.9 : 0.35}
+          fill={i === 1 ? "#d8aa5a" : "#8a8f96"}
+          fillOpacity={i === 1 ? 0.9 : 0.4}
         >
           {!reducedMotion && (
             <animate

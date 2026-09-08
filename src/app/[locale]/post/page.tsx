@@ -12,7 +12,11 @@ const OPTIONS: { key: string; label: string; href: string; ready: boolean; icon:
   { key: "furniture", label: "Furniture", href: "/explore", ready: false, icon: Sofa },
   { key: "service", label: "Service", href: "/explore", ready: false, icon: Wrench },
   { key: "offer", label: "Offer", href: "/deals", ready: false, icon: Tag },
-  { key: "land", label: "Land", href: "/explore", ready: false, icon: Landmark },
+  // Land is a real PropertyType option in the same posting form as
+  // property/room/house/apartment/commercial (see PropertyForm.tsx) — no
+  // separate flow needed, so this routes to the real form instead of the
+  // generic "coming soon" stub the other unbuilt categories use.
+  { key: "land", label: "Land", href: "/properties/new", ready: true, icon: Landmark },
 ];
 
 export default async function PostPage({ params }: Props) {

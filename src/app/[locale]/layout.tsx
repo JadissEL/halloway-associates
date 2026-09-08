@@ -10,7 +10,6 @@ import { routing } from "@/i18n/routing";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { StudioWidgets } from "@/components/layout/StudioWidgets";
-import { MainSurface } from "@/components/layout/MainSurface";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/json-ld";
 import { SITE_NAME, SITE_URL } from "@/lib/seo/site";
@@ -82,17 +81,17 @@ export default async function LocaleLayout({ children, params }: Props) {
       className={`${inter.variable} ${playfair.variable} font-sans`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-surface font-sans" suppressHydrationWarning>
+      <body className="min-h-screen bg-luxury-black font-sans" suppressHydrationWarning>
         <GoogleAnalytics />
         <JsonLd data={[organizationJsonLd(locale), websiteJsonLd(locale)]} />        <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-ink focus:px-4 focus:py-2 focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-luxury-gold focus:px-4 focus:py-2 focus:text-luxury-black"
         >
           {tNav("skipToContent")}
         </a>
         <NextIntlClientProvider messages={messages}>
           <SiteHeader />
-          <MainSurface>{children}</MainSurface>
+          <main id="main-content">{children}</main>
           <SiteFooter />
           <StudioWidgets />
           <ConsentBanner />

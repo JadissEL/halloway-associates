@@ -12,7 +12,7 @@ export function StatsBand() {
   useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="border-y border-line section-padding">
+    <section ref={ref} className="border-y border-luxury-border section-padding">
       <div className="container-wide">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {statKeys.map((key, index) => (
@@ -44,12 +44,12 @@ function StatCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.08, duration: 0.5 }}
-      className="rounded-[16px] bg-lavender p-8 md:p-10"
+      className="border border-luxury-gold/40 bg-luxury-gold/5 p-8 md:p-10"
     >
-      <p className="text-4xl font-semibold tracking-tight text-ink md:text-5xl">
+      <p className="text-4xl font-semibold tracking-tight text-luxury-ivory md:text-5xl">
         {value}
       </p>
-      <p className="mt-3 text-sm leading-relaxed text-ink-secondary md:text-base">{label}</p>
+      <p className="mt-3 text-sm leading-relaxed text-luxury-muted-foreground md:text-base">{label}</p>
     </motion.div>
   );
 }

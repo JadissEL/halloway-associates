@@ -30,14 +30,14 @@ export function ContactForm() {
         error={state.fieldErrors?.email}
       />
       <div>
-        <label htmlFor="focus" className="mb-2 block text-sm font-medium text-ink">
+        <label htmlFor="focus" className="mb-2 block text-sm font-medium text-luxury-ivory">
           {t("focus")}
         </label>
         <select
           id="focus"
           name="focus"
           defaultValue={focusOptions.includes(defaultFocus as (typeof focusOptions)[number]) ? defaultFocus : "other"}
-          className="w-full rounded-[12px] border border-line bg-surface px-4 py-3 text-ink outline-none focus:border-plum/40"
+          className="w-full rounded-none border border-luxury-border bg-luxury-input px-4 py-3 text-luxury-ivory outline-none focus:border-luxury-gold"
         >
           {focusOptions.map((option) => (
             <option key={option} value={option}>
@@ -47,7 +47,7 @@ export function ContactForm() {
         </select>
       </div>
       <div>
-        <label htmlFor="message" className="mb-2 block text-sm font-medium text-ink">
+        <label htmlFor="message" className="mb-2 block text-sm font-medium text-luxury-ivory">
           {t("message")}
         </label>
         <textarea
@@ -56,19 +56,19 @@ export function ContactForm() {
           rows={5}
           required
           className={cn(
-            "w-full resize-y rounded-[12px] border border-line bg-surface px-4 py-3 text-ink outline-none focus:border-plum/40",
-            state.fieldErrors?.message && "border-red-400",
+            "w-full resize-y rounded-none border border-luxury-border bg-luxury-input px-4 py-3 text-luxury-ivory outline-none focus:border-luxury-gold",
+            state.fieldErrors?.message && "border-luxury-destructive",
           )}
         />
         {state.fieldErrors?.message && (
-          <p className="mt-1 text-sm text-red-600">{state.fieldErrors.message}</p>
+          <p className="mt-1 text-sm text-luxury-destructive">{state.fieldErrors.message}</p>
         )}
       </div>
 
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex rounded-full bg-ink px-8 py-3.5 text-sm font-semibold text-white transition-opacity disabled:opacity-60"
+        className="inline-flex bg-luxury-gold px-8 py-3.5 text-sm font-semibold text-luxury-black transition-all duration-200 hover:brightness-110 disabled:opacity-60"
       >
         {pending ? t("sending") : t("submit")}
       </button>
@@ -77,7 +77,7 @@ export function ContactForm() {
         <p
           className={cn(
             "text-sm",
-            state.ok ? "text-plum" : "text-red-600",
+            state.ok ? "text-luxury-gold" : "text-luxury-destructive",
           )}
           role="status"
         >
@@ -103,7 +103,7 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={name} className="mb-2 block text-sm font-medium text-ink">
+      <label htmlFor={name} className="mb-2 block text-sm font-medium text-luxury-ivory">
         {label}
       </label>
       <input
@@ -112,11 +112,11 @@ function Field({
         type={type}
         required={required}
         className={cn(
-          "w-full rounded-[12px] border border-line bg-surface px-4 py-3 text-ink outline-none focus:border-plum/40",
-          error && "border-red-400",
+          "w-full rounded-none border border-luxury-border bg-luxury-input px-4 py-3 text-luxury-ivory outline-none focus:border-luxury-gold",
+          error && "border-luxury-destructive",
         )}
       />
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-sm text-luxury-destructive">{error}</p>}
     </div>
   );
 }

@@ -5,13 +5,13 @@ export default async function LocaleNotFound() {
   const t = await getTranslations("seo");
 
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center">
+    <div className="luxury-surface flex min-h-screen flex-col items-center justify-center px-6 text-center">
       <p className="eyebrow mb-4">404</p>
       <h1 className="headline mb-4">{t("notFoundTitle")}</h1>
       <p className="subhead mb-8 max-w-md">{t("notFoundBody")}</p>
       <Link
         href="/"
-        className="rounded-full bg-ink px-6 py-3 text-sm font-semibold text-white no-underline"
+        className="bg-luxury-gold px-6 py-3 text-sm font-semibold text-luxury-black no-underline transition-all duration-200 hover:brightness-110"
       >
         {t("notFoundCta")}
       </Link>

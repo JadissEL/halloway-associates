@@ -6,6 +6,7 @@ import { safeQuery } from "@/lib/db/safe-query";
 import { ServiceUnavailableNotice } from "@/components/marketplace/ServiceUnavailableNotice";
 import { getSuggestedQuickAccessKeys } from "@/lib/workflows/cross-service-suggestions";
 import { CrossServiceSuggestion } from "@/components/workflows/CrossServiceSuggestion";
+import { Paperclip } from "lucide-react";
 
 type Props = { params: Promise<{ locale: string; id: string }> };
 
@@ -81,6 +82,29 @@ export default async function RequestRoomPage({ params }: Props) {
                 </div>
               ))}
             </div>
+          </section>
+        )}
+
+        {room.attachments.length > 0 && (
+          <section className="mb-12">
+            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-luxury-muted-foreground">
+              {t("attachments")}
+            </h2>
+            <ul className="space-y-2">
+              {room.attachments.map((a) => (
+                <li key={a.id}>
+                  <a
+                    href={a.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-2 border border-luxury-border bg-luxury-graphite p-3 text-sm text-luxury-ivory no-underline transition-colors duration-200 hover:border-luxury-gold hover:text-luxury-gold"
+                  >
+                    <Paperclip size={14} className="shrink-0 text-luxury-muted-foreground" />
+                    {a.filename}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
 

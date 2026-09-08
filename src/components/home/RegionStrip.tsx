@@ -65,10 +65,10 @@ function RegionChipSelector({
             aria-controls="region-map-panel"
             onClick={() => onSelect(region.id)}
             className={cn(
-              "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+              "inline-flex items-center gap-2 border px-4 py-2 text-sm font-medium transition-colors duration-200",
               isSelected
-                ? "border-plum/40 bg-plum text-white"
-                : "border-line bg-surface text-ink-secondary hover:border-plum/25 hover:text-ink",
+                ? "border-luxury-gold bg-luxury-gold text-luxury-black"
+                : "border-luxury-border bg-luxury-graphite text-luxury-muted-foreground hover:border-luxury-gold hover:text-luxury-ivory",
             )}
           >
             <MapPin className="h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden />
@@ -90,18 +90,18 @@ function RegionDetailPanel({ regionId }: { regionId: RegionId }) {
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className="rounded-[16px] border border-line/60 bg-surface p-5 shadow-sm shadow-ink/5 md:p-6"
+      className="border border-luxury-border bg-luxury-graphite p-5 md:p-6"
       aria-live="polite"
     >
       <div className="mb-4 flex items-center gap-3">
-        <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-lavender/70 text-plum">
+        <span className="inline-flex h-10 w-10 items-center justify-center border border-luxury-gold/40 text-luxury-gold">
           <Globe2 className="h-5 w-5" strokeWidth={1.75} aria-hidden />
         </span>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-gold">
+          <p className="text-xs font-semibold uppercase tracking-wide text-luxury-gold">
             {t(`${regionId}.role`)}
           </p>
-          <h3 className="text-lg font-semibold text-ink">{t(`${regionId}.city`)}</h3>
+          <h3 className="text-lg font-semibold text-luxury-ivory">{t(`${regionId}.city`)}</h3>
         </div>
       </div>
 
@@ -112,7 +112,7 @@ function RegionDetailPanel({ regionId }: { regionId: RegionId }) {
         <DetailItem label={t("detailLanguages")} value={t(`${regionId}.languages`)} />
       </dl>
 
-      <p className="mt-4 text-sm leading-relaxed text-ink-secondary">
+      <p className="mt-4 text-sm leading-relaxed text-luxury-muted-foreground">
         {t(`${regionId}.note`)}
       </p>
     </motion.div>
@@ -122,8 +122,8 @@ function RegionDetailPanel({ regionId }: { regionId: RegionId }) {
 function DetailItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{label}</dt>
-      <dd className="mt-1 text-sm leading-relaxed text-ink-secondary">{value}</dd>
+      <dt className="text-xs font-semibold uppercase tracking-wide text-luxury-muted-foreground">{label}</dt>
+      <dd className="mt-1 text-sm leading-relaxed text-luxury-muted-foreground">{value}</dd>
     </div>
   );
 }

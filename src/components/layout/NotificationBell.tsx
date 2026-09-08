@@ -17,7 +17,7 @@ interface NotificationItem {
 // Communication Center entry point (spec section 11.2): every workflow
 // state change ends up here, deep-linking into its Request Room. Renders
 // nothing for signed-out visitors rather than showing a broken bell.
-export function NotificationBell({ dark = false }: { dark?: boolean }) {
+export function NotificationBell() {
   const t = useTranslations("notifications");
   const [items, setItems] = useState<NotificationItem[] | null>(null);
   const [open, setOpen] = useState(false);
@@ -54,7 +54,7 @@ export function NotificationBell({ dark = false }: { dark?: boolean }) {
           }
         }}
         aria-label={t("title")}
-        className={cn("relative rounded-full p-2", dark ? "text-luxury-muted-foreground hover:text-luxury-ivory" : "text-ink-secondary hover:text-ink")}
+        className="relative rounded-full p-2 text-luxury-muted-foreground hover:text-luxury-ivory"
       >
         <Bell size={18} />
         {unreadCount > 0 && (
@@ -62,17 +62,12 @@ export function NotificationBell({ dark = false }: { dark?: boolean }) {
         )}
       </button>
       {open && (
-        <div
-          className={cn(
-            "absolute right-0 top-full z-50 mt-2 w-80 rounded-none border py-2 shadow-[0_12px_40px_rgba(0,0,0,0.3)]",
-            dark ? "border-luxury-border bg-luxury-graphite" : "border-line bg-surface",
-          )}
-        >
-          <p className={cn("px-4 py-2 text-xs font-semibold uppercase tracking-wide", dark ? "text-luxury-muted-foreground" : "text-ink-muted")}>
+        <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-none border border-luxury-border bg-luxury-graphite py-2 shadow-[0_12px_40px_rgba(0,0,0,0.3)]">
+          <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-luxury-muted-foreground">
             {t("title")}
           </p>
           {items.length === 0 && (
-            <p className={cn("px-4 py-3 text-sm", dark ? "text-luxury-muted-foreground" : "text-ink-secondary")}>{t("empty")}</p>
+            <p className="px-4 py-3 text-sm text-luxury-muted-foreground">{t("empty")}</p>
           )}
           <ul className="max-h-80 overflow-y-auto">
             {items.map((n) => (
@@ -81,14 +76,8 @@ export function NotificationBell({ dark = false }: { dark?: boolean }) {
                   <Link
                     href={`/account/requests/${n.requestRoomId}`}
                     className={cn(
-                      "block px-4 py-2.5 text-sm no-underline",
-                      dark
-                        ? n.isRead
-                          ? "text-luxury-muted-foreground hover:bg-luxury-black"
-                          : "font-medium text-luxury-ivory hover:bg-luxury-black"
-                        : n.isRead
-                          ? "text-ink-secondary hover:bg-page"
-                          : "font-medium text-ink hover:bg-page",
+                      "block px-4 py-2.5 text-sm no-underline hover:bg-luxury-black",
+                      n.isRead ? "text-luxury-muted-foreground" : "font-medium text-luxury-ivory",
                     )}
                   >
                     {n.message}
@@ -97,13 +86,7 @@ export function NotificationBell({ dark = false }: { dark?: boolean }) {
                   <p
                     className={cn(
                       "px-4 py-2.5 text-sm",
-                      dark
-                        ? n.isRead
-                          ? "text-luxury-muted-foreground"
-                          : "font-medium text-luxury-ivory"
-                        : n.isRead
-                          ? "text-ink-secondary"
-                          : "font-medium text-ink",
+                      n.isRead ? "text-luxury-muted-foreground" : "font-medium text-luxury-ivory",
                     )}
                   >
                     {n.message}

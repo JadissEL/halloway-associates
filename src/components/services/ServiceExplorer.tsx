@@ -52,10 +52,10 @@ export function ServiceExplorer() {
             aria-selected={filter === key}
             onClick={() => setFilter(key)}
             className={cn(
-              "rounded-full px-4 py-2 text-sm font-medium transition-colors",
+              "px-4 py-2 text-sm font-medium transition-colors",
               filter === key
-                ? "bg-ink text-white"
-                : "border border-line bg-surface text-ink-secondary hover:text-ink",
+                ? "bg-luxury-gold text-luxury-black"
+                : "border border-luxury-border text-luxury-muted-foreground hover:text-luxury-ivory",
             )}
           >
             {t(filterMap[key])}
@@ -68,16 +68,16 @@ export function ServiceExplorer() {
           <li key={service.id}>
             <Link
               href={`/services/${service.id}`}
-              className="group block rounded-[16px] border border-line bg-surface p-6 no-underline transition-colors hover:border-plum/25 hover:bg-lavender/20"
+              className="group block border border-luxury-border bg-luxury-graphite p-6 no-underline transition-colors duration-200 hover:border-luxury-gold"
             >
               <ServiceIcon name={service.icon} />
-              <h2 className="font-semibold text-ink group-hover:text-plum">
+              <h2 className="font-semibold text-luxury-ivory group-hover:text-luxury-gold">
                 {tItems(`${service.id}.title`)}
               </h2>
-              <p className="mt-2 text-sm text-ink-secondary">
+              <p className="mt-2 text-sm text-luxury-muted-foreground">
                 {tItems(`${service.id}.summary`)}
               </p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
+              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-luxury-gold">
                 {tSeo("learnMore")}
                 <ArrowLink className="transition-transform group-hover:translate-x-0.5" />
               </span>

@@ -19,15 +19,15 @@ export function HomeCTA() {
   const t = useTranslations("cta");
 
   return (
-    <section className="section-padding bg-ink text-white">
+    <section className="section-padding bg-luxury-gold text-luxury-black">
       <div className="container-narrow text-center">
-        <h2 className="text-balance font-serif text-3xl font-semibold tracking-tight text-white md:text-4xl">
+        <h2 className="text-balance font-serif text-3xl font-semibold tracking-tight text-luxury-black md:text-4xl">
           {t("title")}
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-white/75">{t("subtitle")}</p>
+        <p className="mx-auto mt-4 max-w-xl text-lg text-luxury-black/75">{t("subtitle")}</p>
         <Link
           href="/contact"
-          className="mt-10 inline-flex rounded-full bg-surface px-8 py-3.5 text-sm font-semibold text-ink no-underline transition-opacity hover:opacity-90"
+          className="mt-10 inline-flex bg-luxury-black px-8 py-3.5 text-sm font-semibold text-luxury-ivory no-underline transition-opacity hover:opacity-90"
         >
           {t("button")}
         </Link>

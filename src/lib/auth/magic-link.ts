@@ -43,12 +43,21 @@ export async function requestMagicLink(
 
   if (process.env.RESEND_API_KEY) {
     const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
+    // The Resend SDK does NOT throw on an API-level failure (e.g. the shared
+    // onboarding@resend.dev sender being restricted to only deliver to the
+    // account owner's own address, a very common state for an unverified
+    // domain) — it resolves normally with `error` populated. Without this
+    // check, a rejected send was indistinguishable from a real one: the
+    // route always returned 200 and the UI always said "check your email."
+    const { error } = await resend.emails.send({
       from,
       to: normalizedEmail,
       subject: "Sign in to Halloway & Associates",
       text: `Sign in with this link (expires in 15 minutes):\n\n${verifyUrl}\n\nIf you didn't request this, you can ignore this email.`,
     });
+    if (error) {
+      throw new Error(`Resend rejected the sign-in email: ${error.message}`);
+    }
   } else {
     console.info("[magic-link]", verifyUrl);
   }

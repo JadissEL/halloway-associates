@@ -54,7 +54,7 @@ export function ServiceIcon({ name, size = "md", className }: ServiceIconProps) 
   return (
     <span
       className={cn(
-        "mb-3 inline-flex items-center justify-center rounded-xl bg-lavender/60 text-plum",
+        "mb-3 inline-flex items-center justify-center border border-luxury-gold/40 text-luxury-gold",
         styles.wrap,
         className,
       )}

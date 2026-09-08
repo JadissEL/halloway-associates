@@ -1,13 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
 export function SignInForm() {
   const t = useTranslations("auth");
+  const tCommon = useTranslations("common");
   const locale = useLocale();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  // /api/auth/verify redirects back here with ?error=invalid (expired/used/
+  // tampered link) or ?error=server (a transient failure) when a magic link
+  // fails — this previously landed on a completely blank form with no
+  // explanation, even though a translation string for exactly this existed.
+  const linkError = searchParams.get("error");
+  const linkErrorMessage =
+    status === "idle" && linkError === "invalid"
+      ? t("invalidLink")
+      : status === "idle" && linkError === "server"
+        ? tCommon("serviceUnavailable")
+        : null;
 
   return (
     <form
@@ -51,6 +66,7 @@ export function SignInForm() {
       {status === "error" && (
         <p className="text-sm text-red-400">{t("invalidLink")}</p>
       )}
+      {linkErrorMessage && <p className="text-sm text-red-400">{linkErrorMessage}</p>}
     </form>
   );
 }

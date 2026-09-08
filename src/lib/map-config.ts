@@ -14,22 +14,22 @@ export const regionCountryNames: Record<RegionId, string> = {
 
 export const activeCountryNames = new Set(Object.values(regionCountryNames));
 
-/** High-contrast matte palette — land must read clearly against ocean. */
+/** Dark luxury palette — gold markers/arcs must read clearly against a near-black ocean. */
 export const MAP_COLORS = {
-  ocean: "#f2eef7",
-  land: "#c9bdd8",
-  landActive: "#a894bc",
-  landSelected: "#756088",
-  stroke: "#2f2840",
-  strokeLand: 0.42,
-  strokeActive: 0.58,
-  strokeSelected: 0.72,
-  marker: "#8a7348",
-  markerSelected: "#2f2840",
-  markerRing: "#9a8555",
-  markerOutline: "#ffffff",
-  arc: "#6b5c38",
-  arcGlow: "#3d3450",
+  ocean: "#15171a",
+  land: "#33363a",
+  landActive: "#4a4530",
+  landSelected: "#8a6f3a",
+  stroke: "#4d5256",
+  strokeLand: 0.4,
+  strokeActive: 0.55,
+  strokeSelected: 0.75,
+  marker: "#8a6f3a",
+  markerSelected: "#d8aa5a",
+  markerRing: "#d8aa5a",
+  markerOutline: "#15171a",
+  arc: "#8a6f3a",
+  arcGlow: "#d8aa5a",
 } as const;
 
 export const MAP_STROKES = {

@@ -10,13 +10,7 @@ import { cn } from "@/lib/utils";
 
 const enabledLocaleDefs = locales.filter((l) => l.enabled);
 
-export function LocaleSwitcher({
-  variant = "desktop",
-  dark = false,
-}: {
-  variant?: "desktop" | "mobile";
-  dark?: boolean;
-}) {
+export function LocaleSwitcher({ variant = "desktop" }: { variant?: "desktop" | "mobile" }) {
   const t = useTranslations("nav");
   const locale = useLocale();
   const pathname = usePathname();
@@ -44,12 +38,8 @@ export function LocaleSwitcher({
             className={cn(
               "rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-wide no-underline",
               l.code === locale
-                ? dark
-                  ? "border-luxury-gold bg-luxury-gold text-luxury-black"
-                  : "border-ink bg-ink text-white"
-                : dark
-                  ? "border-luxury-border text-luxury-muted-foreground hover:text-luxury-ivory"
-                  : "border-line text-ink-muted hover:text-ink",
+                ? "border-luxury-gold bg-luxury-gold text-luxury-black"
+                : "border-luxury-border text-luxury-muted-foreground hover:text-luxury-ivory",
             )}
           >
             {l.code}
@@ -67,10 +57,7 @@ export function LocaleSwitcher({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={t("chooseLanguage")}
-        className={cn(
-          "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider",
-          dark ? "text-luxury-muted-foreground hover:text-luxury-ivory" : "text-ink-muted hover:text-ink",
-        )}
+        className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-luxury-muted-foreground hover:text-luxury-ivory"
       >
         <Globe size={14} />
         {current?.code ?? locale}
@@ -78,10 +65,7 @@ export function LocaleSwitcher({
       {open && (
         <div
           role="listbox"
-          className={cn(
-            "absolute right-0 top-full z-50 mt-2 min-w-[10rem] rounded-none border py-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.3)]",
-            dark ? "border-luxury-border bg-luxury-graphite" : "border-line bg-surface",
-          )}
+          className="absolute right-0 top-full z-50 mt-2 min-w-[10rem] rounded-none border border-luxury-border bg-luxury-graphite py-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.3)]"
         >
           {enabledLocaleDefs.map((l) => (
             <Link
@@ -93,19 +77,11 @@ export function LocaleSwitcher({
               aria-selected={l.code === locale}
               className={cn(
                 "flex items-center justify-between px-4 py-2 text-sm no-underline",
-                dark
-                  ? l.code === locale
-                    ? "font-semibold text-luxury-gold"
-                    : "text-luxury-ivory hover:text-luxury-gold"
-                  : l.code === locale
-                    ? "font-semibold text-ink"
-                    : "text-ink-secondary hover:text-ink",
+                l.code === locale ? "font-semibold text-luxury-gold" : "text-luxury-ivory hover:text-luxury-gold",
               )}
             >
               <span>{l.nativeName}</span>
-              <span className={cn("text-xs uppercase", dark ? "text-luxury-muted-foreground" : "text-ink-faint")}>
-                {l.code}
-              </span>
+              <span className="text-xs uppercase text-luxury-muted-foreground">{l.code}</span>
             </Link>
           ))}
         </div>

@@ -4,19 +4,35 @@ import { prisma } from "@/lib/db/client";
 import { safeQuery } from "@/lib/db/safe-query";
 import { ServiceUnavailableNotice } from "@/components/marketplace/ServiceUnavailableNotice";
 import { Scale, ExternalLink, ArrowRight } from "lucide-react";
+import type { ProfessionalCategory } from "@prisma/client";
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ category?: string }>;
+};
 
-export default async function ProfessionalsPage({ params }: Props) {
+const CATEGORIES: ProfessionalCategory[] = [
+  "LAWYER", "ACCOUNTANT", "ARCHITECT", "ENGINEER", "CLEANER",
+  "MOVER", "PROPERTY_MANAGER", "BARBER_GROOMING", "OTHER",
+];
+const VALID_CATEGORIES = new Set<string>(CATEGORIES);
+
+export default async function ProfessionalsPage({ params, searchParams }: Props) {
   const { locale } = await params;
+  const sp = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations("marketplaceNav");
   const tShell = await getTranslations("shell.quickAccess");
+  const tCat = await getTranslations("professionalsPage");
+
+  // A stale/hand-edited category value must never reach Prisma raw (same
+  // class of bug fixed on /properties) — drop it rather than filter on it.
+  const category = sp.category && VALID_CATEGORIES.has(sp.category) ? (sp.category as ProfessionalCategory) : undefined;
 
   const { data: professionals, error: dbError } = await safeQuery(
     () =>
       prisma.professional.findMany({
-        where: { status: "APPROVED" },
+        where: { status: "APPROVED", ...(category ? { category } : {}) },
         orderBy: { createdAt: "desc" },
         take: 30,
       }),
@@ -30,7 +46,7 @@ export default async function ProfessionalsPage({ params }: Props) {
         <span className="mb-2 block h-px w-8 bg-luxury-gold/60" />
         <h1 className="mb-10 font-serif text-4xl font-semibold tracking-tight md:text-5xl">{t("professionals")}</h1>
 
-        <div className="mb-12 grid gap-4 sm:grid-cols-2">
+        <div className="mb-10 grid gap-4 sm:grid-cols-2">
           <Link
             href="/professionals/lawyer"
             className="group flex items-start gap-4 border border-luxury-gold bg-luxury-gold/5 p-5 no-underline transition-colors duration-200 hover:bg-luxury-gold/10"
@@ -47,8 +63,32 @@ export default async function ProfessionalsPage({ params }: Props) {
           </Link>
         </div>
 
+        <form className="mb-10 flex flex-wrap items-end gap-3 border-b border-luxury-border pb-10" method="get">
+          <label className="flex flex-col gap-1.5 text-xs font-medium text-luxury-muted-foreground">
+            {tCat("categoryLabel")}
+            <select
+              name="category"
+              defaultValue={category ?? ""}
+              className="rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-sm text-luxury-ivory outline-none transition-colors duration-200 focus:border-luxury-gold"
+            >
+              <option value="">{tCat("allCategories")}</option>
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {tCat(`categories.${c}`)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            type="submit"
+            className="bg-luxury-gold px-5 py-2.5 text-sm font-semibold text-luxury-black shadow-[0_4px_16px_rgba(201,162,74,0.2)] transition-all duration-200 hover:brightness-110"
+          >
+            {t("professionals")}
+          </button>
+        </form>
+
         {professionals.length === 0 ? (
-          <p className="text-sm text-luxury-muted-foreground">No professionals listed yet.</p>
+          <p className="text-sm text-luxury-muted-foreground">{tCat("noResults")}</p>
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {professionals.map((p) => (
@@ -63,7 +103,7 @@ export default async function ProfessionalsPage({ params }: Props) {
                 )}
                 <p className="font-serif text-base">{p.name}</p>
                 <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-luxury-gold">
-                  {p.category.replace(/_/g, " ")}
+                  {tCat(`categories.${p.category}`)}
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-luxury-muted-foreground">{p.bio}</p>
                 {p.externalUrl && (

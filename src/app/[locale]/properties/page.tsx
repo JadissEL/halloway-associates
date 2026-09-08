@@ -19,21 +19,41 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
   COMMERCIAL: Store,
 };
 
+const VALID_TYPES = new Set(Object.keys(TYPE_ICONS));
+const VALID_INTENTS = new Set(["RENT", "SALE"]);
+
+// searchParams are user-controlled — an old/renamed type value or a
+// non-numeric price must never reach Prisma raw (it throws, and the page
+// was falling back to a "temporarily unavailable" banner that hid every
+// listing, as if the whole database were down over one bad query param).
+// Invalid values are simply dropped rather than filtered on.
+function parsePropertyFilters(sp: { city?: string; maxPrice?: string; type?: string; intent?: string }) {
+  const maxPrice = sp.maxPrice !== undefined ? Number(sp.maxPrice) : undefined;
+  return {
+    city: sp.city || undefined,
+    maxPrice: maxPrice !== undefined && Number.isFinite(maxPrice) && maxPrice > 0 ? maxPrice : undefined,
+    type: sp.type && VALID_TYPES.has(sp.type) ? (sp.type as PropertyType) : undefined,
+    intent: sp.intent && VALID_INTENTS.has(sp.intent) ? (sp.intent as ListingIntent) : undefined,
+  };
+}
+
 export default async function PropertiesPage({ params, searchParams }: Props) {
   const { locale } = await params;
   const sp = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations("properties");
 
+  const filters = parsePropertyFilters(sp);
+
   const { data: properties, error: dbError } = await safeQuery(
     () =>
       prisma.property.findMany({
         where: {
           status: "PUBLISHED",
-          ...(sp.city ? { city: { equals: sp.city, mode: "insensitive" } } : {}),
-          ...(sp.maxPrice ? { priceAmount: { lte: Number(sp.maxPrice) } } : {}),
-          ...(sp.type ? { propertyType: sp.type as PropertyType } : {}),
-          ...(sp.intent ? { listingIntent: sp.intent as ListingIntent } : {}),
+          ...(filters.city ? { city: { equals: filters.city, mode: "insensitive" } } : {}),
+          ...(filters.maxPrice ? { priceAmount: { lte: filters.maxPrice } } : {}),
+          ...(filters.type ? { propertyType: filters.type } : {}),
+          ...(filters.intent ? { listingIntent: filters.intent } : {}),
         },
         orderBy: { createdAt: "desc" },
         take: 30,
@@ -108,9 +128,10 @@ export default async function PropertiesPage({ params, searchParams }: Props) {
             {properties.map((p) => {
               const Icon = TYPE_ICONS[p.propertyType] ?? Home;
               return (
-                <div
+                <Link
                   key={p.id}
-                  className="group border border-luxury-border bg-luxury-graphite transition-colors duration-200 hover:border-luxury-gold"
+                  href={`/properties/${p.id}`}
+                  className="group block border border-luxury-border bg-luxury-graphite no-underline transition-colors duration-200 hover:border-luxury-gold"
                 >
                   <div className="flex h-32 items-center justify-center border-b border-luxury-border bg-luxury-black/60">
                     <Icon size={32} className="text-luxury-muted-foreground transition-colors duration-200 group-hover:text-luxury-gold" />
@@ -121,7 +142,7 @@ export default async function PropertiesPage({ params, searchParams }: Props) {
                         demo
                       </span>
                     )}
-                    <p className="font-serif text-lg transition-colors duration-200 group-hover:text-luxury-gold">{p.title}</p>
+                    <p className="font-serif text-lg text-luxury-ivory transition-colors duration-200 group-hover:text-luxury-gold">{p.title}</p>
                     <p className="mt-1 flex items-center gap-1.5 text-sm text-luxury-muted-foreground">
                       <MapPin size={13} />
                       {p.city}
@@ -131,7 +152,7 @@ export default async function PropertiesPage({ params, searchParams }: Props) {
                       {p.priceAmount} {p.currency}
                     </p>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

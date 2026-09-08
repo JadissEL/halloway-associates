@@ -29,8 +29,11 @@ export function isRateLimited(key: string, limit: number, windowMs: number): boo
   return false;
 }
 
-export function clientIp(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
+// Takes Headers rather than a Request so it also works from Server Actions
+// (which get next/headers()'s ReadonlyHeaders, not a Request object) as well
+// as route handlers (pass request.headers).
+export function clientIp(headers: Headers): string {
+  const forwarded = headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0].trim();
-  return request.headers.get("x-real-ip") ?? "unknown";
+  return headers.get("x-real-ip") ?? "unknown";
 }

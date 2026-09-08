@@ -43,26 +43,26 @@ export function ConsentBanner() {
       // the header) except the top-left, which only overlaps the low-stakes
       // "My Activity" panel rather than any primary control. A full-width
       // bottom bar previously hid the chat input completely on first visit.
-      className="fixed left-4 top-20 z-[60] w-[min(19rem,calc(100vw-2rem))] rounded-none border border-line bg-surface/98 p-4 shadow-[0_12px_40px_rgba(26,26,26,0.16)] backdrop-blur-md"
+      className="fixed left-4 top-20 z-[60] w-[min(19rem,calc(100vw-2rem))] border border-luxury-border bg-luxury-graphite/98 p-4 shadow-[0_12px_40px_rgba(0,0,0,0.4)] backdrop-blur-md"
     >
-      <p id="consent-title" className="text-sm font-semibold text-ink">
+      <p id="consent-title" className="text-sm font-semibold text-luxury-ivory">
         {t("title")}
       </p>
-      <p id="consent-description" className="mt-1.5 text-sm leading-relaxed text-ink-secondary">
+      <p id="consent-description" className="mt-1.5 text-sm leading-relaxed text-luxury-muted-foreground">
         {t("body")}
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => choose("granted")}
-          className="rounded-full bg-ink px-4 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+          className="bg-luxury-gold px-4 py-2 text-xs font-semibold text-luxury-black transition-all hover:brightness-110"
         >
           {t("accept")}
         </button>
         <button
           type="button"
           onClick={() => choose("denied")}
-          className="rounded-full border border-line bg-page px-4 py-2 text-xs font-semibold text-ink-secondary transition-colors hover:text-ink"
+          className="border border-luxury-border px-4 py-2 text-xs font-semibold text-luxury-muted-foreground transition-colors hover:text-luxury-ivory"
         >
           {t("reject")}
         </button>

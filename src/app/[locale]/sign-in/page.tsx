@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SignInForm } from "@/components/auth/SignInForm";
 
@@ -12,7 +13,9 @@ export default async function SignInPage({ params }: Props) {
     <div className="luxury-surface flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-6 py-20 text-luxury-ivory md:min-h-[calc(100vh-4.5rem)]">
       <div className="w-full max-w-sm">
         <h1 className="mb-8 text-center font-serif text-3xl font-semibold md:text-4xl">{t("signIn")}</h1>
-        <SignInForm />
+        <Suspense fallback={null}>
+          <SignInForm />
+        </Suspense>
       </div>
     </div>
   );

@@ -13,14 +13,22 @@ export async function GET(request: Request) {
     return Response.redirect(`${url.origin}/${locale}/sign-in?error=invalid`, 302);
   }
 
-  const verified = await consumeMagicLink(token);
-  if (!verified) {
-    return Response.redirect(`${url.origin}/${locale}/sign-in?error=invalid`, 302);
+  try {
+    const verified = await consumeMagicLink(token);
+    if (!verified) {
+      return Response.redirect(`${url.origin}/${locale}/sign-in?error=invalid`, 302);
+    }
+
+    const sessionToken = createSessionToken(verified);
+    const store = await cookies();
+    store.set(SESSION_COOKIE, sessionToken, sessionCookieOptions);
+
+    return Response.redirect(`${url.origin}/${locale}/account`, 302);
+  } catch (error) {
+    // A transient DB/crypto failure here must not surface as Next's raw
+    // framework error page — send the user back to sign-in with a message
+    // they can act on (try again) instead.
+    console.error("[auth-verify]", error);
+    return Response.redirect(`${url.origin}/${locale}/sign-in?error=server`, 302);
   }
-
-  const sessionToken = createSessionToken(verified);
-  const store = await cookies();
-  store.set(SESSION_COOKIE, sessionToken, sessionCookieOptions);
-
-  return Response.redirect(`${url.origin}/${locale}/account`, 302);
 }
