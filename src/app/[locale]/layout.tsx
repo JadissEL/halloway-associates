@@ -9,7 +9,7 @@ import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ToastProvider } from "@/components/ui/Toast";
 import { routing } from "@/i18n/routing";
 import { SiteHeader } from "@/components/layout/SiteHeader";
-import { SiteFooter } from "@/components/layout/SiteFooter";
+import { ConditionalFooter } from "@/components/layout/ConditionalFooter";
 import { StudioWidgets } from "@/components/layout/StudioWidgets";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/json-ld";
@@ -112,7 +112,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <ToastProvider>
             <SiteHeader />
             <main id="main-content">{children}</main>
-            <SiteFooter />
+            <ConditionalFooter />
             <StudioWidgets />
             <ConsentBanner />
           </ToastProvider>
