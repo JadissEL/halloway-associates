@@ -88,6 +88,12 @@ function mediaKindFromMime(mime: string): PendingAttachment["mediaKind"] {
   return "DOCUMENT";
 }
 
+function extractDraftId(workspace: WorkspacePayload | null | undefined): string | null {
+  if (!workspace || workspace.type !== "listingDraft") return null;
+  const draft = (workspace.data as { draft?: { id?: unknown } } | undefined)?.draft;
+  return typeof draft?.id === "string" ? draft.id : null;
+}
+
 function getOrCreateSessionId(): string {
   if (typeof window === "undefined") return "";
   try {
@@ -118,6 +124,13 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
   const [sessionId, setSessionId] = useState("");
   const [pendingConfirmation, setPendingConfirmation] = useState<PendingConfirmation | null>(null);
   const [pendingAttachments, setPendingAttachments] = useState<PendingAttachment[]>([]);
+  // The property draft this conversation is currently working on, once one
+  // exists — echoed back to the API on every turn so the model knows which
+  // draft "my listing" refers to without the user ever seeing or typing its
+  // id (see the request schema comment in route.ts for why this is needed:
+  // a confirmed tool's result never re-enters the model's own message
+  // history, only the plain-text reply does).
+  const [activePropertyId, setActivePropertyId] = useState<string | null>(null);
   const [isRecordingVoice, setIsRecordingVoice] = useState(false);
   const [voiceRecordingError, setVoiceRecordingError] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -318,6 +331,7 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
             })),
             locale,
             sessionId,
+            activePropertyId: activePropertyId ?? undefined,
           }),
         });
         if (!res.ok) throw new Error("concierge failed");
@@ -326,6 +340,8 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
         if (data.workspace) {
           setWorkspace(data.workspace);
           setViewMode((v) => (v === "conversation" ? "full" : v));
+          const draftId = extractDraftId(data.workspace);
+          if (draftId) setActivePropertyId(draftId);
         }
         setPendingConfirmation(data.pendingConfirmation ?? null);
       } catch {
@@ -337,7 +353,7 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
         setLoading(false);
       }
     },
-    [loading, locale, messages, sessionId, pendingAttachments],
+    [loading, locale, messages, sessionId, pendingAttachments, activePropertyId],
   );
 
   const confirmPendingAction = useCallback(async () => {
@@ -358,6 +374,13 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
       if (data.workspace) {
         setWorkspace(data.workspace);
         setViewMode((v) => (v === "conversation" ? "full" : v));
+        // This is where a freshly-confirmed create_property_draft's id first
+        // becomes known client-side — capturing it here (not just in
+        // sendMessage's response handler) is what makes "what's still
+        // missing on my draft?" work as the very next message, with no
+        // extra turn needed.
+        const draftId = extractDraftId(data.workspace);
+        if (draftId) setActivePropertyId(draftId);
       }
     } catch {
       setMessages((prev) => [

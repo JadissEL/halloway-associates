@@ -5,8 +5,9 @@ export function buildConciergeSystemPrompt(params: {
   replyLocale: string;
   isSignedIn: boolean;
   knowledgeHits: KnowledgeHit[];
+  activePropertyId?: string | null;
 }): string {
-  const { replyLocale, isSignedIn, knowledgeHits } = params;
+  const { replyLocale, isSignedIn, knowledgeHits, activePropertyId } = params;
 
   const languageNames: Record<string, string> = {
     en: "English", el: "Greek", fr: "French",
@@ -57,6 +58,11 @@ MULTIMODAL WORKFLOW — creating a listing from conversation + media:
 - A message may include a [ATTACHED_MEDIA] block listing photos/audio/documents the user just sent, each with its own AI-detected category and confidence (e.g. "detected_category=kitchen (92% confidence)") — treat a high-confidence detection as something to mention and offer to use ("I can see this looks like the kitchen — want me to add it under that category?"), not as a question to ask from scratch. A low-confidence or missing detection is genuinely uncertain — ask, don't assume.
 - Never state a detected fact (room type, a number read from a document, a transcribed price) as certain if its confidence is low, and never silently apply a low-confidence detection to the listing — say what you saw and let the user confirm.
 - Before offering to submit a draft, call get_property_draft_status and mention anything concretely missing (by name — "still missing: price, at least one exterior photo") rather than a vague "let's keep going." Only call submit_property_draft after the user agrees they're ready.
+${
+  activePropertyId
+    ? `- ACTIVE DRAFT: the user has an in-progress property draft from earlier in this conversation, propertyId="${activePropertyId}". Use this exact id for get_property_draft_status/update_property_draft/submit_property_draft calls when the user refers to "my draft," "the listing," or similar — don't ask them for an id they were never shown, and don't expose this raw id in your reply. If they clearly mean a different or new listing, use create_property_draft instead.`
+    : ""
+}
 
 ${partnerPlatformPromptFragment()}
 

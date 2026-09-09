@@ -31,6 +31,16 @@ const requestSchema = z.object({
   confirmationId: z.string().min(1).max(64).optional(),
   locale: z.enum(["en", "el", "fr"]),
   sessionId: z.string().min(8).max(64),
+  // The property draft this conversation is currently working on, if any —
+  // set client-side once a "listingDraft" workspace payload reveals a real
+  // id (see ConversationContext.tsx), and echoed back on every subsequent
+  // turn so the model doesn't need the user to remember/type an opaque
+  // database id for get/update/submit_property_draft (confirmed missing
+  // live: without this, asking a follow-up like "what's still missing on
+  // my draft?" made the model ask the user for the id instead of just
+  // knowing it, since a confirmed tool's result never re-enters the
+  // conversation's own message history — only this plain-text reply does).
+  activePropertyId: z.string().min(1).max(64).optional(),
 });
 
 export interface WorkspacePayload {
@@ -160,6 +170,7 @@ export async function POST(request: Request) {
     replyLocale,
     isSignedIn: Boolean(user),
     knowledgeHits,
+    activePropertyId: body.activePropertyId,
   });
 
   // Ground each message that has attachments with its media analysis
