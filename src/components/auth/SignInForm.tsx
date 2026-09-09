@@ -19,6 +19,10 @@ export function SignInForm() {
   // tampered link) or ?error=server (a transient failure) when a magic link
   // fails — this previously landed on a completely blank form with no
   // explanation, even though a translation string for exactly this existed.
+  // Carried through to /api/auth/request-link so the emailed link lands the
+  // user back where they actually wanted to go (e.g. "/app" when they were
+  // sent here from the gated AI concierge) instead of always /account.
+  const redirect = searchParams.get("redirect");
   const linkError = searchParams.get("error");
   const linkErrorMessage =
     status === "idle" && linkError === "invalid"
@@ -37,7 +41,7 @@ export function SignInForm() {
           const res = await fetch("/api/auth/request-link", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, locale }),
+            body: JSON.stringify({ email, locale, redirect: redirect ?? undefined }),
           });
           setStatus(res.ok ? "sent" : "error");
         } catch {

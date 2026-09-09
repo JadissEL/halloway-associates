@@ -460,6 +460,12 @@
     "send": "Send",
     "confirmAction": "Confirm",
     "cancelAction": "Cancel",
+    "gate": {
+      "title": "Sign in to use the Concierge",
+      "body": "The AI concierge searches live listings, books calls, and creates requests on your behalf — that takes an account. Browsing properties and professionals is always free, no sign-in needed.",
+      "cta": "Sign in to continue",
+      "browseInstead": "Browse properties instead"
+    },
     "activity": {
       "title": "My Activity",
       "recent": "Recent",

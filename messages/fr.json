@@ -460,6 +460,12 @@
     "send": "Envoyer",
     "confirmAction": "Confirmer",
     "cancelAction": "Annuler",
+    "gate": {
+      "title": "Connectez-vous pour utiliser le Concierge",
+      "body": "L'assistant IA recherche des annonces en direct, réserve des appels et crée des demandes en votre nom — cela nécessite un compte. Parcourir les propriétés et les professionnels reste toujours gratuit, sans connexion requise.",
+      "cta": "Se connecter pour continuer",
+      "browseInstead": "Parcourir les propriétés"
+    },
     "activity": {
       "title": "Mon activité",
       "recent": "Récent",

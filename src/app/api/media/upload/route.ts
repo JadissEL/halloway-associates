@@ -10,8 +10,9 @@ import { runFastAnalysis, runDeepAnalysis } from "@/lib/media/pipeline";
 // constructs, not binary uploads — the model never sees or handles raw
 // bytes here, it only ever gets back the structured analysis result via
 // get_media_analysis (src/mcp/tools/listings.ts), same as every other
-// tool result. Anonymous-safe like /api/ai/conversation (a visitor can
-// attach photos before signing in), rate-limited the same way.
+// tool result. Requires sign-in like /api/ai/conversation now does — the
+// AI concierge (chat + attachments) is a signed-in-only surface; browsing
+// listings is the part of the platform that stays open to anyone.
 
 const MAX_UPLOAD_BODY_BYTES = 32 * 1024 * 1024;
 
@@ -58,6 +59,9 @@ export async function POST(request: Request) {
   }
 
   const user = await getCurrentUser();
+  if (!user) {
+    return Response.json({ error: "Sign in required.", requiresSignIn: true }, { status: 401 });
+  }
 
   // Ownership: a caller may only attach media to a propertyId they own —
   // the same ownership model every MCP tool uses (authorize.ts), enforced

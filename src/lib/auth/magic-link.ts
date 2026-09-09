@@ -1,6 +1,7 @@
 import { randomBytes, createHash } from "crypto";
 import { Resend } from "resend";
 import { prisma } from "@/lib/db/client";
+import { safeRedirectPath } from "./safe-redirect";
 
 const TOKEN_TTL_MS = 15 * 60 * 1000; // 15 minutes
 
@@ -18,6 +19,7 @@ function hashToken(token: string): string {
 export async function requestMagicLink(
   email: string,
   preferredLocale: string,
+  redirectPath?: string,
 ): Promise<void> {
   const normalizedEmail = email.trim().toLowerCase();
 
@@ -37,7 +39,12 @@ export async function requestMagicLink(
   });
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const verifyUrl = `${siteUrl}/api/auth/verify?token=${token}&locale=${preferredLocale}`;
+  // Re-validated here even though the request-link route already checked it
+  // — this value travels through an email a user clicks minutes later, so
+  // it's worth guarding at the point where it actually becomes a redirect
+  // target too, not just at the point it was first submitted.
+  const redirect = safeRedirectPath(redirectPath, "/account");
+  const verifyUrl = `${siteUrl}/api/auth/verify?token=${token}&locale=${preferredLocale}&redirect=${encodeURIComponent(redirect)}`;
 
   const from = process.env.CONTACT_FROM_EMAIL ?? "onboarding@resend.dev";
 

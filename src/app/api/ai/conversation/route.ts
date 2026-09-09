@@ -88,9 +88,8 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  // This is a fully anonymous, unauthenticated endpoint that can fan out to
-  // several Groq completions per call — cap both per-session and per-IP so
-  // it can't become an unbounded way to spend the Groq budget.
+  // Rate-limit before the auth check (cheap, no DB hit) so an anonymous
+  // flood can't force a user lookup per request either.
   const ip = clientIp(request.headers);
   if (
     isRateLimited(`ai-session:${body.sessionId}`, 30, 5 * 60 * 1000) ||
@@ -103,6 +102,18 @@ export async function POST(request: Request) {
   // tool or confirms one) — a fresh DB-backed identity, not just the session
   // cookie's userId/email, per the documented pattern in current-user.ts.
   const user = await getCurrentUser();
+
+  // The AI concierge is a signed-in-only surface (product decision: browsing
+  // listings stays open to anyone, but talking to the concierge — which can
+  // search on the user's behalf, book calls, and create/manage listings —
+  // requires an account). Enforced here, not just by AppPage.tsx hiding the
+  // chat UI for a signed-out visitor: a page-level gate alone doesn't stop
+  // someone calling this endpoint directly, and every real tool invocation
+  // in this codebase is authorized at the API boundary, not the UI's say-so.
+  if (!user) {
+    return Response.json({ error: "Sign in required.", requiresSignIn: true }, { status: 401 });
+  }
+
   const identity = identityFromUser(user, body.locale, body.sessionId);
 
   // --- Confirming a previously proposed action -----------------------------
