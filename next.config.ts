@@ -16,7 +16,10 @@ const nextConfig: NextConfig = {
   // running it). Marking it external keeps Next.js from bundling it, so it
   // loads via plain require() with its real on-disk relative paths intact —
   // the documented fix for this exact class of native/worker-script package.
-  serverExternalPackages: ["tesseract.js"],
+  // ffmpeg-static resolves its bundled binary's path relative to its own
+  // package directory too (src/lib/media/video.ts) — same class of bug as
+  // tesseract.js above if Next bundles it.
+  serverExternalPackages: ["tesseract.js", "ffmpeg-static"],
   // Pin the workspace root explicitly: a stray lockfile in a parent directory
   // (outside this repo) can otherwise make Next mis-infer the root and sweep
   // unrelated files (e.g. the separate modal/ app) into this build.
