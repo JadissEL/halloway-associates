@@ -325,6 +325,38 @@
     display: none;
   }
 
+  /* Custom scrollbar for the AI workspace's scrollable panels (message
+     list, activity list, results list) — the default OS scrollbar (a pale
+     grey track/thumb) looked completely unstyled against the dark luxury
+     shell, the exact "doesn't follow the platform" gap this closes. Thin
+     and sharp-edged (no border-radius — every other control in this system
+     is rounded-none too), and quiet by default: scrolling happens
+     constantly and half-consciously, so the resting thumb stays a muted
+     graphite and only warms to gold under the cursor/while dragging — a
+     small "yes, this is still our brand" cue exactly when a hand is on it,
+     not a gold bar sitting there all the time. */
+  .luxury-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-luxury-border) transparent;
+  }
+
+  .luxury-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .luxury-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .luxury-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--color-luxury-border);
+  }
+
+  .luxury-scroll::-webkit-scrollbar-thumb:hover,
+  .luxury-scroll::-webkit-scrollbar-thumb:active {
+    background-color: var(--color-luxury-gold);
+  }
+
   /* --- Listing media placeholder ------------------------------------------
      Used wherever a property/professional has no photo yet (i.e. everywhere
      right now -- Property.images is modeled in Prisma but nothing captures

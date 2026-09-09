@@ -160,15 +160,15 @@ export function SalesChatbot() {
               </button>
             </header>
 
-            <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+            <div ref={listRef} className="luxury-scroll flex-1 space-y-3 overflow-y-auto px-4 py-4">
               {messages.map((msg, i) => (
                 <div
                   key={`${msg.role}-${i}`}
                   className={cn(
                     "max-w-[92%] px-3.5 py-2.5 text-sm leading-relaxed",
                     msg.role === "user"
-                      ? "ml-auto bg-luxury-gold text-luxury-black"
-                      : "border border-luxury-border bg-luxury-black/40 text-luxury-muted-foreground",
+                      ? "ml-auto bg-luxury-gold text-luxury-black shadow-[0_10px_30px_rgba(201,162,74,0.28)]"
+                      : "border border-luxury-border bg-luxury-black/40 text-luxury-muted-foreground shadow-[0_10px_30px_rgba(0,0,0,0.5)]",
                   )}
                 >
                   {renderInlineMarkdown(msg.content)}

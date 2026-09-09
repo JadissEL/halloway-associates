@@ -79,7 +79,7 @@ export function ActivityPanel() {
           </button>
         ))}
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+      <div className="luxury-scroll min-h-0 flex-1 overflow-y-auto p-3">
         {authState === "signed-out" && (
           <div className="flex flex-col items-center gap-3 px-3 py-10 text-center">
             <div className="flex h-11 w-11 items-center justify-center border border-luxury-gold/40 text-luxury-gold">

@@ -104,7 +104,7 @@ export function ConversationPanel() {
           </motion.div>
         </div>
       ) : (
-        <div ref={listRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-6 md:px-8">
+        <div ref={listRef} className="luxury-scroll min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-6 md:px-8">
           <AnimatePresence initial={false}>
             {messages.map((msg, i) => (
               <motion.div
@@ -113,10 +113,18 @@ export function ConversationPanel() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
                 className={cn(
-                  "max-w-[85%] rounded-none px-4 py-3 text-sm leading-relaxed shadow-[0_8px_24px_rgba(0,0,0,0.35)]",
+                  // A flat black shadow at low opacity barely reads against
+                  // an already near-black backdrop — no contrast to perceive
+                  // depth from. Matches the platform's own established
+                  // shadow language instead: gold surfaces (buttons, CTAs)
+                  // already cast a gold-tinted glow everywhere else in this
+                  // app, and 0.5-opacity black is what every other elevated
+                  // dark panel (toasts, the site-assistant window) actually
+                  // uses to read as "lifted."
+                  "max-w-[85%] rounded-none px-4 py-3 text-sm leading-relaxed",
                   msg.role === "user"
-                    ? "ml-auto bg-luxury-gold text-luxury-black"
-                    : "border border-luxury-border bg-luxury-graphite text-luxury-ivory",
+                    ? "ml-auto bg-luxury-gold text-luxury-black shadow-[0_10px_30px_rgba(201,162,74,0.28)]"
+                    : "border border-luxury-border bg-luxury-graphite text-luxury-ivory shadow-[0_10px_30px_rgba(0,0,0,0.5)]",
                 )}
               >
                 {msg.attachments && msg.attachments.length > 0 && <MessageAttachments attachments={msg.attachments} />}

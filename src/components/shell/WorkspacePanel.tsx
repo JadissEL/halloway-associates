@@ -68,7 +68,7 @@ export function WorkspacePanel() {
         <span className="mb-1.5 block h-px w-6 bg-luxury-gold/60" />
         <h2 className="font-serif text-lg">{t("title")}</h2>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto p-4">
+      <div className="luxury-scroll min-h-0 flex-1 overflow-y-auto p-4">
         {!workspace && (
           <div className="flex flex-col items-center gap-2.5 px-3 py-10 text-center">
             <Sparkles size={18} className="text-luxury-gold" strokeWidth={1.5} />

@@ -109,8 +109,8 @@ function ShellInner() {
       </div>
       {/* Mobile stacked results/activity, shown under the conversation when selected */}
       <div className="border-t border-luxury-border md:hidden">
-        {viewMode === "results" && <div className="h-64 overflow-y-auto"><WorkspacePanel /></div>}
-        {viewMode === "history" && <div className="h-64 overflow-y-auto"><ActivityPanel /></div>}
+        {viewMode === "results" && <div className="luxury-scroll h-64 overflow-y-auto"><WorkspacePanel /></div>}
+        {viewMode === "history" && <div className="luxury-scroll h-64 overflow-y-auto"><ActivityPanel /></div>}
       </div>
     </div>
   );
