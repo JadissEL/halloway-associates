@@ -9,7 +9,7 @@ import { QuickAccessRow } from "./QuickAccessRow";
 import { AttachmentTray } from "./AttachmentTray";
 import { MessageAttachments } from "./MessageAttachments";
 import { cn } from "@/lib/utils";
-import { renderInlineMarkdown } from "@/lib/chat/render-inline-markdown";
+import { ChatMarkdown } from "@/lib/chat/render-markdown";
 
 const ACCEPT = "image/*,audio/*,video/*,application/pdf";
 
@@ -128,7 +128,7 @@ export function ConversationPanel() {
                 )}
               >
                 {msg.attachments && msg.attachments.length > 0 && <MessageAttachments attachments={msg.attachments} />}
-                {renderInlineMarkdown(msg.content)}
+                <ChatMarkdown content={msg.content} />
               </motion.div>
             ))}
           </AnimatePresence>

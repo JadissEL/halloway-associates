@@ -18,7 +18,7 @@ import {
   trackUserMessage,
 } from "@/lib/chat/visitor-client";
 import { cn } from "@/lib/utils";
-import { renderInlineMarkdown } from "@/lib/chat/render-inline-markdown";
+import { ChatMarkdown } from "@/lib/chat/render-markdown";
 
 const QUICK_KEYS = ["marketplace", "services", "concierge", "contact"] as const;
 
@@ -171,7 +171,7 @@ export function SalesChatbot() {
                       : "border border-luxury-border bg-luxury-black/40 text-luxury-muted-foreground shadow-[0_10px_30px_rgba(0,0,0,0.5)]",
                   )}
                 >
-                  {renderInlineMarkdown(msg.content)}
+                  <ChatMarkdown content={msg.content} />
                 </div>
               ))}
               {loading && (
