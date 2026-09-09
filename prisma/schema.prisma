@@ -24,13 +24,13 @@ enum Role {
 }
 
 model User {
-  id              String    @id @default(cuid())
-  email           String    @unique
+  id              String   @id @default(cuid())
+  email           String   @unique
   name            String?
-  role            Role      @default(CUSTOMER)
-  preferredLocale String    @default("en")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  role            Role     @default(CUSTOMER)
+  preferredLocale String   @default("en")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   magicLinkTokens MagicLinkToken[]
   requestRooms    RequestRoom[]
@@ -39,16 +39,17 @@ model User {
   properties      Property[]
   callBookings    CallBooking[]
   requestMessages RequestMessage[]
+  mediaAssets     MediaAsset[]
 }
 
 model MagicLinkToken {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tokenHash String   @unique
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
   expiresAt DateTime
   usedAt    DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   @@index([userId])
 }
@@ -102,9 +103,9 @@ model RequestRoom {
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
 
-  messages    RequestMessage[]
-  attachments RequestAttachment[]
-  statusEvents StatusEvent[]
+  messages      RequestMessage[]
+  attachments   RequestAttachment[]
+  statusEvents  StatusEvent[]
   notifications Notification[]
 
   @@index([userId])
@@ -119,19 +120,19 @@ enum MessageSender {
 }
 
 model RequestMessage {
-  id                String        @id @default(cuid())
-  roomId            String
-  room              RequestRoom   @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  senderType        MessageSender
-  senderUserId      String?
-  senderUser        User?         @relation(fields: [senderUserId], references: [id])
-  content           String
+  id             String        @id @default(cuid())
+  roomId         String
+  room           RequestRoom   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  senderType     MessageSender
+  senderUserId   String?
+  senderUser     User?         @relation(fields: [senderUserId], references: [id])
+  content        String
   // BCP-47 code of the language the message was actually written in
   // (spec section 16 — never silently overwrite the original).
-  originalLocale    String
+  originalLocale String
   // { "<locale>": "translated text" } — populated on demand, original always kept.
-  translations      Json?
-  createdAt         DateTime      @default(now())
+  translations   Json?
+  createdAt      DateTime      @default(now())
 
   @@index([roomId])
 }
@@ -215,30 +216,133 @@ enum ModerationStatus {
 }
 
 model Property {
-  id            String            @id @default(cuid())
+  id            String           @id @default(cuid())
   ownerId       String?
-  owner         User?             @relation(fields: [ownerId], references: [id])
+  owner         User?            @relation(fields: [ownerId], references: [id])
   title         String
   description   String
   propertyType  PropertyType
   listingIntent ListingIntent
   city          String
   area          String?
+  // Square metres — added alongside the AI draft workflow (mcp/tools/listings.ts)
+  // after live testing showed the model conflating "85 square meters" with the
+  // `area` field above (a neighbourhood/district name, not a size) since there
+  // was nowhere else to put it. The manual PropertyForm.tsx doesn't collect
+  // this yet either — a real, pre-existing gap the AI path just surfaced first.
+  livingAreaSqm Int?
   priceAmount   Int
-  currency      String            @default("EUR")
+  currency      String           @default("EUR")
   bedrooms      Int?
   furnished     Boolean?
   images        String[]
-  status        ModerationStatus  @default(PENDING_REVIEW)
-  isDemo        Boolean           @default(false)
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  status        ModerationStatus @default(PENDING_REVIEW)
+  isDemo        Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 
   requestRooms    RequestRoom[]
   moderationItems ModerationItem[]
+  media           MediaAsset[]
 
   @@index([status])
   @@index([city, propertyType, listingIntent])
+}
+
+// ---------------------------------------------------------------------------
+// Media intelligence layer — the AI concierge's multimodal upload pipeline
+// (chat attachments: images/audio/video/documents). Generic across listing
+// types on purpose (see ListingKind): today only PROPERTY has a real backing
+// table to attach to, but the model itself doesn't hardcode that — a future
+// vertical (vehicle/business/...) attaches by adding its own nullable FK
+// column here, the same way propertyId does, not by duplicating this table.
+//
+// Blobs are stored in Postgres (`data Bytes`) rather than S3/R2/Blob
+// storage: this platform has no object-storage credentials provisioned
+// today (confirmed against .env.local/.env.example — Neon Postgres + Groq +
+// Resend only), and provisioning one is a real infra/cost decision for a
+// human to make, not something to silently add. Images are re-encoded to
+// WebP and capped at 2000px on the long edge before storage specifically to
+// keep this option viable (see src/lib/media/storage.ts) — swapping the
+// storage backend later only means rewriting that one module's save/read
+// functions, everything else (schema, API, MCP tools, UI) is backend-agnostic.
+enum ListingKind {
+  PROPERTY
+}
+
+enum MediaKind {
+  IMAGE
+  AUDIO
+  VIDEO
+  DOCUMENT
+}
+
+enum MediaProcessingStatus {
+  UPLOADED
+  PROCESSING
+  ANALYZED
+  FAILED
+}
+
+model MediaAsset {
+  id        String  @id @default(cuid())
+  // Every upload starts scoped to the chat session it came from (spec
+  // section 13, "multimodal context") — sessionId is the same anonymous id
+  // ConversationContext.tsx already generates client-side. userId is set
+  // only once we know who's signed in; a listing draft is created and
+  // media gets linked to it via listingKind/propertyId once the AI (or the
+  // user) confirms which listing this media belongs to.
+  sessionId String
+  userId    String?
+  user      User?   @relation(fields: [userId], references: [id])
+
+  listingKind ListingKind?
+  propertyId  String?
+  property    Property?    @relation(fields: [propertyId], references: [id])
+
+  mediaKind        MediaKind
+  originalFilename String
+  mimeType         String
+  sizeBytes        Int
+  data             Bytes
+  checksum         String
+  widthPx          Int?
+  heightPx         Int?
+  durationMs       Int?
+
+  processingStatus MediaProcessingStatus @default(UPLOADED)
+  errorMessage     String?
+
+  // AI detections — a taxonomy category (see src/lib/media/taxonomy.ts),
+  // never presented to the user as fact without its confidence (spec
+  // section 9/23: AI-detected is not the same provenance tier as
+  // user-confirmed until userConfirmed flips true).
+  detectedCategory    String?
+  detectedSubcategory String?
+  categoryConfidence  Float?
+  extractedText       String?
+  transcript          String?
+  aiDescription       String?
+  qualityScore        Float?
+  blurScore           Float?
+  orientation         String?
+  perceptualHash      String?
+  duplicateGroup      String?
+  userConfirmed       Boolean @default(false)
+  // Catch-all for detection detail that doesn't warrant its own column yet
+  // (entities extracted from a voice message, OCR line items, etc.) —
+  // structured, still provenance-tagged inside, never freeform prose.
+  aiMetadata          Json    @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sessionId])
+  @@index([userId])
+  @@index([propertyId])
+  @@index([checksum])
+  @@index([duplicateGroup])
+  @@index([processingStatus])
 }
 
 // ---------------------------------------------------------------------------
@@ -259,18 +363,18 @@ enum ProfessionalCategory {
 }
 
 model Professional {
-  id               String               @id @default(cuid())
-  name             String
-  category         ProfessionalCategory
-  languages        String[]
-  bio              String
+  id                String               @id @default(cuid())
+  name              String
+  category          ProfessionalCategory
+  languages         String[]
+  bio               String
   // True for approved external platforms we route users to instead of building
   // our own workflow (e.g. shopthebarber.app for grooming/barber bookings).
-  isPartnerPlatform Boolean             @default(false)
-  externalUrl      String?
-  isDemo           Boolean              @default(false)
-  status           ModerationStatus     @default(APPROVED)
-  createdAt        DateTime             @default(now())
+  isPartnerPlatform Boolean              @default(false)
+  externalUrl       String?
+  isDemo            Boolean              @default(false)
+  status            ModerationStatus     @default(APPROVED)
+  createdAt         DateTime             @default(now())
 
   requestRooms RequestRoom[]
 
@@ -293,20 +397,20 @@ enum CallType {
 }
 
 model AvailabilitySlot {
-  id          String        @id @default(cuid())
+  id          String       @id @default(cuid())
   callType    CallType?
   startTime   DateTime
   endTime     DateTime
-  isBooked    Boolean       @default(false)
+  isBooked    Boolean      @default(false)
   callBooking CallBooking?
 
   @@index([startTime, isBooked])
 }
 
 model CallBooking {
-  id                String     @id @default(cuid())
+  id                String            @id @default(cuid())
   userId            String
-  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   callType          CallType
   reason            String?
   topics            String[]
@@ -314,9 +418,9 @@ model CallBooking {
   countryOfOrigin   String?
   arrivalDate       DateTime?
   cityOfInterest    String?
-  slotId            String?    @unique
+  slotId            String?           @unique
   slot              AvailabilitySlot? @relation(fields: [slotId], references: [id])
-  createdAt         DateTime   @default(now())
+  createdAt         DateTime          @default(now())
 
   requestRoom RequestRoom?
 
@@ -347,14 +451,14 @@ enum ModerationAction {
 }
 
 model ModerationItem {
-  id            String                @id @default(cuid())
+  id            String               @id @default(cuid())
   contentType   ModeratedContentType
   propertyId    String?
-  property      Property?             @relation(fields: [propertyId], references: [id])
-  status        ModerationStatus      @default(PENDING_REVIEW)
+  property      Property?            @relation(fields: [propertyId], references: [id])
+  status        ModerationStatus     @default(PENDING_REVIEW)
   lastAction    ModerationAction?
   moderatorNote String?
-  createdAt     DateTime              @default(now())
+  createdAt     DateTime             @default(now())
   decidedAt     DateTime?
 
   @@index([contentType, status])
@@ -405,17 +509,17 @@ enum AiLayer {
 }
 
 model AiUsageLog {
-  id                String   @id @default(cuid())
-  sessionId         String
-  userId            String?
-  layer             AiLayer
-  model             String?
-  promptTokens      Int      @default(0)
-  completionTokens  Int      @default(0)
-  latencyMs         Int      @default(0)
-  toolCalls         Json?
-  costEstimateUsd   Float    @default(0)
-  createdAt         DateTime @default(now())
+  id               String   @id @default(cuid())
+  sessionId        String
+  userId           String?
+  layer            AiLayer
+  model            String?
+  promptTokens     Int      @default(0)
+  completionTokens Int      @default(0)
+  latencyMs        Int      @default(0)
+  toolCalls        Json?
+  costEstimateUsd  Float    @default(0)
+  createdAt        DateTime @default(now())
 
   @@index([createdAt])
   @@index([layer])
@@ -447,24 +551,24 @@ enum McpOutcome {
 }
 
 model McpAuditLog {
-  id             String           @id @default(cuid())
+  id           String           @id @default(cuid())
   // Who: null actorUserId means an anonymous/read-only caller (e.g. a public
   // search) — still logged, just with no identity attached.
-  actorUserId    String?
-  actorRole      Role?
+  actorUserId  String?
+  actorRole    Role?
   // Which transport/caller: "internal-concierge" for the platform's own AI,
   // or an external MCP client's configured clientId.
-  clientId       String
-  toolName       String
-  resourceType   McpResourceType?
-  resourceId     String?
-  inputArgs      Json
-  authorized     Boolean
-  confirmed      Boolean?
-  outcome        McpOutcome
-  errorMessage   String?
-  latencyMs      Int              @default(0)
-  createdAt      DateTime         @default(now())
+  clientId     String
+  toolName     String
+  resourceType McpResourceType?
+  resourceId   String?
+  inputArgs    Json
+  authorized   Boolean
+  confirmed    Boolean?
+  outcome      McpOutcome
+  errorMessage String?
+  latencyMs    Int              @default(0)
+  createdAt    DateTime         @default(now())
 
   @@index([toolName, createdAt])
   @@index([actorUserId])

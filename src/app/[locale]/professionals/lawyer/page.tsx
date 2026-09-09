@@ -15,7 +15,7 @@ export default async function LawyerRequestPage({ params }: Props) {
     <div className="luxury-surface min-h-screen px-4 py-14 md:px-10 md:py-20">
       <div className="mx-auto max-w-xl">
         <span className="mb-3 block h-px w-8 bg-luxury-gold/60" />
-        <h1 className="mb-8 font-serif text-4xl font-semibold tracking-tight text-luxury-ivory md:text-5xl">{t("title")}</h1>
+        <h1 className="text-page-title mb-8">{t("title")}</h1>
         {user ? <LawyerRequestForm /> : <GatedAction />}
       </div>
     </div>

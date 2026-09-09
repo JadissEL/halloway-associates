@@ -4,6 +4,7 @@ import { registerPropertyTools } from "./tools/properties";
 import { registerProfessionalTools } from "./tools/professionals";
 import { registerRequestTools } from "./tools/requests";
 import { registerCallTools } from "./tools/calls";
+import { registerListingTools } from "./tools/listings";
 import type { McpScope } from "./types";
 
 // One real capability registry (same tool definitions, same authorization
@@ -35,5 +36,6 @@ export function createMcpServer(authInfo?: AuthInfo): McpServer {
   registerProfessionalTools(server, visibleScopes);
   registerRequestTools(server, visibleScopes);
   registerCallTools(server, visibleScopes);
+  registerListingTools(server, visibleScopes);
   return server;
 }

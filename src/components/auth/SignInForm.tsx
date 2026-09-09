@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { Mail } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Field";
 
 export function SignInForm() {
   const t = useTranslations("auth");
@@ -42,31 +45,22 @@ export function SignInForm() {
         }
       }}
     >
-      <label className="flex flex-col gap-1.5 text-sm font-medium text-luxury-ivory">
-        {t("emailLabel")}
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="rounded-none border border-luxury-border bg-luxury-input px-4 py-2.5 text-base text-luxury-ivory outline-none focus:border-luxury-gold"
-          placeholder="you@example.com"
-        />
-      </label>
-      <button
-        type="submit"
-        disabled={status === "sending" || status === "sent"}
-        className="rounded-none bg-luxury-gold px-5 py-3 text-sm font-semibold text-luxury-black disabled:opacity-50"
-      >
+      <Input
+        label={t("emailLabel")}
+        type="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="you@example.com"
+        error={status === "error" ? t("invalidLink") : linkErrorMessage ?? undefined}
+      />
+      <Button type="submit" disabled={status === "sending" || status === "sent"} loading={status === "sending"} size="lg">
+        <Mail size={15} />
         {status === "sending" ? t("sending") : t("sendLink")}
-      </button>
+      </Button>
       {status === "sent" && (
         <p className="text-sm text-luxury-muted-foreground">{t("checkEmail")}</p>
       )}
-      {status === "error" && (
-        <p className="text-sm text-red-400">{t("invalidLink")}</p>
-      )}
-      {linkErrorMessage && <p className="text-sm text-red-400">{linkErrorMessage}</p>}
     </form>
   );
 }

@@ -11,7 +11,7 @@ export async function ComingSoon({ title }: { title: string }) {
         <Sparkles size={22} className="text-luxury-gold" />
       </div>
       <span className="h-px w-8 bg-luxury-gold/60" />
-      <p className="font-serif text-3xl font-semibold tracking-tight md:text-4xl">{title}</p>
+      <p className="text-section-title">{title}</p>
       <p className="max-w-md text-sm leading-relaxed text-luxury-muted-foreground">{t("comingSoonBody")}</p>
       <Link
         href="/app"

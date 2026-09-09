@@ -400,7 +400,9 @@
     "backHome": "Retour à l'accueil"
   },
   "footer": {
-    "tagline": "Laboratoire de production · IA · Automatisation · Ingénierie de croissance",
+    "tagline": "Propriétés, professionnels et services du quotidien en Grèce — en une seule conversation.",
+    "exploreHeading": "Explorer",
+    "companyHeading": "Entreprise",
     "ourWork": "Nos réalisations",
     "privacy": "Confidentialité",
     "contact": "Contact",
@@ -413,21 +415,21 @@
     "reject": "Essentiels seulement"
   },
   "chat": {
-    "title": "Conseiller Halloway",
-    "subtitle": "Services · Découverte · Contact",
+    "title": "Assistant Halloway",
+    "subtitle": "Propriétés · Services · Assistance",
     "open": "Clavardez avec nous",
     "close": "Fermer le clavardage",
-    "welcome": "Bonjour — je peux vous aider à comprendre nos services du Laboratoire de production et trouver le chemin le plus rapide vers un appel de découverte. Que souhaitez-vous construire ou améliorer?",
-    "placeholder": "Posez une question sur l'automatisation, la croissance, le produit…",
+    "welcome": "Bonjour — posez-moi vos questions sur Halloway & Associates : comment trouver une propriété ou un professionnel en Grèce, comment fonctionne notre assistant IA, ou nos services d'automatisation et de croissance pour les entreprises. Que souhaitez-vous savoir?",
+    "placeholder": "Posez une question sur les propriétés, les professionnels ou nos services…",
     "send": "Envoyer",
     "thinking": "Réflexion…",
     "error": "Je suis temporairement indisponible. Écrivez à hello@hallowayassociates.com ou utilisez notre page contact.",
-    "contactNudge": "Prêt? Réserver un appel de découverte",
+    "contactNudge": "Prêt à parler à une vraie personne?",
     "quick": {
+      "marketplace": "Comment trouver une propriété ou un professionnel?",
       "services": "Quels services offrez-vous?",
-      "automation": "Nous avons besoin d'automatisation et d'IA",
-      "contact": "Je voudrais parler à votre équipe",
-      "regions": "Où opérez-vous?"
+      "concierge": "Comment fonctionne l'assistant IA?",
+      "contact": "Je voudrais parler à une vraie personne"
     }
   },
   "marketplaceNav": {
@@ -700,12 +702,16 @@
       "intent": "Location ou vente",
       "city": "Ville",
       "area": "Quartier / zone",
+      "areaHint": "Le nom du quartier, pas la superficie — voir Surface habitable (m²) ci-dessous.",
+      "livingAreaSqm": "Surface habitable (m²)",
       "price": "Prix",
       "bedrooms": "Chambres",
       "furnished": "Meublé",
       "images": "Photos",
       "submit": "Soumettre pour modération",
-      "submitted": "Merci — votre annonce est en attente de modération."
+      "submitted": "Merci — votre annonce est en attente de modération.",
+      "invalidError": "Veuillez vérifier les champs obligatoires.",
+      "serviceUnavailableError": "Cette partie de la plateforme est temporairement indisponible. Veuillez réessayer sous peu."
     }
   },
   "common": {

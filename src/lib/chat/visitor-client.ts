@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
 import {
   VISITOR_STORAGE_KEY,
   type VisitorProfile,
@@ -70,8 +71,11 @@ export function trackPageVisit(pathname: string, locale: string) {
 export function trackUserMessage(content: string, locale: string) {
   const profile = loadVisitorProfile(locale);
   profile.messageCount += 1;
+  // interests tracks Studio focus tracks only (see ChatFocus's doc comment
+  // in types.ts) — a "marketplace" signal is used for the contact-handoff
+  // destination in SalesChatbot.tsx, not stored here.
   const focus = inferFocusFromText(content);
-  if (focus && !profile.interests.includes(focus)) {
+  if (focus && focus !== "marketplace" && !profile.interests.includes(focus)) {
     profile.interests = [...profile.interests, focus];
   }
   saveVisitorProfile(profile);
@@ -80,11 +84,17 @@ export function trackUserMessage(content: string, locale: string) {
 
 export function VisitorTracker() {
   const pathname = usePathname();
+  // Was `pathname.startsWith("/fr") ? "fr" : "en"` -- silently mis-tagged
+  // every Greek-locale page visit as English (no "el" branch at all). Now
+  // that this tracker also runs across the Greece marketplace, not just
+  // Studio pages, getting the visitor's actual locale right matters a lot
+  // more than it used to; next-intl's own resolved locale is the correct
+  // source instead of re-deriving it from the URL.
+  const locale = useLocale();
 
   useEffect(() => {
-    const locale = pathname.startsWith("/fr") ? "fr" : "en";
     trackPageVisit(pathname, locale);
-  }, [pathname]);
+  }, [pathname, locale]);
 
   return null;
 }

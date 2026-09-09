@@ -25,7 +25,7 @@ export default async function ExplorePage({ params }: Props) {
     <div className="luxury-surface min-h-screen px-4 py-14 text-luxury-ivory md:px-10 md:py-20">
       <div className="mx-auto max-w-4xl">
         <span className="mb-3 block h-px w-8 bg-luxury-gold/60" />
-        <h1 className="mb-10 font-serif text-4xl font-semibold tracking-tight md:text-5xl">{tMarketplace("exploreTitle")}</h1>
+        <h1 className="text-page-title mb-10">{tMarketplace("exploreTitle")}</h1>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {CATEGORIES.map(({ key, icon: Icon }) => (
             <Link

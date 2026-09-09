@@ -24,6 +24,17 @@ const HOW_IT_WORKS_ICONS: Record<(typeof HOW_IT_WORKS_STEPS)[number], LucideIcon
   track: Layers,
 };
 
+// Rotated across the service tiles so the grid reads as a set of distinct
+// categories rather than one flat monochrome list -- same Aegean/gold/
+// terracotta/olive palette as the aurora background and professional
+// avatars, so it still reads as one system.
+const SERVICE_GRADIENTS = [
+  "linear-gradient(135deg, var(--color-luxury-gold), #1c6e8c)",
+  "linear-gradient(135deg, #1c6e8c, #5f7a3d)",
+  "linear-gradient(135deg, #b5622f, var(--color-luxury-gold))",
+  "linear-gradient(135deg, #5f7a3d, var(--color-luxury-gold))",
+];
+
 export async function LandingPage() {
   const t = await getTranslations("landingPage");
 
@@ -65,24 +76,27 @@ export async function LandingPage() {
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-luxury-gold">
             {t("howItWorks.eyebrow")}
           </p>
-          <h2 className="mb-14 max-w-2xl font-serif text-3xl font-semibold tracking-tight md:text-4xl">
+          <h2 className="text-section-title mb-16 max-w-2xl">
             {t("howItWorks.title")}
           </h2>
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="relative grid gap-10 md:grid-cols-3 md:gap-8">
+            <div className="pointer-events-none absolute inset-x-0 top-7 hidden h-px bg-luxury-border md:block" />
             {HOW_IT_WORKS_STEPS.map((step, i) => {
               const Icon = HOW_IT_WORKS_ICONS[step];
               return (
-                <div key={step} className="border border-luxury-border bg-luxury-graphite p-6">
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center border border-luxury-gold/40">
-                    <Icon size={20} className="text-luxury-gold" />
+                <div key={step} className="relative flex flex-col items-start gap-4 md:items-center md:text-center">
+                  <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center border border-luxury-gold bg-luxury-black">
+                    <Icon size={22} className="text-luxury-gold" />
+                    <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center bg-luxury-gold text-[10px] font-bold text-luxury-black">
+                      {i + 1}
+                    </span>
                   </div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-luxury-muted-foreground">
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
-                  <p className="mb-2 font-serif text-xl">{t(`howItWorks.steps.${step}.title`)}</p>
-                  <p className="text-sm leading-relaxed text-luxury-muted-foreground">
-                    {t(`howItWorks.steps.${step}.body`)}
-                  </p>
+                  <div>
+                    <p className="mb-1.5 font-serif text-xl">{t(`howItWorks.steps.${step}.title`)}</p>
+                    <p className="text-sm leading-relaxed text-luxury-muted-foreground">
+                      {t(`howItWorks.steps.${step}.body`)}
+                    </p>
+                  </div>
                 </div>
               );
             })}
@@ -97,17 +111,22 @@ export async function LandingPage() {
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-luxury-gold">
             {t("services.eyebrow")}
           </p>
-          <h2 className="mb-14 max-w-2xl font-serif text-3xl font-semibold tracking-tight md:text-4xl">
+          <h2 className="text-section-title mb-14 max-w-2xl">
             {t("services.title")}
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {SERVICES.map(({ key, href, icon: Icon }) => (
+            {SERVICES.map(({ key, href, icon: Icon }, i) => (
               <Link
                 key={key}
                 href={href}
-                className="group flex flex-col gap-3 border border-luxury-border bg-luxury-black/60 p-5 no-underline transition-colors duration-200 hover:border-luxury-gold"
+                className="group flex flex-col gap-4 border border-luxury-border bg-luxury-black/60 p-5 no-underline transition-colors duration-200 hover:border-luxury-gold"
               >
-                <Icon size={22} className="text-luxury-muted-foreground transition-colors duration-200 group-hover:text-luxury-gold" />
+                <div
+                  className="flex h-10 w-10 items-center justify-center"
+                  style={{ background: SERVICE_GRADIENTS[i % SERVICE_GRADIENTS.length] }}
+                >
+                  <Icon size={19} className="text-luxury-black" />
+                </div>
                 <p className="text-sm leading-relaxed text-luxury-ivory">{t(`services.${key}`)}</p>
                 <span className="mt-auto inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-luxury-gold opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                   <ArrowRight size={12} />
@@ -119,23 +138,23 @@ export async function LandingPage() {
       </section>
 
       {/* Trust */}
-      <section className="border-t border-luxury-border px-6 py-20 md:px-10 md:py-28">
+      <section className="border-t border-luxury-border bg-luxury-graphite/40 px-6 py-20 md:px-10 md:py-28">
         <div className="mx-auto max-w-5xl">
           <span className="mb-3 block h-px w-8 bg-luxury-gold/60" />
           <p className="mb-14 text-xs font-semibold uppercase tracking-[0.25em] text-luxury-gold">
             {t("trust.eyebrow")}
           </p>
-          <div className="grid gap-10 md:grid-cols-3">
+          <div className="grid divide-y divide-luxury-border md:grid-cols-3 md:divide-x md:divide-y-0">
             {(
               [
                 { key: "multilingual" as const, icon: Languages },
                 { key: "humanReview" as const, icon: ShieldCheck },
                 { key: "oneThread" as const, icon: Layers },
               ]
-            ).map(({ key, icon: Icon }) => (
-              <div key={key}>
-                <Icon size={24} className="mb-4 text-luxury-gold" />
-                <p className="mb-2 font-serif text-xl">{t(`trust.${key}.title`)}</p>
+            ).map(({ key, icon: Icon }, i) => (
+              <div key={key} className={`flex flex-col gap-3 py-6 md:py-0 ${i === 0 ? "md:pr-8" : i === 2 ? "md:pl-8" : "md:px-8"}`}>
+                <Icon size={22} className="text-luxury-gold" />
+                <p className="font-serif text-xl">{t(`trust.${key}.title`)}</p>
                 <p className="text-sm leading-relaxed text-luxury-muted-foreground">{t(`trust.${key}.body`)}</p>
               </div>
             ))}

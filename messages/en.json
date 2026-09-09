@@ -400,7 +400,9 @@
     "backHome": "Back to home"
   },
   "footer": {
-    "tagline": "Production Lab · AI · Automation · Growth Engineering",
+    "tagline": "Properties, professionals, and everyday services in Greece — in one conversation.",
+    "exploreHeading": "Explore",
+    "companyHeading": "Company",
     "ourWork": "Our work",
     "privacy": "Privacy",
     "contact": "Contact",
@@ -413,21 +415,21 @@
     "reject": "Essential only"
   },
   "chat": {
-    "title": "Halloway Advisor",
-    "subtitle": "Services · Discovery · Contact",
+    "title": "Halloway Assistant",
+    "subtitle": "Properties · Services · Support",
     "open": "Chat with us",
     "close": "Close chat",
-    "welcome": "Hi — I'm here to help you understand our Production Lab services and find the fastest path to a discovery call. What are you trying to build or improve?",
-    "placeholder": "Ask about automation, growth, product…",
+    "welcome": "Hi — ask me anything about Halloway & Associates: finding a property or professional in Greece, how the AI concierge works, or our automation and growth services for businesses. What would you like to know?",
+    "placeholder": "Ask about properties, professionals, or our services…",
     "send": "Send message",
     "thinking": "Thinking…",
     "error": "I'm temporarily unavailable. Please email hello@hallowayassociates.com or use our contact page.",
-    "contactNudge": "Ready? Book a discovery call",
+    "contactNudge": "Ready to talk to a real person?",
     "quick": {
+      "marketplace": "How do I find a property or professional?",
       "services": "What services do you offer?",
-      "automation": "We need automation & AI",
-      "contact": "I'd like to talk to your team",
-      "regions": "Where do you operate?"
+      "concierge": "How does the AI concierge work?",
+      "contact": "I'd like to talk to a real person"
     }
   },
   "marketplaceNav": {
@@ -700,12 +702,16 @@
       "intent": "Rent or sale",
       "city": "City",
       "area": "Area / neighborhood",
+      "areaHint": "The neighbourhood name, not the size — see Living area (m²) below.",
+      "livingAreaSqm": "Living area (m²)",
       "price": "Price",
       "bedrooms": "Bedrooms",
       "furnished": "Furnished",
       "images": "Photos",
       "submit": "Submit for review",
-      "submitted": "Thank you — your listing is awaiting moderation."
+      "submitted": "Thank you — your listing is awaiting moderation.",
+      "invalidError": "Please check the required fields.",
+      "serviceUnavailableError": "This part of the platform is temporarily unavailable. Please try again shortly."
     }
   },
   "common": {

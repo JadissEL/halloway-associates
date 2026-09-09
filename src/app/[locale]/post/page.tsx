@@ -28,7 +28,7 @@ export default async function PostPage({ params }: Props) {
     <div className="luxury-surface min-h-screen px-4 py-14 text-luxury-ivory md:px-10 md:py-20">
       <div className="mx-auto max-w-3xl">
         <span className="mb-3 block h-px w-8 bg-luxury-gold/60" />
-        <h1 className="mb-2 font-serif text-4xl font-semibold tracking-tight md:text-5xl">{t("post")}</h1>
+        <h1 className="text-page-title mb-2">{t("post")}</h1>
         <p className="mb-10 text-sm text-luxury-muted-foreground">What would you like to publish?</p>
         <div className="grid gap-4 sm:grid-cols-2">
           {OPTIONS.map((opt) => (

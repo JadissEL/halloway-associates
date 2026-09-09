@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { LogIn, Inbox, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Tab = "recent" | "active" | "saved" | "history";
@@ -80,19 +81,23 @@ export function ActivityPanel() {
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         {authState === "signed-out" && (
-          <div className="flex flex-col items-start gap-3 p-2">
-            <p className="text-sm text-luxury-muted-foreground">{t("signInPrompt")}</p>
+          <div className="flex flex-col items-center gap-3 px-3 py-10 text-center">
+            <div className="flex h-11 w-11 items-center justify-center border border-luxury-gold/40 text-luxury-gold">
+              <LogIn size={18} />
+            </div>
+            <p className="text-sm leading-relaxed text-luxury-muted-foreground">{t("signInPrompt")}</p>
             <Link
               href="/sign-in"
-              className="border border-luxury-gold px-4 py-2 text-xs font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
+              className="mt-1 border border-luxury-gold px-4 py-2 text-xs font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
             >
               {tAuth("signIn")}
             </Link>
           </div>
         )}
         {authState === "error" && (
-          <div className="rounded-none border border-luxury-destructive/60 bg-luxury-destructive/10 px-4 py-3 text-sm text-luxury-ivory">
-            {tCommon("serviceUnavailable")}
+          <div className="flex flex-col items-center gap-2 px-3 py-10 text-center">
+            <AlertTriangle size={18} className="text-luxury-destructive" />
+            <p className="text-sm text-luxury-muted-foreground">{tCommon("serviceUnavailable")}</p>
           </div>
         )}
         {authState === "signed-in" && data && (
@@ -115,7 +120,7 @@ function ActivityList({
   statusLabel: (key: string) => string;
 }) {
   if (tab === "saved") {
-    if (data.saved.length === 0) return <p className="p-2 text-sm text-luxury-muted-foreground">{emptyLabel}</p>;
+    if (data.saved.length === 0) return <EmptyTab label={emptyLabel} />;
     return (
       <ul className="space-y-1.5">
         {data.saved.map((s) => (
@@ -131,7 +136,7 @@ function ActivityList({
   }
 
   const rooms = data[tab];
-  if (rooms.length === 0) return <p className="p-2 text-sm text-luxury-muted-foreground">{emptyLabel}</p>;
+  if (rooms.length === 0) return <EmptyTab label={emptyLabel} />;
 
   return (
     <ul className="space-y-1.5">
@@ -149,5 +154,14 @@ function ActivityList({
         </li>
       ))}
     </ul>
+  );
+}
+
+function EmptyTab({ label }: { label: string }) {
+  return (
+    <div className="flex flex-col items-center gap-2.5 px-3 py-10 text-center">
+      <Inbox size={18} className="text-luxury-muted-foreground" strokeWidth={1.5} />
+      <p className="text-sm text-luxury-muted-foreground">{label}</p>
+    </div>
   );
 }

@@ -11,12 +11,21 @@ import type { McpScope, PlatformIdentity } from "./types";
 // admin surface (moderation, AI usage) is the separate modal/ app gated by
 // INTERNAL_ADMIN_API_KEY, not a role check — this MCP layer doesn't yet
 // expose any admin-only tool, so there's nothing to grant it for.
+//
+// properties:write:own is granted to every role (not just PROPERTY_OWNER/
+// AGENT) because the platform's own manual posting flow
+// (properties/new/page.tsx) already lets ANY signed-in user post a
+// property regardless of role — only auth is checked there, not role. The
+// AI-assisted draft tools (mcp/tools/listings.ts) are a second path onto
+// the exact same authorization boundary; scoping them narrower than the
+// form they're meant to parallel would make the AI *more* restrictive than
+// the UI it's supposed to augment, not an intentional distinction.
 const ROLE_SCOPES: Record<Role, McpScope[]> = {
-  CUSTOMER: ["lawyer-request:create", "request:read:own", "call-booking:create"],
+  CUSTOMER: ["lawyer-request:create", "request:read:own", "call-booking:create", "properties:write:own"],
   PROPERTY_OWNER: ["lawyer-request:create", "request:read:own", "call-booking:create", "properties:write:own"],
   AGENT: ["lawyer-request:create", "request:read:own", "call-booking:create", "properties:write:own"],
-  BUSINESS: ["lawyer-request:create", "request:read:own", "call-booking:create"],
-  PROFESSIONAL: ["lawyer-request:create", "request:read:own", "call-booking:create"],
+  BUSINESS: ["lawyer-request:create", "request:read:own", "call-booking:create", "properties:write:own"],
+  PROFESSIONAL: ["lawyer-request:create", "request:read:own", "call-booking:create", "properties:write:own"],
   ADMINISTRATOR: ["lawyer-request:create", "request:read:own", "call-booking:create", "properties:write:own"],
 };
 
@@ -30,8 +39,8 @@ export function deriveScopes(role: Role | null): McpScope[] {
   return [...PUBLIC_SCOPES, ...(ROLE_SCOPES[role] ?? [])];
 }
 
-export function identityFromUser(user: User | null, locale: string): PlatformIdentity {
-  return { userId: user?.id ?? null, email: user?.email ?? null, role: user?.role ?? null, locale };
+export function identityFromUser(user: User | null, locale: string, sessionId: string | null = null): PlatformIdentity {
+  return { userId: user?.id ?? null, email: user?.email ?? null, role: user?.role ?? null, locale, sessionId };
 }
 
 // AuthInfo is OAuth-shaped (token/clientId/scopes) by SDK design — there's no
@@ -54,7 +63,7 @@ export function hasScope(authInfo: AuthInfo | undefined, scope: McpScope): boole
 
 export function identityFromAuthInfo(authInfo: AuthInfo | undefined): PlatformIdentity {
   const extra = authInfo?.extra as PlatformIdentity | undefined;
-  return extra ?? { userId: null, email: null, role: null, locale: "en" };
+  return extra ?? { userId: null, email: null, role: null, locale: "en", sessionId: null };
 }
 
 // Per-model ownership field, matching the schema exactly (confirmed by

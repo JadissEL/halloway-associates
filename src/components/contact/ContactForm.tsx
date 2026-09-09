@@ -4,7 +4,9 @@ import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { submitContactForm, type ContactFormState } from "@/app/actions/contact";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
+import { Input, Textarea, Select } from "@/components/ui/Field";
+import { Send } from "lucide-react";
 
 const initialState: ContactFormState = { ok: false, message: "" };
 
@@ -19,104 +21,38 @@ export function ContactForm() {
   return (
     <form action={formAction} className="space-y-5">
       <div className="grid gap-5 md:grid-cols-2">
-        <Field label={t("name")} name="name" required error={state.fieldErrors?.name} />
-        <Field label={t("company")} name="company" />
+        <Input label={t("name")} name="name" required error={state.fieldErrors?.name} />
+        <Input label={t("company")} name="company" />
       </div>
-      <Field
-        label={t("email")}
-        name="email"
-        type="email"
-        required
-        error={state.fieldErrors?.email}
-      />
-      <div>
-        <label htmlFor="focus" className="mb-2 block text-sm font-medium text-luxury-ivory">
-          {t("focus")}
-        </label>
-        <select
-          id="focus"
-          name="focus"
-          defaultValue={focusOptions.includes(defaultFocus as (typeof focusOptions)[number]) ? defaultFocus : "other"}
-          className="w-full rounded-none border border-luxury-border bg-luxury-input px-4 py-3 text-luxury-ivory outline-none focus:border-luxury-gold"
-        >
-          {focusOptions.map((option) => (
-            <option key={option} value={option}>
-              {t(`focusOptions.${option}`)}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label htmlFor="message" className="mb-2 block text-sm font-medium text-luxury-ivory">
-          {t("message")}
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          rows={5}
-          required
-          className={cn(
-            "w-full resize-y rounded-none border border-luxury-border bg-luxury-input px-4 py-3 text-luxury-ivory outline-none focus:border-luxury-gold",
-            state.fieldErrors?.message && "border-luxury-destructive",
-          )}
-        />
-        {state.fieldErrors?.message && (
-          <p className="mt-1 text-sm text-luxury-destructive">{state.fieldErrors.message}</p>
-        )}
-      </div>
+      <Input label={t("email")} name="email" type="email" required error={state.fieldErrors?.email} />
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="inline-flex bg-luxury-gold px-8 py-3.5 text-sm font-semibold text-luxury-black transition-all duration-200 hover:brightness-110 disabled:opacity-60"
+      <Select
+        label={t("focus")}
+        name="focus"
+        defaultValue={focusOptions.includes(defaultFocus as (typeof focusOptions)[number]) ? defaultFocus : "other"}
       >
+        {focusOptions.map((option) => (
+          <option key={option} value={option}>
+            {t(`focusOptions.${option}`)}
+          </option>
+        ))}
+      </Select>
+
+      <Textarea label={t("message")} name="message" rows={5} required error={state.fieldErrors?.message} />
+
+      <Button type="submit" disabled={pending} loading={pending} size="lg">
+        <Send size={15} />
         {pending ? t("sending") : t("submit")}
-      </button>
+      </Button>
 
       {state.message && (
         <p
-          className={cn(
-            "text-sm",
-            state.ok ? "text-luxury-gold" : "text-luxury-destructive",
-          )}
+          className={state.ok ? "text-sm text-luxury-gold" : "text-sm text-luxury-destructive"}
           role="status"
         >
           {state.message}
         </p>
       )}
     </form>
-  );
-}
-
-function Field({
-  label,
-  name,
-  type = "text",
-  required,
-  error,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  required?: boolean;
-  error?: string;
-}) {
-  return (
-    <div>
-      <label htmlFor={name} className="mb-2 block text-sm font-medium text-luxury-ivory">
-        {label}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        required={required}
-        className={cn(
-          "w-full rounded-none border border-luxury-border bg-luxury-input px-4 py-3 text-luxury-ivory outline-none focus:border-luxury-gold",
-          error && "border-luxury-destructive",
-        )}
-      />
-      {error && <p className="mt-1 text-sm text-luxury-destructive">{error}</p>}
-    </div>
   );
 }

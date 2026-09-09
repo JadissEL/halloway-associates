@@ -50,7 +50,7 @@ export default async function RequestRoomPage({ params }: Props) {
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-luxury-gold">
           {room.type.replace(/_/g, " ")}
         </p>
-        <h1 className="mb-10 font-serif text-4xl font-semibold tracking-tight md:text-5xl">
+        <h1 className="text-page-title mb-10">
           {t(`status.${room.status}`)}
         </h1>
 

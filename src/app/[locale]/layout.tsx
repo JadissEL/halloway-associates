@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/react";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
+import { ToastProvider } from "@/components/ui/Toast";
 import { routing } from "@/i18n/routing";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -14,8 +15,16 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/json-ld";
 import { SITE_NAME, SITE_URL } from "@/lib/seo/site";
 import "../globals.css";
+// subsets: "latin" alone silently dropped Greek glyphs from the self-hosted
+// font file — confirmed against Next's own Google-fonts metadata (Inter
+// does ship a "greek" subset, it just wasn't requested). Since Inter is the
+// platform's one interface font (nav, buttons, forms, chat, body text
+// everywhere), every el locale page was quietly falling back to the
+// browser's default system font for every Greek character on the site,
+// not just headlines. latin-ext is added too for full French diacritic
+// coverage (œ and less-common accented capitals sit outside base "latin").
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext", "greek"],
   variable: "--font-inter",
   display: "swap",
 });
@@ -23,9 +32,19 @@ const inter = Inter({
 // Serif headline face for the new Greece marketplace shell (AntaY-co design
 // system, section 1.3). Studio pages don't reference --font-serif, so their
 // Inter-only look is unaffected — this only adds a font, it doesn't switch one.
+//
+// No "greek" subset here on purpose: Playfair Display has no Greek glyphs
+// on Google Fonts at all (checked against the same metadata) — for Greek
+// text this deliberately, not accidentally, falls through to the Georgia
+// serif already declared in --font-serif's stack (globals.css), which does
+// have proper Greek coverage and a reasonably close weight/proportion match.
+// Weights trimmed from 5 to the 2 actually used anywhere in the app (400 —
+// implicit on card/list titles, 600 — every real heading; confirmed by
+// auditing every `font-serif` call site) rather than shipping 500/700/800
+// nothing renders with.
 const playfair = Playfair_Display({
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "600"],
   variable: "--font-playfair",
   display: "swap",
 });
@@ -90,11 +109,13 @@ export default async function LocaleLayout({ children, params }: Props) {
           {tNav("skipToContent")}
         </a>
         <NextIntlClientProvider messages={messages}>
-          <SiteHeader />
-          <main id="main-content">{children}</main>
-          <SiteFooter />
-          <StudioWidgets />
-          <ConsentBanner />
+          <ToastProvider>
+            <SiteHeader />
+            <main id="main-content">{children}</main>
+            <SiteFooter />
+            <StudioWidgets />
+            <ConsentBanner />
+          </ToastProvider>
         </NextIntlClientProvider>
         <Analytics />
       </body>

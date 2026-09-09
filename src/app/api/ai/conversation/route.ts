@@ -8,10 +8,20 @@ import { runConcierge, confirmConciergeAction } from "@/lib/ai/groq-client";
 import { logAiUsage } from "@/lib/ai/usage-log";
 import { isRateLimited, clientIp } from "@/lib/rate-limit";
 import { identityFromUser } from "@/mcp/authorize";
+import { buildAttachmentContext } from "@/lib/media/context";
 
 const requestSchema = z.object({
   messages: z
-    .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(4000) }))
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string().min(1).max(4000),
+        // Media ids from /api/media/upload the user attached to THIS
+        // message (spec section 13: attachments join the active
+        // conversational context, not a disconnected file list).
+        attachmentIds: z.array(z.string().min(1).max(64)).max(20).optional(),
+      }),
+    )
     .min(1)
     .max(30)
     .optional(),
@@ -24,7 +34,7 @@ const requestSchema = z.object({
 });
 
 export interface WorkspacePayload {
-  type: "properties" | "professionals" | "requestRoom" | "callSlots" | "callBooking";
+  type: "properties" | "professionals" | "requestRoom" | "callSlots" | "callBooking" | "listingDraft" | "mediaGallery";
   data: unknown;
 }
 
@@ -46,6 +56,13 @@ function deriveWorkspacePayload(
     if (name === "create_lawyer_request") return { type: "requestRoom", data: result };
     if (name === "get_available_call_slots") return { type: "callSlots", data: result };
     if (name === "create_call_booking") return { type: "callBooking", data: result };
+    if (
+      name === "create_property_draft" ||
+      name === "update_property_draft" ||
+      name === "get_property_draft_status"
+    )
+      return { type: "listingDraft", data: result };
+    if (name === "get_media_analysis") return { type: "mediaGallery", data: result };
   }
   return null;
 }
@@ -76,7 +93,7 @@ export async function POST(request: Request) {
   // tool or confirms one) — a fresh DB-backed identity, not just the session
   // cookie's userId/email, per the documented pattern in current-user.ts.
   const user = await getCurrentUser();
-  const identity = identityFromUser(user, body.locale);
+  const identity = identityFromUser(user, body.locale, body.sessionId);
 
   // --- Confirming a previously proposed action -----------------------------
   if (body.confirmationId) {
@@ -111,9 +128,13 @@ export async function POST(request: Request) {
   const messages = body.messages!;
   const lastUserMessage = [...messages].reverse().find((m) => m.role === "user");
   const { replyLocale } = detectLanguage(lastUserMessage?.content ?? "", body.locale);
+  const hasAttachments = messages.some((m) => m.attachmentIds && m.attachmentIds.length > 0);
 
-  // Layer 1 — deterministic, zero model tokens.
-  const deterministic = routeDeterministically(lastUserMessage?.content ?? "", replyLocale);
+  // Layer 1 — deterministic, zero model tokens. Skipped when media is
+  // attached: a canned keyword-matched reply can't account for what was
+  // just uploaded, so this turn always needs the reasoning layer to look at
+  // the attachment analysis (via buildAttachmentContext below).
+  const deterministic = hasAttachments ? { handled: false as const } : routeDeterministically(lastUserMessage?.content ?? "", replyLocale);
   if (deterministic.handled) {
     await logAiUsage({ sessionId: body.sessionId, userId: user?.id, layer: "DETERMINISTIC" }).catch(
       (error) => {
@@ -141,9 +162,21 @@ export async function POST(request: Request) {
     knowledgeHits,
   });
 
+  // Ground each message that has attachments with its media analysis
+  // results before they reach the reasoning model (spec sections 13/22) —
+  // built server-side from already-computed pipeline output, never raw
+  // bytes, and marked as untrusted data (see buildAttachmentContext).
+  const groundedMessages = await Promise.all(
+    messages.map(async (m) => {
+      if (!m.attachmentIds || m.attachmentIds.length === 0) return { role: m.role, content: m.content };
+      const context = await buildAttachmentContext(m.attachmentIds).catch(() => "");
+      return { role: m.role, content: context ? `${m.content}\n${context}` : m.content };
+    }),
+  );
+
   const startedAt = Date.now();
   try {
-    const result = await runConcierge(systemPrompt, messages, { ...identity, locale: replyLocale });
+    const result = await runConcierge(systemPrompt, groundedMessages, { ...identity, locale: replyLocale });
 
     await logAiUsage({
       sessionId: body.sessionId,

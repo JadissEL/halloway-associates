@@ -5,6 +5,9 @@ import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/db/client";
 import { safeQuery } from "@/lib/db/safe-query";
 import { ServiceUnavailableNotice } from "@/components/marketplace/ServiceUnavailableNotice";
+import { MediaTile } from "@/components/marketplace/MediaTile";
+import { Badge } from "@/components/ui/Badge";
+import { formatPrice, formatSqm } from "@/lib/format";
 import { BedDouble, Building2, Home, Landmark, Store, MapPin, type LucideIcon } from "lucide-react";
 
 type Props = {
@@ -66,17 +69,17 @@ export default async function PropertyDetailPage({ params }: Props) {
           &larr; {t("title")}
         </Link>
 
-        <div className="flex h-56 items-center justify-center border border-luxury-border bg-luxury-graphite">
-          <Icon size={48} className="text-luxury-muted-foreground" />
-        </div>
+        <MediaTile
+          images={property.images}
+          icon={Icon}
+          label={property.title}
+          iconSize={48}
+          className="h-64 border border-luxury-border md:h-80"
+        />
 
         <div className="mt-8">
-          {property.isDemo && (
-            <span className="mb-3 inline-block bg-luxury-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-luxury-black">
-              demo
-            </span>
-          )}
-          <h1 className="font-serif text-3xl font-semibold tracking-tight md:text-4xl">{property.title}</h1>
+          {property.isDemo && <Badge variant="gold" className="mb-3">demo</Badge>}
+          <h1 className="text-section-title">{property.title}</h1>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-luxury-muted-foreground">
             <MapPin size={14} />
             {property.city}
@@ -84,12 +87,17 @@ export default async function PropertyDetailPage({ params }: Props) {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <span className="border border-luxury-gold/40 px-3 py-1.5 text-sm font-semibold text-luxury-gold">
-              {property.priceAmount} {property.currency}
+            <span className="text-numeric border border-luxury-gold/40 px-3 py-1.5 text-sm font-semibold text-luxury-gold">
+              {formatPrice(property.priceAmount, property.currency, locale)}
             </span>
             <span className="border border-luxury-border px-3 py-1.5 text-sm text-luxury-muted-foreground">
               {t(`types.${property.propertyType}`)}
             </span>
+            {property.livingAreaSqm != null && (
+              <span className="text-numeric border border-luxury-border px-3 py-1.5 text-sm text-luxury-muted-foreground">
+                {formatSqm(property.livingAreaSqm, locale)}
+              </span>
+            )}
             <span className="border border-luxury-border px-3 py-1.5 text-sm text-luxury-muted-foreground">
               {t(`intents.${property.listingIntent}`)}
             </span>

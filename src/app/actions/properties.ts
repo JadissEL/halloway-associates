@@ -13,6 +13,13 @@ const propertySchema = z.object({
   listingIntent: z.enum(["RENT", "SALE"]),
   city: z.string().min(2).max(100),
   area: z.string().max(100).optional(),
+  // preprocess: an empty (but present) form field coerces to 0 via
+  // z.coerce.number(), which then fails .positive() and breaks this
+  // optional field's "just leave it blank" case — treat "" as absent first.
+  livingAreaSqm: z.preprocess(
+    (v) => (v === "" ? undefined : v),
+    z.coerce.number().int().positive().max(100_000).optional(),
+  ),
   priceAmount: z.coerce.number().int().positive().max(1_000_000_000),
   bedrooms: z.coerce.number().int().min(0).max(50).optional(),
   furnished: z.coerce.boolean().optional(),

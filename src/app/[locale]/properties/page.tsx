@@ -3,6 +3,9 @@ import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/db/client";
 import { safeQuery } from "@/lib/db/safe-query";
 import { ServiceUnavailableNotice } from "@/components/marketplace/ServiceUnavailableNotice";
+import { MediaTile } from "@/components/marketplace/MediaTile";
+import { Badge } from "@/components/ui/Badge";
+import { formatPrice } from "@/lib/format";
 import { BedDouble, Building2, Home, Landmark, Store, MapPin, type LucideIcon } from "lucide-react";
 import type { PropertyType, ListingIntent } from "@prisma/client";
 
@@ -68,7 +71,7 @@ export default async function PropertiesPage({ params, searchParams }: Props) {
           <div>
             {dbError && <ServiceUnavailableNotice />}
             <span className="mb-2 block h-px w-8 bg-luxury-gold/60" />
-            <h1 className="font-serif text-4xl font-semibold tracking-tight md:text-5xl">{t("title")}</h1>
+            <h1 className="text-page-title">{t("title")}</h1>
           </div>
           <Link
             href="/properties/new"
@@ -133,23 +136,22 @@ export default async function PropertiesPage({ params, searchParams }: Props) {
                   href={`/properties/${p.id}`}
                   className="group block border border-luxury-border bg-luxury-graphite no-underline transition-colors duration-200 hover:border-luxury-gold"
                 >
-                  <div className="flex h-32 items-center justify-center border-b border-luxury-border bg-luxury-black/60">
-                    <Icon size={32} className="text-luxury-muted-foreground transition-colors duration-200 group-hover:text-luxury-gold" />
-                  </div>
+                  <MediaTile
+                    images={p.images}
+                    icon={Icon}
+                    label={p.title}
+                    className="h-40 border-b border-luxury-border"
+                  />
                   <div className="p-4">
-                    {p.isDemo && (
-                      <span className="mb-2 inline-block bg-luxury-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-luxury-black">
-                        demo
-                      </span>
-                    )}
+                    {p.isDemo && <Badge variant="gold" className="mb-2">demo</Badge>}
                     <p className="font-serif text-lg text-luxury-ivory transition-colors duration-200 group-hover:text-luxury-gold">{p.title}</p>
                     <p className="mt-1 flex items-center gap-1.5 text-sm text-luxury-muted-foreground">
                       <MapPin size={13} />
                       {p.city}
                       {p.area ? `, ${p.area}` : ""}
                     </p>
-                    <p className="mt-3 inline-block border border-luxury-gold/40 px-2.5 py-1 text-sm font-semibold text-luxury-gold">
-                      {p.priceAmount} {p.currency}
+                    <p className="text-numeric mt-3 inline-block border border-luxury-gold/40 px-2.5 py-1 text-sm font-semibold text-luxury-gold">
+                      {formatPrice(p.priceAmount, p.currency, locale)}
                     </p>
                   </div>
                 </Link>

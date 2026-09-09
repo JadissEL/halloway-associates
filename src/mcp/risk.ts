@@ -14,6 +14,11 @@ export const TOOL_RISK: Record<string, RiskLevel> = {
   get_available_call_slots: "LOW",
   create_lawyer_request: "MEDIUM",
   create_call_booking: "MEDIUM",
+  create_property_draft: "MEDIUM",
+  update_property_draft: "LOW",
+  submit_property_draft: "MEDIUM",
+  get_property_draft_status: "LOW",
+  get_media_analysis: "LOW",
 };
 
 export function requiresConfirmation(toolName: string): boolean {

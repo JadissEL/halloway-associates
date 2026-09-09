@@ -30,7 +30,7 @@ export default async function BookACallPage({ params }: Props) {
         {dbError && <ServiceUnavailableNotice />}
         <span className="mb-3 block h-px w-8 bg-luxury-gold/60" />
         <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-luxury-gold">{t("eyebrow")}</p>
-        <h1 className="mb-3 font-serif text-4xl font-semibold tracking-tight text-luxury-ivory md:text-5xl">{t("title")}</h1>
+        <h1 className="text-page-title mb-3">{t("title")}</h1>
         <p className="mb-10 text-sm leading-relaxed text-luxury-muted-foreground">{t("subtitle")}</p>
         {user ? (
           <BookACallForm slots={slots.map((s) => ({ id: s.id, startTime: s.startTime.toISOString() }))} />

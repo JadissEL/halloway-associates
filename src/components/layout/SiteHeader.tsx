@@ -73,21 +73,23 @@ export function SiteHeader() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex xl:gap-3">
-          <NotificationBell />
-          <LocaleSwitcher />
-          <Link
-            href="/post"
-            className="whitespace-nowrap border border-luxury-gold px-3.5 py-2.5 text-sm font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
-          >
-            {tMarketplace("post")}
-          </Link>
-          <Link
-            href="/book-a-call"
-            className="whitespace-nowrap border border-luxury-gold px-3.5 py-2.5 text-sm font-semibold text-luxury-gold no-underline transition-colors duration-200 hover:bg-luxury-gold hover:text-luxury-black"
-          >
-            {tMarketplace("bookACall")}
-          </Link>
+        <div className="hidden items-center gap-4 lg:flex xl:gap-5">
+          <div className="flex items-center gap-4 border-r border-luxury-border pr-4 xl:gap-5 xl:pr-5">
+            <Link
+              href="/post"
+              className="whitespace-nowrap text-sm font-medium text-luxury-muted-foreground no-underline transition-colors hover:text-luxury-ivory"
+            >
+              {tMarketplace("post")}
+            </Link>
+            <Link
+              href="/book-a-call"
+              className="whitespace-nowrap text-sm font-medium text-luxury-muted-foreground no-underline transition-colors hover:text-luxury-ivory"
+            >
+              {tMarketplace("bookACall")}
+            </Link>
+            <NotificationBell />
+            <LocaleSwitcher />
+          </div>
           <Link
             href="/app"
             className="whitespace-nowrap bg-luxury-azure px-4 py-2.5 text-sm font-semibold text-white no-underline shadow-[0_4px_16px_rgba(59,111,235,0.3)] transition-colors duration-200 hover:bg-luxury-azure-hover"

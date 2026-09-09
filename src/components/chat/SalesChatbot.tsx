@@ -11,7 +11,7 @@ import {
   type ChatMessage,
   type ChatResponseBody,
 } from "@/lib/chat/types";
-import type { ServiceCategory } from "@/lib/services-data";
+import type { ChatFocus } from "@/lib/chat/types";
 import {
   loadVisitorProfile,
   saveVisitorProfile,
@@ -20,7 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 import { renderInlineMarkdown } from "@/lib/chat/render-inline-markdown";
 
-const QUICK_KEYS = ["services", "automation", "contact", "regions"] as const;
+const QUICK_KEYS = ["marketplace", "services", "concierge", "contact"] as const;
 
 export function SalesChatbot() {
   const t = useTranslations("chat");
@@ -30,7 +30,7 @@ export function SalesChatbot() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [suggestedFocus, setSuggestedFocus] = useState<ServiceCategory | undefined>();
+  const [suggestedFocus, setSuggestedFocus] = useState<ChatFocus | undefined>();
   const [showContactNudge, setShowContactNudge] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -101,10 +101,16 @@ export function SalesChatbot() {
         if (data.suggestedFocus) setSuggestedFocus(data.suggestedFocus);
         if (data.suggestContact) setShowContactNudge(true);
 
-        const updated = loadVisitorProfile(locale);
-        if (data.suggestedFocus && !updated.interests.includes(data.suggestedFocus)) {
-          updated.interests = [...updated.interests, data.suggestedFocus];
-          saveVisitorProfile(updated);
+        // VisitorProfile.interests tracks Studio focus tracks specifically
+        // (it feeds the Studio service-recommendation context) — "marketplace"
+        // isn't one of those, so it only ever drives contactHref below, never
+        // gets pushed in here.
+        if (data.suggestedFocus && data.suggestedFocus !== "marketplace") {
+          const updated = loadVisitorProfile(locale);
+          if (!updated.interests.includes(data.suggestedFocus)) {
+            updated.interests = [...updated.interests, data.suggestedFocus];
+            saveVisitorProfile(updated);
+          }
         }
       } catch {
         setMessages((prev) => [
@@ -118,7 +124,11 @@ export function SalesChatbot() {
     [loading, locale, messages, t],
   );
 
-  const contactHref = `/contact?focus=${suggestedFocus ?? "other"}`;
+  // The Studio contact form isn't the marketplace's human-handoff — a real
+  // person for property/professional/relocation questions is booked via
+  // /book-a-call (an Arrival & Information Call), not a discovery-call inbox.
+  const contactHref =
+    suggestedFocus === "marketplace" ? "/book-a-call" : `/contact?focus=${suggestedFocus ?? "other"}`;
 
   if (!mounted) return null;
 

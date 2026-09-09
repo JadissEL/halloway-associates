@@ -14,6 +14,12 @@ export interface PlatformIdentity {
   // booking's preferredLanguage) — simpler to carry it here than invent a
   // second passthrough channel.
   locale: string;
+  // The chat session's client-generated id (ConversationContext.tsx). Media
+  // upload tools (listings.ts) use this to find "media the user already
+  // dropped into this chat" — threaded from the request, never supplied by
+  // the model itself, since trusting the model to pass the right session id
+  // would let one conversation's tool calls reach into another's uploads.
+  sessionId: string | null;
 }
 
 // Scope vocabulary for AuthInfo.scopes. Read scopes are granted to anyone

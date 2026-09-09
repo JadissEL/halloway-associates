@@ -1,26 +1,86 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type DragEvent, type ClipboardEvent } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Send, ShieldCheck } from "lucide-react";
+import { Loader2, Send, ShieldCheck, Paperclip, Mic, Square, UploadCloud } from "lucide-react";
 import { useConversation } from "./ConversationContext";
 import { QuickAccessRow } from "./QuickAccessRow";
+import { AttachmentTray } from "./AttachmentTray";
+import { MessageAttachments } from "./MessageAttachments";
 import { cn } from "@/lib/utils";
 import { renderInlineMarkdown } from "@/lib/chat/render-inline-markdown";
 
+const ACCEPT = "image/*,audio/*,video/*,application/pdf";
+
 export function ConversationPanel() {
   const t = useTranslations("shell");
-  const { messages, loading, sendMessage, pendingConfirmation, confirmPendingAction, cancelPendingAction } = useConversation();
+  const {
+    messages, loading, sendMessage, pendingConfirmation, confirmPendingAction, cancelPendingAction,
+    pendingAttachments, addFiles, removeAttachment, isUploading,
+    isRecordingVoice, startVoiceRecording, stopVoiceRecording, voiceRecordingError,
+  } = useConversation();
   const [input, setInput] = useState("");
+  const [isDragOver, setIsDragOver] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const dragCounterRef = useRef(0);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, loading]);
+  }, [messages, loading, pendingAttachments.length]);
+
+  const submit = () => {
+    const text = input;
+    setInput("");
+    void sendMessage(text);
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    dragCounterRef.current = 0;
+    setIsDragOver(false);
+    const files = Array.from(e.dataTransfer.files ?? []);
+    if (files.length) addFiles(files);
+  };
+
+  const handlePaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
+    const files = Array.from(e.clipboardData.items)
+      .filter((item) => item.kind === "file")
+      .map((item) => item.getAsFile())
+      .filter((f): f is File => Boolean(f));
+    if (files.length) addFiles(files);
+  };
 
   return (
-    <div className="flex h-full min-h-0 flex-col text-luxury-ivory">
+    <div
+      className="relative flex h-full min-h-0 flex-col text-luxury-ivory"
+      onDragEnter={(e) => {
+        e.preventDefault();
+        dragCounterRef.current += 1;
+        setIsDragOver(true);
+      }}
+      onDragLeave={() => {
+        dragCounterRef.current -= 1;
+        if (dragCounterRef.current <= 0) setIsDragOver(false);
+      }}
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={handleDrop}
+    >
+      <AnimatePresence>
+        {isDragOver && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="pointer-events-none absolute inset-2 z-20 flex flex-col items-center justify-center gap-2 border-2 border-dashed border-luxury-gold bg-luxury-black/85 backdrop-blur-sm"
+          >
+            <UploadCloud size={28} className="text-luxury-gold" />
+            <p className="text-sm font-semibold text-luxury-ivory">Drop to attach</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {messages.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-5 px-6 text-center">
           <motion.div
@@ -59,6 +119,7 @@ export function ConversationPanel() {
                     : "border border-luxury-border bg-luxury-graphite text-luxury-ivory",
                 )}
               >
+                {msg.attachments && msg.attachments.length > 0 && <MessageAttachments attachments={msg.attachments} />}
                 {renderInlineMarkdown(msg.content)}
               </motion.div>
             ))}
@@ -105,24 +166,60 @@ export function ConversationPanel() {
 
       <QuickAccessRow />
 
+      <AttachmentTray attachments={pendingAttachments} onRemove={removeAttachment} />
+
+      {voiceRecordingError && (
+        <p className="px-4 pt-2 text-xs text-luxury-destructive md:px-8">{voiceRecordingError}</p>
+      )}
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          const text = input;
-          setInput("");
-          void sendMessage(text);
+          submit();
         }}
         className="flex items-end gap-2 border-t border-luxury-border px-4 py-3 md:px-8"
       >
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={ACCEPT}
+          multiple
+          className="hidden"
+          onChange={(e) => {
+            const files = Array.from(e.target.files ?? []);
+            if (files.length) addFiles(files);
+            e.target.value = "";
+          }}
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          aria-label="Attach photos, audio, video, or documents"
+          className="flex h-[46px] w-[42px] shrink-0 items-center justify-center border border-luxury-border text-luxury-muted-foreground transition-colors duration-200 hover:border-luxury-gold hover:text-luxury-gold"
+        >
+          <Paperclip size={17} />
+        </button>
+        <button
+          type="button"
+          onClick={() => (isRecordingVoice ? stopVoiceRecording() : void startVoiceRecording())}
+          aria-label={isRecordingVoice ? "Stop recording" : "Record a voice message"}
+          className={cn(
+            "flex h-[46px] w-[42px] shrink-0 items-center justify-center border transition-colors duration-200",
+            isRecordingVoice
+              ? "border-luxury-destructive bg-luxury-destructive/10 text-luxury-destructive"
+              : "border-luxury-border text-luxury-muted-foreground hover:border-luxury-gold hover:text-luxury-gold",
+          )}
+        >
+          {isRecordingVoice ? <Square size={15} className="animate-pulse" /> : <Mic size={17} />}
+        </button>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onPaste={handlePaste}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              const text = input;
-              setInput("");
-              void sendMessage(text);
+              submit();
             }
           }}
           rows={1}
@@ -131,7 +228,7 @@ export function ConversationPanel() {
         />
         <button
           type="submit"
-          disabled={loading || !input.trim()}
+          disabled={loading || isUploading || (!input.trim() && pendingAttachments.length === 0)}
           className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-none bg-luxury-gold text-luxury-black shadow-[0_4px_16px_rgba(201,162,74,0.25)] transition-all duration-200 hover:brightness-110 disabled:opacity-40 disabled:shadow-none"
           aria-label={t("send")}
         >

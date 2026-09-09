@@ -106,15 +106,69 @@
     @apply text-lg leading-relaxed text-luxury-muted-foreground md:text-xl;
   }
 
+  /* --- Typography scale (design-system pass) -------------------------------
+     Every one of these codifies a pattern that was already the de facto
+     standard — copy-pasted verbatim across 8-10+ files with small drift
+     (a missing breakpoint here, an extra tracking value there) rather than
+     shared. Extracting them changes zero pixels on first use; the payoff is
+     that the next page that needs a title reaches for one class instead of
+     re-typing (and slightly re-inventing) the string. */
+
+  /* The hero-scale headline — used once or twice per surface, never for a
+     routine page title. text-display, not .headline: the existing .headline
+     class is /about's own established pattern (H1 *and* H2 there) and is
+     left untouched rather than silently redefined out from under it. */
+  .text-display {
+    @apply text-balance font-serif text-4xl font-semibold leading-[1.1] tracking-tight text-luxury-ivory md:text-6xl lg:text-7xl;
+  }
+
+  /* The single most-repeated pattern in the app: every marketplace page's
+     H1 (Properties, Professionals, Post, Explore, a listing's own title, ...). */
+  .text-page-title {
+    @apply font-serif text-4xl font-semibold tracking-tight text-luxury-ivory md:text-5xl;
+  }
+
+  /* A section-level H2 inside a page (LandingPage's "How it works" /
+     "What we cover" / "Why Halloway", etc.) — one step down from a page title. */
+  .text-section-title {
+    @apply text-balance font-serif text-3xl font-semibold tracking-tight text-luxury-ivory md:text-4xl;
+  }
+
+  /* Card/list-item titles (a property card, a professional's name, a
+     workspace result) — serif for brand consistency, but intentionally
+     regular-weight and smaller: these compete with a price/badge/icon next
+     to them, a page title doesn't. */
+  .text-card-title {
+    @apply font-serif text-base leading-snug text-luxury-ivory;
+  }
+
+  /* Uppercase micro-labels that aren't the hero/section eyebrow motif above
+     (nav items, filter labels, form section headers) — deliberately NOT
+     serif and NOT the gold eyebrow color, so it doesn't compete with real
+     eyebrows for attention. */
+  .text-label {
+    @apply text-xs font-semibold uppercase tracking-wide text-luxury-muted-foreground;
+  }
+
+  /* Numerals that must line up — prices, m², bedroom counts, dates. Inter's
+     tabular figures keep digit widths uniform so e.g. a column of prices
+     doesn't visually jitter from one row to the next (spec: never let
+     financial figures look inconsistent). Applied via @apply so the
+     font-serif price badges throughout the marketplace pick it up without
+     fighting the serif italic-figure default. */
+  .text-numeric {
+    font-variant-numeric: tabular-nums;
+  }
+
   /* --- Marketplace luxury surface treatment ------------------------------
      A flat single-color fill read as "unstyled" rather than premium. This
      gives every marketplace surface a continuously drifting, code-generated
-     aurora — seven independently-moving blurred blobs (gold stays the
-     brand's primary accent; blue/violet/teal are purely atmospheric, the
-     same reason moody dark UIs rarely lean on one hue) whose composite hue
-     also slowly rotates, so the whole field genuinely shifts color over
-     time rather than just repositioning — plus a fine starfield + grain
-     layer on top. No images: pure CSS gradients + keyframes.
+     aurora — seven independently-moving blurred blobs in a Greece/Aegean-
+     coded palette (gold stays the brand's primary accent; deep aegean blue,
+     terracotta, olive and wine are atmospheric, chosen to read as
+     Mediterranean rather than the generic blue/violet/teal "AI SaaS"
+     gradient look) — plus a fine starfield + grain layer on top. No images:
+     pure CSS gradients + keyframes.
 
      Each blob is one layer of one multi-background gradient, and
      `background-position`/`background-size` are animated PER LAYER (a
@@ -149,21 +203,21 @@
     pointer-events: none;
     background-repeat: no-repeat;
     background-image:
-      radial-gradient(circle, color-mix(in srgb, var(--color-luxury-gold) 30%, transparent), transparent 70%),
-      radial-gradient(circle, color-mix(in srgb, #3a56e8 26%, transparent), transparent 70%),
-      radial-gradient(circle, color-mix(in srgb, #7440d6 24%, transparent), transparent 70%),
-      radial-gradient(circle, color-mix(in srgb, #1fb8a8 18%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, var(--color-luxury-gold) 32%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, #1c6e8c 28%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, #b5622f 22%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, #5f7a3d 18%, transparent), transparent 70%),
       radial-gradient(circle, color-mix(in srgb, var(--color-luxury-gold) 16%, transparent), transparent 70%),
-      radial-gradient(circle, color-mix(in srgb, #b23a8f 16%, transparent), transparent 70%),
-      radial-gradient(circle, color-mix(in srgb, #3a56e8 14%, transparent), transparent 70%);
+      radial-gradient(circle, color-mix(in srgb, #6b3550 18%, transparent), transparent 70%),
+      radial-gradient(circle, color-mix(in srgb, #1c6e8c 14%, transparent), transparent 70%);
     background-size:
       42% 36%, 38% 32%, 46% 38%, 30% 26%, 34% 30%, 28% 24%, 40% 34%;
     background-position:
       22% 28%, 80% 15%, 62% 82%, 12% 80%, 50% 45%, 88% 60%, 8% 12%;
-    filter: blur(75px) saturate(135%) hue-rotate(0deg);
+    filter: blur(75px) saturate(125%) hue-rotate(0deg);
     animation:
       luxury-drift-1 52s ease-in-out infinite,
-      luxury-hue-shift 90s linear infinite;
+      luxury-hue-shift 120s ease-in-out infinite;
     will-change: background-position, filter;
   }
 
@@ -232,9 +286,12 @@
     }
   }
 
+  /* A gentle +/-10deg wobble, not a full rainbow sweep -- the whole point of
+     the Aegean/gold/terracotta palette above is undone if it cycles through
+     every hue on the wheel like the old 0->360 version did. */
   @keyframes luxury-hue-shift {
-    0% { filter: blur(75px) saturate(135%) hue-rotate(0deg); }
-    100% { filter: blur(75px) saturate(135%) hue-rotate(360deg); }
+    0%, 100% { filter: blur(75px) saturate(125%) hue-rotate(-10deg); }
+    50% { filter: blur(75px) saturate(125%) hue-rotate(10deg); }
   }
 
   @keyframes luxury-twinkle {
@@ -266,5 +323,51 @@
 
   .scrollbar-none::-webkit-scrollbar {
     display: none;
+  }
+
+  /* --- Listing media placeholder ------------------------------------------
+     Used wherever a property/professional has no photo yet (i.e. everywhere
+     right now -- Property.images is modeled in Prisma but nothing captures
+     or reads it yet). A flat icon centered on a solid box reads as "broken
+     thumbnail"; this gives every un-photographed listing a deliberate,
+     brand-consistent tile instead: a two-tone gold/aegean diagonal wash, a
+     faint repeating Greek-key border motif, and the type icon as a large,
+     low-opacity watermark rather than the only thing on the tile. */
+  .media-placeholder {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+      linear-gradient(135deg,
+        color-mix(in srgb, var(--color-luxury-gold) 20%, var(--color-luxury-graphite)) 0%,
+        var(--color-luxury-graphite) 45%,
+        color-mix(in srgb, #1c6e8c 24%, var(--color-luxury-graphite)) 100%);
+  }
+
+  .media-placeholder::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.5;
+    background-image: repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--color-luxury-ivory) 6%, transparent) 0px,
+      color-mix(in srgb, var(--color-luxury-ivory) 6%, transparent) 1px,
+      transparent 1px,
+      transparent 12px
+    );
+  }
+
+  .media-placeholder__icon {
+    position: relative;
+    color: color-mix(in srgb, var(--color-luxury-ivory) 55%, transparent);
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .group:hover .media-placeholder__icon {
+    color: var(--color-luxury-gold);
+    transform: scale(1.06);
   }
 }
