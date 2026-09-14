@@ -29,10 +29,18 @@ model User {
   name            String?
   role            Role     @default(CUSTOMER)
   preferredLocale String   @default("en")
+  // Clerk is the identity provider (sign-in/sign-up, sessions) — this row
+  // stays the source of truth for everything the app actually owns
+  // (role, and every FK below: ownerId/userId across Property, RequestRoom,
+  // CallBooking, MediaAsset, ...), looked up/created on demand by
+  // getCurrentUser() the first time a given Clerk user is seen. Nullable
+  // because rows created before this migration have no Clerk identity yet
+  // until that user's first post-migration sign-in links it (matched by
+  // email as a one-time bridge — see current-user.ts).
+  clerkUserId     String?  @unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  magicLinkTokens MagicLinkToken[]
   requestRooms    RequestRoom[]
   notifications   Notification[]
   savedItems      SavedItem[]
@@ -40,18 +48,6 @@ model User {
   callBookings    CallBooking[]
   requestMessages RequestMessage[]
   mediaAssets     MediaAsset[]
-}
-
-model MagicLinkToken {
-  id        String    @id @default(cuid())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tokenHash String    @unique
-  expiresAt DateTime
-  usedAt    DateTime?
-  createdAt DateTime  @default(now())
-
-  @@index([userId])
 }
 
 // ---------------------------------------------------------------------------

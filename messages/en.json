@@ -725,6 +725,7 @@
   },
   "auth": {
     "signIn": "Sign in",
+    "signUp": "Sign up",
     "emailLabel": "Email address",
     "sendLink": "Send me a sign-in link",
     "sending": "Sending…",

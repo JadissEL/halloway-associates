@@ -51,7 +51,7 @@ export async function runTool<Args extends Record<string, unknown>>(opts: ToolRu
     return textResult(
       identity.userId
         ? "You're not authorized to do that."
-        : "Please sign in first (via the magic-link sign-in page), then ask again.",
+        : "Please sign in first, then ask again.",
       undefined,
       true,
     );

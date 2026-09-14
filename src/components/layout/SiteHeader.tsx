@@ -8,10 +8,16 @@ import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 
 export function SiteHeader() {
   const t = useTranslations("nav");
   const tMarketplace = useTranslations("marketplaceNav");
+  const tAuth = useTranslations("auth");
+  // <SignedIn>/<SignedOut> were removed in this SDK's Core 3 — they now
+  // throw at render time (see @clerk/nextjs/dist/*/removedControlComponents).
+  // useUser()'s isLoaded/isSignedIn is the direct replacement.
+  const { isLoaded: authLoaded, isSignedIn } = useUser();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -90,6 +96,27 @@ export function SiteHeader() {
             <NotificationBell />
             <LocaleSwitcher />
           </div>
+          {authLoaded && !isSignedIn && (
+            <div className="flex items-center gap-3">
+              <SignInButton mode="modal">
+                <button
+                  type="button"
+                  className="whitespace-nowrap text-sm font-medium text-luxury-muted-foreground transition-colors hover:text-luxury-ivory"
+                >
+                  {tAuth("signIn")}
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button
+                  type="button"
+                  className="whitespace-nowrap border border-luxury-gold px-4 py-2 text-sm font-semibold text-luxury-gold transition-colors hover:bg-luxury-gold hover:text-luxury-black"
+                >
+                  {tAuth("signUp")}
+                </button>
+              </SignUpButton>
+            </div>
+          )}
+          {authLoaded && isSignedIn && <UserButton />}
           <Link
             href="/app"
             className="whitespace-nowrap bg-luxury-azure px-4 py-2.5 text-sm font-semibold text-white no-underline shadow-[0_4px_16px_rgba(59,111,235,0.3)] transition-colors duration-200 hover:bg-luxury-azure-hover"
@@ -140,6 +167,31 @@ export function SiteHeader() {
             >
               {tMarketplace("needHelp")}
             </Link>
+            {authLoaded && !isSignedIn && (
+              <div className="mt-2 flex flex-col gap-3 border-t border-luxury-border pt-4">
+                <SignInButton mode="modal">
+                  <button
+                    type="button"
+                    className="py-2 text-left text-base font-medium text-luxury-ivory"
+                  >
+                    {tAuth("signIn")}
+                  </button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button
+                    type="button"
+                    className="inline-flex justify-center border border-luxury-gold px-5 py-3 text-sm font-semibold text-luxury-gold"
+                  >
+                    {tAuth("signUp")}
+                  </button>
+                </SignUpButton>
+              </div>
+            )}
+            {authLoaded && isSignedIn && (
+              <div className="mt-2 flex items-center gap-3 border-t border-luxury-border pt-4">
+                <UserButton showName />
+              </div>
+            )}
           </nav>
         </div>
       )}

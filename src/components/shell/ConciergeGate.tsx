@@ -27,7 +27,7 @@ export async function ConciergeGate() {
       </p>
       <div className="mt-2 flex flex-col items-center gap-4 sm:flex-row">
         <Link
-          href="/sign-in?redirect=/app"
+          href="/sign-in?redirect_url=/app"
           className="flex items-center gap-2 bg-luxury-gold px-7 py-3.5 text-sm font-semibold text-luxury-black no-underline shadow-[0_8px_28px_rgba(201,162,74,0.3)] transition-all duration-200 hover:brightness-110"
         >
           {t("cta")}

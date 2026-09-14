@@ -1,5 +1,7 @@
 import { Inter, Playfair_Display } from "next/font/google";
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
+import { clerkAppearance } from "@/lib/auth/clerk-appearance";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -101,23 +103,31 @@ export default async function LocaleLayout({ children, params }: Props) {
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-luxury-black font-sans" suppressHydrationWarning>
-        <GoogleAnalytics />
-        <JsonLd data={[organizationJsonLd(locale), websiteJsonLd(locale)]} />        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-luxury-gold focus:px-4 focus:py-2 focus:text-luxury-black"
-        >
-          {tNav("skipToContent")}
-        </a>
-        <NextIntlClientProvider messages={messages}>
-          <ToastProvider>
-            <SiteHeader />
-            <main id="main-content">{children}</main>
-            <ConditionalFooter />
-            <StudioWidgets />
-            <ConsentBanner />
-          </ToastProvider>
-        </NextIntlClientProvider>
-        <Analytics />
+        {/* Inside <body>, not wrapping <html> (Clerk Core 3 requirement).
+            `dynamic` lets statically-generated locale pages keep their SSG
+            output — Clerk fills in the actual signed-in/out UI (SiteHeader's
+            UserButton, the AI concierge gate) client-side after hydration
+            instead of forcing every page behind SiteHeader into full
+            per-request SSR just because the header can render auth state. */}
+        <ClerkProvider dynamic appearance={clerkAppearance} afterSignOutUrl="/">
+          <GoogleAnalytics />
+          <JsonLd data={[organizationJsonLd(locale), websiteJsonLd(locale)]} />          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-luxury-gold focus:px-4 focus:py-2 focus:text-luxury-black"
+          >
+            {tNav("skipToContent")}
+          </a>
+          <NextIntlClientProvider messages={messages}>
+            <ToastProvider>
+              <SiteHeader />
+              <main id="main-content">{children}</main>
+              <ConditionalFooter />
+              <StudioWidgets />
+              <ConsentBanner />
+            </ToastProvider>
+          </NextIntlClientProvider>
+          <Analytics />
+        </ClerkProvider>
       </body>
     </html>
   );

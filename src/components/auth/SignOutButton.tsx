@@ -1,17 +1,19 @@
 "use client";
 
+import { useClerk } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 
 export function SignOutButton() {
   const t = useTranslations("auth");
   const router = useRouter();
+  const { signOut } = useClerk();
 
   return (
     <button
       type="button"
       onClick={async () => {
-        await fetch("/api/auth/sign-out", { method: "POST" });
+        await signOut();
         router.push("/");
         router.refresh();
       }}
