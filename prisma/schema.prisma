@@ -48,6 +48,7 @@ model User {
   callBookings    CallBooking[]
   requestMessages RequestMessage[]
   mediaAssets     MediaAsset[]
+  conciergeConversations ConciergeConversation[]
 }
 
 // ---------------------------------------------------------------------------
@@ -491,6 +492,54 @@ model KnowledgeArticle {
   updatedAt       DateTime          @updatedAt
 
   @@index([category, isApproved])
+}
+
+// ---------------------------------------------------------------------------
+// Concierge transcripts — one row per signed-in chat, so a conversation can
+// be resumed later with its messages and the last workspace/tool payload.
+// Additive: nothing existing points at these tables. Ownership is the
+// userId foreign key; every read filters on it.
+// ---------------------------------------------------------------------------
+
+enum ConciergeMessageRole {
+  USER
+  ASSISTANT
+}
+
+model ConciergeConversation {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // The browser session this chat was started in. Not unique: "new
+  // conversation" keeps the same session id (media uploads are still
+  // scoped by it) and mints a new row here.
+  sessionId        String
+  title            String
+  locale           String   @default("en")
+  activePropertyId String?
+  // Last tool/workspace payload (properties, draft, call slots, ...).
+  // Null until a tool actually fills the right-hand panel.
+  workspace        Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  messages ConciergeMessage[]
+
+  @@index([userId, updatedAt])
+}
+
+model ConciergeMessage {
+  id             String                 @id @default(cuid())
+  conversationId String
+  conversation   ConciergeConversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           ConciergeMessageRole
+  content        String
+  // [{ id, mediaKind, detectedCategory }] — preview URLs are rebuilt on
+  // read from /api/media/:id, never stored (blob: URLs die with the tab).
+  attachments    Json?
+  createdAt      DateTime               @default(now())
+
+  @@index([conversationId, createdAt])
 }
 
 // ---------------------------------------------------------------------------

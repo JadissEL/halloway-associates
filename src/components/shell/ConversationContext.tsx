@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 export interface MessageAttachment {
@@ -45,8 +45,13 @@ export interface PendingAttachment {
 
 interface ConversationState {
   sessionId: string;
+  conversationId: string | null;
   messages: ShellMessage[];
   workspace: WorkspacePayload | null;
+  restoring: boolean;
+  activityRevision: number;
+  openConversation: (id: string) => Promise<void>;
+  startNewConversation: () => void;
   loading: boolean;
   viewMode: "full" | "conversation" | "results" | "history";
   setViewMode: (mode: ConversationState["viewMode"]) => void;
@@ -68,7 +73,65 @@ const ConversationCtx = createContext<ConversationState | null>(null);
 
 const SESSION_KEY = "halloway-concierge-session-id";
 const MESSAGES_KEY = "halloway-concierge-messages";
+const CONVERSATION_KEY = "halloway-concierge-conversation-id";
 const PENDING_QUICK_ACCESS_KEY = "halloway-pending-quick-access";
+
+const WORKSPACE_TYPES = new Set<WorkspacePayload["type"]>([
+  "properties",
+  "professionals",
+  "requestRoom",
+  "callSlots",
+  "callBooking",
+  "listingDraft",
+  "mediaGallery",
+]);
+
+function rememberConversationId(id: string | null) {
+  try {
+    if (id) sessionStorage.setItem(CONVERSATION_KEY, id);
+    else sessionStorage.removeItem(CONVERSATION_KEY);
+    sessionStorage.removeItem(MESSAGES_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+function parseRestoredAttachments(value: unknown): MessageAttachment[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const attachments = value.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const id = "id" in item && typeof item.id === "string" ? item.id : null;
+    const mediaKind = "mediaKind" in item ? item.mediaKind : null;
+    const previewUrl = "previewUrl" in item && typeof item.previewUrl === "string" ? item.previewUrl : null;
+    if (!id || !previewUrl) return [];
+    if (mediaKind !== "IMAGE" && mediaKind !== "AUDIO" && mediaKind !== "VIDEO" && mediaKind !== "DOCUMENT") return [];
+    const detectedCategory =
+      "detectedCategory" in item && (item.detectedCategory === null || typeof item.detectedCategory === "string")
+        ? item.detectedCategory
+        : null;
+    return [{ id, mediaKind, previewUrl, detectedCategory }];
+  });
+  return attachments.length > 0 ? attachments : undefined;
+}
+
+function parseRestoredMessages(value: unknown): ShellMessage[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const role = "role" in item ? item.role : null;
+    const content = "content" in item ? item.content : null;
+    if ((role !== "user" && role !== "assistant") || typeof content !== "string") return [];
+    const attachments = parseRestoredAttachments("attachments" in item ? item.attachments : undefined);
+    return [{ role, content, ...(attachments ? { attachments } : {}) }];
+  });
+}
+
+function parseRestoredWorkspace(value: unknown): WorkspacePayload | null {
+  if (!value || typeof value !== "object" || Array.isArray(value) || !("type" in value)) return null;
+  const type = value.type;
+  if (typeof type !== "string" || !WORKSPACE_TYPES.has(type as WorkspacePayload["type"])) return null;
+  return { type: type as WorkspacePayload["type"], data: "data" in value ? value.data : null };
+}
 
 // Mirrors src/lib/media/storage.ts's server-side allowlist/caps — checked
 // again here purely for fast client-side feedback (spec section 27: never
@@ -94,11 +157,17 @@ function extractDraftId(workspace: WorkspacePayload | null | undefined): string 
   return typeof draft?.id === "string" ? draft.id : null;
 }
 
+let cachedSessionId: string | null = null;
+
 function getOrCreateSessionId(): string {
+  if (cachedSessionId) return cachedSessionId;
   if (typeof window === "undefined") return "";
   try {
     const existing = sessionStorage.getItem(SESSION_KEY);
-    if (existing) return existing;
+    if (existing) {
+      cachedSessionId = existing;
+      return existing;
+    }
   } catch {
     /* ignore */
   }
@@ -111,7 +180,12 @@ function getOrCreateSessionId(): string {
   } catch {
     /* ignore */
   }
+  cachedSessionId = fresh;
   return fresh;
+}
+
+function subscribeSessionId() {
+  return () => {};
 }
 
 export function ConversationProvider({ children }: { children: React.ReactNode }) {
@@ -120,8 +194,11 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
   const [messages, setMessages] = useState<ShellMessage[]>([]);
   const [workspace, setWorkspace] = useState<WorkspacePayload | null>(null);
   const [loading, setLoading] = useState(false);
+  const [restoring, setRestoring] = useState(true);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [activityRevision, setActivityRevision] = useState(0);
   const [viewMode, setViewMode] = useState<ConversationState["viewMode"]>("full");
-  const [sessionId, setSessionId] = useState("");
+  const sessionId = useSyncExternalStore(subscribeSessionId, getOrCreateSessionId, () => "");
   const [pendingConfirmation, setPendingConfirmation] = useState<PendingConfirmation | null>(null);
   const [pendingAttachments, setPendingAttachments] = useState<PendingAttachment[]>([]);
   // The property draft this conversation is currently working on, once one
@@ -136,26 +213,8 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
   const pollTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
-
-  useEffect(() => {
-    setSessionId(getOrCreateSessionId());
-    try {
-      const saved = sessionStorage.getItem(MESSAGES_KEY);
-      if (saved) setMessages(JSON.parse(saved));
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  useEffect(() => {
-    if (messages.length > 0) {
-      try {
-        sessionStorage.setItem(MESSAGES_KEY, JSON.stringify(messages.slice(-40)));
-      } catch {
-        /* ignore */
-      }
-    }
-  }, [messages]);
+  const turnRef = useRef(0);
+  const discardRecordingRef = useRef(false);
 
   useEffect(() => {
     const timers = pollTimersRef.current;
@@ -278,6 +337,10 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
       };
       recorder.onstop = () => {
         stream.getTracks().forEach((t) => t.stop());
+        if (discardRecordingRef.current) {
+          discardRecordingRef.current = false;
+          return;
+        }
         const blob = new Blob(recordedChunksRef.current, { type: mimeType });
         const ext = mimeType === "audio/webm" ? "webm" : "m4a";
         const file = new File([blob], `voice-message.${ext}`, { type: mimeType });
@@ -297,12 +360,127 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
     setIsRecordingVoice(false);
   }, []);
 
+  const noteConversation = useCallback((id: string | null) => {
+    setConversationId(id);
+    rememberConversationId(id);
+    if (id) setActivityRevision((revision) => revision + 1);
+  }, []);
+
+  const openConversation = useCallback(async (id: string, options?: { focus?: boolean }) => {
+    const turn = ++turnRef.current;
+    const focus = options?.focus !== false;
+    if (focus) setLoading(true);
+    setPendingConfirmation(null);
+    try {
+      const res = await fetch(`/api/ai/conversations/${encodeURIComponent(id)}`);
+      if (turn !== turnRef.current) return;
+      if (!res.ok) {
+        if (res.status === 404) {
+          try {
+            if (sessionStorage.getItem(CONVERSATION_KEY) === id) sessionStorage.removeItem(CONVERSATION_KEY);
+          } catch {
+            /* ignore */
+          }
+        }
+        return;
+      }
+      const data = await res.json();
+      if (turn !== turnRef.current) return;
+      const restoredId = typeof data.id === "string" ? data.id : id;
+      setConversationId(restoredId);
+      rememberConversationId(restoredId);
+      setMessages(parseRestoredMessages(data.messages));
+      setWorkspace(parseRestoredWorkspace(data.workspace));
+      setActivePropertyId(typeof data.activePropertyId === "string" ? data.activePropertyId : null);
+      setPendingAttachments((prev) => {
+        prev.forEach((attachment) => URL.revokeObjectURL(attachment.previewUrl));
+        return [];
+      });
+      if (focus) {
+        setViewMode(window.matchMedia("(min-width: 768px)").matches ? "full" : "conversation");
+      }
+    } catch {
+      /* keep whatever thread is already on screen */
+    } finally {
+      if (turn === turnRef.current && focus) setLoading(false);
+    }
+  }, []);
+
+  const startNewConversation = useCallback(() => {
+    turnRef.current += 1;
+    if (mediaRecorderRef.current) {
+      discardRecordingRef.current = true;
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current = null;
+      setIsRecordingVoice(false);
+    }
+    pollTimersRef.current.forEach((timer) => clearTimeout(timer));
+    pollTimersRef.current.clear();
+    setPendingAttachments((prev) => {
+      prev.forEach((attachment) => URL.revokeObjectURL(attachment.previewUrl));
+      return [];
+    });
+    setMessages([]);
+    setWorkspace(null);
+    setConversationId(null);
+    setActivePropertyId(null);
+    setPendingConfirmation(null);
+    setLoading(false);
+    setVoiceRecordingError(null);
+    rememberConversationId(null);
+  }, []);
+
+  const postConversation = useCallback(
+    async (payload: Record<string, unknown>, activeConversationId: string | null) => {
+      const send = (id: string | null) =>
+        fetch("/api/ai/conversation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...payload, ...(id ? { conversationId: id } : {}) }),
+        });
+      let res = await send(activeConversationId);
+      // A stored id this user doesn't own (or that was deleted) should not
+      // block the message they just typed — continue it as a new chat.
+      if (res.status === 404 && activeConversationId) {
+        setConversationId(null);
+        rememberConversationId(null);
+        res = await send(null);
+      }
+      return res;
+    },
+    [],
+  );
+
+  const applyAssistantPayload = useCallback(
+    (data: {
+      reply?: unknown;
+      workspace?: unknown;
+      pendingConfirmation?: PendingConfirmation | null;
+      conversationId?: unknown;
+    }) => {
+      if (typeof data.reply === "string") {
+        setMessages((prev) => [...prev, { role: "assistant", content: data.reply as string }]);
+      }
+      const restoredWorkspace = parseRestoredWorkspace(data.workspace);
+      if (restoredWorkspace) {
+        setWorkspace(restoredWorkspace);
+        setViewMode((view) => (view === "conversation" ? "full" : view));
+        const draftId = extractDraftId(restoredWorkspace);
+        if (draftId) setActivePropertyId(draftId);
+      }
+      if (typeof data.conversationId === "string") noteConversation(data.conversationId);
+      setPendingConfirmation(data.pendingConfirmation ?? null);
+    },
+    [noteConversation],
+  );
+
   const sendMessage = useCallback(
     async (text: string) => {
       const trimmed = text.trim();
       const readyAttachments = pendingAttachments.filter((a) => a.serverId && a.status !== "uploading" && a.status !== "failed");
-      if ((!trimmed && readyAttachments.length === 0) || loading || !sessionId) return;
+      if ((!trimmed && readyAttachments.length === 0) || loading || restoring || !sessionId) return;
 
+      const turn = turnRef.current;
       const messageAttachments: MessageAttachment[] = readyAttachments.map((a) => ({
         id: a.serverId!,
         mediaKind: a.mediaKind,
@@ -320,11 +498,9 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
       if (next.length === 1) setViewMode("full");
 
       try {
-        const res = await fetch("/api/ai/conversation", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            messages: next.map((m) => ({
+        const res = await postConversation(
+          {
+            messages: next.slice(-40).map((m) => ({
               role: m.role,
               content: m.content,
               attachmentIds: m.attachments?.map((a) => a.id),
@@ -332,70 +508,92 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
             locale,
             sessionId,
             activePropertyId: activePropertyId ?? undefined,
-          }),
-        });
-        if (!res.ok) throw new Error("concierge failed");
-        const data = await res.json();
-        setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
-        if (data.workspace) {
-          setWorkspace(data.workspace);
-          setViewMode((v) => (v === "conversation" ? "full" : v));
-          const draftId = extractDraftId(data.workspace);
-          if (draftId) setActivePropertyId(draftId);
+          },
+          conversationId,
+        );
+        const data = await res.json().catch(() => null);
+        if (turn !== turnRef.current) return;
+        if (!res.ok || !data || typeof data.reply !== "string") {
+          if (data && typeof data.conversationId === "string") noteConversation(data.conversationId);
+          throw new Error("concierge failed");
         }
-        setPendingConfirmation(data.pendingConfirmation ?? null);
+        applyAssistantPayload(data);
       } catch {
+        if (turn !== turnRef.current) return;
         setMessages((prev) => [
           ...prev,
           { role: "assistant", content: "I'm temporarily unavailable. Please try again in a moment." },
         ]);
       } finally {
-        setLoading(false);
+        if (turn === turnRef.current) setLoading(false);
       }
     },
-    [loading, locale, messages, sessionId, pendingAttachments, activePropertyId],
+    [loading, restoring, locale, messages, sessionId, pendingAttachments, activePropertyId, conversationId, postConversation, noteConversation, applyAssistantPayload],
   );
 
   const confirmPendingAction = useCallback(async () => {
-    if (!pendingConfirmation || loading || !sessionId) return;
+    if (!pendingConfirmation || loading || restoring || !sessionId) return;
+    const turn = turnRef.current;
     const confirmationId = pendingConfirmation.confirmationId;
     setLoading(true);
     setPendingConfirmation(null);
 
     try {
-      const res = await fetch("/api/ai/conversation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ confirmationId, locale, sessionId }),
-      });
-      if (!res.ok) throw new Error("confirm failed");
-      const data = await res.json();
-      setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
-      if (data.workspace) {
-        setWorkspace(data.workspace);
-        setViewMode((v) => (v === "conversation" ? "full" : v));
-        // This is where a freshly-confirmed create_property_draft's id first
-        // becomes known client-side — capturing it here (not just in
-        // sendMessage's response handler) is what makes "what's still
-        // missing on my draft?" work as the very next message, with no
-        // extra turn needed.
-        const draftId = extractDraftId(data.workspace);
-        if (draftId) setActivePropertyId(draftId);
+      const res = await postConversation(
+        { confirmationId, locale, sessionId, activePropertyId: activePropertyId ?? undefined },
+        conversationId,
+      );
+      const data = await res.json().catch(() => null);
+      if (turn !== turnRef.current) return;
+      if (!res.ok || !data || typeof data.reply !== "string") {
+        if (data && typeof data.conversationId === "string") noteConversation(data.conversationId);
+        throw new Error("confirm failed");
       }
+      // This is where a freshly-confirmed create_property_draft's id first
+      // becomes known client-side — capturing it here (not just in
+      // sendMessage's response handler) is what makes "what's still
+      // missing on my draft?" work as the very next message, with no
+      // extra turn needed.
+      applyAssistantPayload(data);
     } catch {
+      if (turn !== turnRef.current) return;
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: "I'm temporarily unavailable. Please try again in a moment." },
       ]);
     } finally {
-      setLoading(false);
+      if (turn === turnRef.current) setLoading(false);
     }
-  }, [pendingConfirmation, loading, locale, sessionId]);
+  }, [pendingConfirmation, loading, restoring, locale, sessionId, activePropertyId, conversationId, postConversation, noteConversation, applyAssistantPayload]);
 
   const cancelPendingAction = useCallback(() => setPendingConfirmation(null), []);
 
   useEffect(() => {
-    if (!sessionId) return;
+    let cancelled = false;
+    void (async () => {
+      // Yield once so this effect doesn't setState synchronously (the
+      // session id itself comes from useSyncExternalStore).
+      await Promise.resolve();
+      if (cancelled) return;
+      let pending: string | null = null;
+      let storedId: string | null = null;
+      try {
+        pending = sessionStorage.getItem(PENDING_QUICK_ACCESS_KEY);
+        storedId = sessionStorage.getItem(CONVERSATION_KEY);
+        sessionStorage.removeItem(MESSAGES_KEY);
+      } catch {
+        /* ignore */
+      }
+      if (!pending && storedId) await openConversation(storedId, { focus: false });
+      if (!cancelled) setRestoring(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [openConversation]);
+
+  useEffect(() => {
+    if (!sessionId || restoring) return;
     let pendingKey: string | null = null;
     try {
       pendingKey = sessionStorage.getItem(PENDING_QUICK_ACCESS_KEY);
@@ -403,24 +601,29 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
     } catch {
       /* ignore */
     }
-    if (pendingKey) {
-      void sendMessage(tQuickAccess(pendingKey));
-    }
+    if (!pendingKey) return;
+    const key = pendingKey;
+    const timer = window.setTimeout(() => {
+      void sendMessage(tQuickAccess(key));
+    }, 0);
+    return () => window.clearTimeout(timer);
     // Only re-run when the session becomes ready; sendMessage/tQuickAccess are stable enough per session.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionId]);
+  }, [sessionId, restoring]);
 
   const isUploading = pendingAttachments.some((a) => a.status === "uploading");
 
   const value = useMemo(
     () => ({
-      sessionId, messages, workspace, loading, viewMode, setViewMode, sendMessage,
+      sessionId, conversationId, messages, workspace, loading, restoring, activityRevision,
+      viewMode, setViewMode, sendMessage, openConversation, startNewConversation,
       pendingConfirmation, confirmPendingAction, cancelPendingAction,
       pendingAttachments, addFiles, removeAttachment, isUploading,
       isRecordingVoice, startVoiceRecording, stopVoiceRecording, voiceRecordingError,
     }),
     [
-      sessionId, messages, workspace, loading, viewMode, sendMessage,
+      sessionId, conversationId, messages, workspace, loading, restoring, activityRevision,
+      viewMode, sendMessage, openConversation, startNewConversation,
       pendingConfirmation, confirmPendingAction, cancelPendingAction,
       pendingAttachments, addFiles, removeAttachment, isUploading,
       isRecordingVoice, startVoiceRecording, stopVoiceRecording, voiceRecordingError,

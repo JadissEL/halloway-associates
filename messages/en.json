@@ -473,7 +473,11 @@
       "saved": "Saved",
       "history": "History",
       "empty": "Nothing here yet.",
-      "signInPrompt": "Sign in to keep track of your requests."
+      "signInPrompt": "Sign in to keep track of your requests and conversations.",
+      "newConversation": "New conversation",
+      "chats": "Chats",
+      "requests": "Requests",
+      "chatLabel": "Chat"
     },
     "workspace": {
       "title": "Workspace",

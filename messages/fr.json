@@ -473,7 +473,11 @@
       "saved": "Enregistré",
       "history": "Historique",
       "empty": "Rien ici pour le moment.",
-      "signInPrompt": "Connectez-vous pour suivre vos demandes."
+      "signInPrompt": "Connectez-vous pour suivre vos demandes et vos conversations.",
+      "newConversation": "Nouvelle conversation",
+      "chats": "Discussions",
+      "requests": "Demandes",
+      "chatLabel": "Discussion"
     },
     "workspace": {
       "title": "Espace de travail",
