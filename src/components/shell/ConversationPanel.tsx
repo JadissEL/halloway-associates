@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type DragEvent, type ClipboardEvent } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Send, ShieldCheck, Paperclip, Mic, Square, UploadCloud } from "lucide-react";
+import { Loader2, Send, ShieldCheck, Paperclip, Mic, Square, UploadCloud, Plus } from "lucide-react";
 import { useConversation } from "./ConversationContext";
 import { QuickAccessRow } from "./QuickAccessRow";
 import { AttachmentTray } from "./AttachmentTray";
@@ -16,7 +16,7 @@ const ACCEPT = "image/*,audio/*,video/*,application/pdf";
 export function ConversationPanel() {
   const t = useTranslations("shell");
   const {
-    messages, loading, sendMessage, pendingConfirmation, confirmPendingAction, cancelPendingAction,
+    messages, loading, restoring, sendMessage, startNewConversation, pendingConfirmation, confirmPendingAction, cancelPendingAction,
     pendingAttachments, addFiles, removeAttachment, isUploading,
     isRecordingVoice, startVoiceRecording, stopVoiceRecording, voiceRecordingError,
   } = useConversation();
@@ -81,7 +81,24 @@ export function ConversationPanel() {
         )}
       </AnimatePresence>
 
-      {messages.length === 0 ? (
+      {messages.length > 0 && !restoring && (
+        <div className="flex justify-end border-b border-luxury-border px-4 py-2 md:px-8">
+          <button
+            type="button"
+            onClick={startNewConversation}
+            className="flex items-center gap-1.5 text-xs font-semibold text-luxury-muted-foreground transition-colors duration-200 hover:text-luxury-gold"
+          >
+            <Plus size={13} />
+            {t("activity.newConversation")}
+          </button>
+        </div>
+      )}
+
+      {restoring ? (
+        <div className="flex flex-1 items-center justify-center">
+          <Loader2 size={18} className="animate-spin text-luxury-gold" />
+        </div>
+      ) : messages.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-5 px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -236,7 +253,7 @@ export function ConversationPanel() {
         />
         <button
           type="submit"
-          disabled={loading || isUploading || (!input.trim() && pendingAttachments.length === 0)}
+          disabled={loading || restoring || isUploading || (!input.trim() && pendingAttachments.length === 0)}
           className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-none bg-luxury-gold text-luxury-black shadow-[0_4px_16px_rgba(201,162,74,0.25)] transition-all duration-200 hover:brightness-110 disabled:opacity-40 disabled:shadow-none"
           aria-label={t("send")}
         >

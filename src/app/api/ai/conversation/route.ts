@@ -9,6 +9,14 @@ import { logAiUsage } from "@/lib/ai/usage-log";
 import { isRateLimited, clientIp } from "@/lib/rate-limit";
 import { identityFromUser } from "@/mcp/authorize";
 import { buildAttachmentContext } from "@/lib/media/context";
+import {
+  ConversationNotFoundError,
+  activePropertyIdFromWorkspace,
+  beginConversationTurn,
+  finishConversationTurn,
+  type StoredWorkspace,
+  type TurnMessage,
+} from "@/lib/chat/conversations";
 
 const requestSchema = z.object({
   messages: z
@@ -23,12 +31,16 @@ const requestSchema = z.object({
       }),
     )
     .min(1)
-    .max(30)
+    .max(40)
     .optional(),
   // Present instead of `messages` when the user is confirming a previously
   // proposed action (see ConversationPanel.tsx's Confirm button) rather than
   // sending a new chat message.
   confirmationId: z.string().min(1).max(64).optional(),
+  // Omitted on the first turn. When set, the transcript already stored for
+  // this user is what the model sees — the client array is only how the new
+  // user message arrives, and a conversation the caller doesn't own 404s.
+  conversationId: z.string().min(1).max(64).optional(),
   locale: z.enum(["en", "el", "fr"]),
   sessionId: z.string().min(8).max(64),
   // The property draft this conversation is currently working on, if any —
@@ -77,6 +89,46 @@ function deriveWorkspacePayload(
   return null;
 }
 
+async function groundMessages(messages: TurnMessage[]) {
+  return Promise.all(
+    messages.map(async (message) => {
+      if (!message.attachmentIds || message.attachmentIds.length === 0) {
+        return { role: message.role, content: message.content };
+      }
+      const context = await buildAttachmentContext(message.attachmentIds).catch(() => "");
+      return {
+        role: message.role,
+        content: context ? `${message.content}\n${context}` : message.content,
+      };
+    }),
+  );
+}
+
+// Persistence is best-effort: a database miss must not swallow a reply the
+// model already produced. Ownership is re-checked inside finishConversationTurn.
+async function saveAssistantReply(input: {
+  userId: string;
+  conversationId: string | null;
+  reply: string;
+  workspace: StoredWorkspace | null;
+  activePropertyId?: string | null;
+}): Promise<string | null> {
+  if (!input.conversationId) return null;
+  try {
+    const saved = await finishConversationTurn({
+      userId: input.userId,
+      conversationId: input.conversationId,
+      assistantContent: input.reply,
+      workspace: input.workspace,
+      activePropertyId: input.activePropertyId,
+    });
+    return saved ? input.conversationId : null;
+  } catch (error) {
+    console.error("[concierge-conversation]", error);
+    return input.conversationId;
+  }
+}
+
 export async function POST(request: Request) {
   let body: z.infer<typeof requestSchema>;
   try {
@@ -120,36 +172,83 @@ export async function POST(request: Request) {
   if (body.confirmationId) {
     const outcome = await confirmConciergeAction(body.confirmationId, identity);
     if (outcome.status === "not_found") {
+      const reply =
+        body.locale === "el"
+          ? "Αυτή η επιβεβαίωση έληξε ή δεν βρέθηκε. Πείτε μου ξανά τι θα θέλατε να κάνω."
+          : body.locale === "fr"
+            ? "Cette confirmation a expiré ou est introuvable. Dites-moi à nouveau ce que vous aimeriez faire."
+            : "That confirmation expired or wasn't found. Tell me again what you'd like to do.";
+      const conversationId = await saveAssistantReply({
+        userId: user.id,
+        conversationId: body.conversationId ?? null,
+        reply,
+        workspace: null,
+        activePropertyId: body.activePropertyId,
+      });
       return Response.json({
-        reply:
-          body.locale === "el"
-            ? "Αυτή η επιβεβαίωση έληξε ή δεν βρέθηκε. Πείτε μου ξανά τι θα θέλατε να κάνω."
-            : body.locale === "fr"
-              ? "Cette confirmation a expiré ou est introuvable. Dites-moi à nouveau ce que vous aimeriez faire."
-              : "That confirmation expired or wasn't found. Tell me again what you'd like to do.",
+        reply,
         replyLocale: body.locale,
         layer: "REASONING",
         workspace: null,
         pendingConfirmation: null,
+        conversationId,
       });
     }
     const workspace = deriveWorkspacePayload([{ name: outcome.toolName, result: outcome.result }]);
+    const reply = outcome.isError
+      ? (body.locale === "el" ? "Δεν μπόρεσα να το ολοκληρώσω. Δοκιμάστε ξανά σε λίγο." : body.locale === "fr" ? "Je n'ai pas pu terminer cette action. Réessayez sous peu." : "I couldn't complete that — please try again shortly.")
+      : (body.locale === "el" ? "Έγινε." : body.locale === "fr" ? "C'est fait." : "Done.");
+    const conversationId = await saveAssistantReply({
+      userId: user.id,
+      conversationId: body.conversationId ?? null,
+      reply,
+      workspace,
+      activePropertyId: activePropertyIdFromWorkspace(workspace) ?? body.activePropertyId,
+    });
     return Response.json({
-      reply: outcome.isError
-        ? (body.locale === "el" ? "Δεν μπόρεσα να το ολοκληρώσω. Δοκιμάστε ξανά σε λίγο." : body.locale === "fr" ? "Je n'ai pas pu terminer cette action. Réessayez sous peu." : "I couldn't complete that — please try again shortly.")
-        : (body.locale === "el" ? "Έγινε." : body.locale === "fr" ? "C'est fait." : "Done."),
+      reply,
       replyLocale: body.locale,
       layer: "REASONING",
       workspace,
       pendingConfirmation: null,
+      conversationId,
     });
   }
 
   // --- Normal chat turn ------------------------------------------------------
   const messages = body.messages!;
-  const lastUserMessage = [...messages].reverse().find((m) => m.role === "user");
+  let conversationId: string | null = body.conversationId ?? null;
+  let history: TurnMessage[] = messages.map((message) => ({
+    role: message.role,
+    content: message.content,
+    ...(message.attachmentIds ? { attachmentIds: message.attachmentIds } : {}),
+  }));
+
+  try {
+    const turn = await beginConversationTurn({
+      userId: user.id,
+      conversationId: body.conversationId,
+      sessionId: body.sessionId,
+      locale: body.locale,
+      activePropertyId: body.activePropertyId,
+      incoming: history,
+    });
+    conversationId = turn.conversationId;
+    // Once a transcript exists, it — not the client array — is the context
+    // sent to the model. The caller can only append to a conversation they own.
+    history = turn.history;
+    if (turn.activePropertyId) body = { ...body, activePropertyId: turn.activePropertyId };
+  } catch (error) {
+    if (error instanceof ConversationNotFoundError) {
+      return Response.json({ error: "Not found." }, { status: 404 });
+    }
+    console.error("[concierge-conversation]", error);
+    conversationId = null;
+  }
+
+  const lastUserMessage = [...history].reverse().find((m) => m.role === "user");
   const { replyLocale } = detectLanguage(lastUserMessage?.content ?? "", body.locale);
-  const hasAttachments = messages.some((m) => m.attachmentIds && m.attachmentIds.length > 0);
+  const hasAttachments = history.some((m) => m.attachmentIds && m.attachmentIds.length > 0);
 
   // Layer 1 — deterministic, zero model tokens. Skipped when media is
   // attached: a canned keyword-matched reply can't account for what was
@@ -162,7 +261,21 @@ export async function POST(request: Request) {
         console.error("[ai-conversation:usage]", error);
       },
     );
-    return Response.json({ reply: deterministic.reply, replyLocale, layer: "DETERMINISTIC", workspace: null, pendingConfirmation: null });
+    const savedId = await saveAssistantReply({
+      userId: user.id,
+      conversationId,
+      reply: deterministic.reply,
+      workspace: null,
+      activePropertyId: body.activePropertyId,
+    });
+    return Response.json({
+      reply: deterministic.reply,
+      replyLocale,
+      layer: "DETERMINISTIC",
+      workspace: null,
+      pendingConfirmation: null,
+      conversationId: savedId,
+    });
   }
 
   // Layer 3 — retrieval, still no reasoning-model call yet, feeds the prompt.
@@ -188,13 +301,9 @@ export async function POST(request: Request) {
   // results before they reach the reasoning model (spec sections 13/22) —
   // built server-side from already-computed pipeline output, never raw
   // bytes, and marked as untrusted data (see buildAttachmentContext).
-  const groundedMessages = await Promise.all(
-    messages.map(async (m) => {
-      if (!m.attachmentIds || m.attachmentIds.length === 0) return { role: m.role, content: m.content };
-      const context = await buildAttachmentContext(m.attachmentIds).catch(() => "");
-      return { role: m.role, content: context ? `${m.content}\n${context}` : m.content };
-    }),
-  );
+  // History here is the stored transcript (plus this turn), so reopening a
+  // chat and continuing it replays the same context the model had before.
+  const groundedMessages = await groundMessages(history);
 
   const startedAt = Date.now();
   try {
@@ -211,15 +320,25 @@ export async function POST(request: Request) {
       toolCalls: result.toolCalls.map((t) => ({ name: t.name })),
     });
 
+    const workspace = deriveWorkspacePayload(result.toolCalls);
+    const savedId = await saveAssistantReply({
+      userId: user.id,
+      conversationId,
+      reply: result.reply,
+      workspace,
+      activePropertyId: activePropertyIdFromWorkspace(workspace) ?? body.activePropertyId,
+    });
+
     return Response.json({
       reply: result.reply,
       replyLocale,
       layer: "REASONING",
-      workspace: deriveWorkspacePayload(result.toolCalls),
+      workspace,
       pendingConfirmation: result.pendingConfirmation,
+      conversationId: savedId,
     });
   } catch (error) {
     console.error("[ai-conversation]", error);
-    return Response.json({ error: "Concierge unavailable." }, { status: 502 });
+    return Response.json({ error: "Concierge unavailable.", conversationId }, { status: 502 });
   }
 }
