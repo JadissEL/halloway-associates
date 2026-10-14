@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import {
   applyGoogleConsent,
@@ -9,28 +9,37 @@ import {
   type ConsentChoice,
 } from "@/lib/consent/consent";
 
+const CONSENT_EVENT = "halloway-consent-change";
+
+function subscribe(onStoreChange: () => void) {
+  window.addEventListener(CONSENT_EVENT, onStoreChange);
+  return () => window.removeEventListener(CONSENT_EVENT, onStoreChange);
+}
+
+function getSnapshot() {
+  return readStoredConsent() ? "hidden" : "prompt";
+}
+
+function getServerSnapshot() {
+  return "hidden";
+}
+
 export function ConsentBanner() {
   const t = useTranslations("consent");
-  const [visible, setVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const visibility = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   useEffect(() => {
-    setMounted(true);
     const stored = readStoredConsent();
-    if (stored) {
-      applyGoogleConsent(stored);
-      return;
-    }
-    setVisible(true);
+    if (stored) applyGoogleConsent(stored);
   }, []);
 
   const choose = (choice: ConsentChoice) => {
     persistConsent(choice);
     applyGoogleConsent(choice);
-    setVisible(false);
+    window.dispatchEvent(new Event(CONSENT_EVENT));
   };
 
-  if (!mounted || !visible) return null;
+  if (visibility !== "prompt") return null;
 
   return (
     <div

@@ -21,6 +21,11 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [pathWhenOpened, setPathWhenOpened] = useState(pathname);
+  if (pathname !== pathWhenOpened) {
+    setPathWhenOpened(pathname);
+    setOpen(false);
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -29,14 +34,13 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
   const links = [
     { href: "/properties", label: tMarketplace("properties") },
     { href: "/professionals", label: tMarketplace("professionals") },
     { href: "/jobs", label: tMarketplace("jobs") },
+    { href: "/staffing", label: tMarketplace("staffingShort") },
+    { href: "/business-setup", label: tMarketplace("businessSetupShort") },
+    { href: "/experts", label: tMarketplace("expertsShort") },
     { href: "/services", label: t("services") },
     { href: "/studio", label: t("studio") },
     { href: "/about", label: t("about") },
@@ -53,31 +57,14 @@ export function SiteHeader() {
           : "border-luxury-border/60 bg-luxury-black",
       )}
     >
-      <div className="container-wide flex h-16 items-center justify-between gap-4 px-6 md:h-[72px] md:px-8 lg:px-10">
+      <div className="container-wide px-6 md:px-8 lg:px-10">
+        <div className="flex h-16 items-center justify-between gap-4 md:h-[72px]">
         <Link
           href="/"
           className="whitespace-nowrap text-base font-semibold tracking-tight text-luxury-ivory no-underline lg:text-lg"
         >
           Halloway <span className="font-semibold">& Associates</span>
         </Link>
-
-        <nav className="hidden items-center gap-5 lg:flex xl:gap-6" aria-label="Main">
-          {links.map((link) => {
-            const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "whitespace-nowrap text-sm font-medium no-underline transition-colors",
-                  active ? "text-luxury-ivory" : "text-luxury-muted-foreground hover:text-luxury-ivory",
-                )}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
 
         <div className="hidden items-center gap-4 lg:flex xl:gap-5">
           <div className="flex items-center gap-4 border-r border-luxury-border pr-4 xl:gap-5 xl:pr-5">
@@ -134,10 +121,32 @@ export function SiteHeader() {
         >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
+        </div>
+
+        <nav
+          className="hidden flex-wrap items-center gap-x-5 gap-y-2 border-t border-luxury-border/60 pb-3 lg:flex"
+          aria-label="Main"
+        >
+          {links.map((link) => {
+            const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "whitespace-nowrap text-sm font-medium no-underline transition-colors",
+                  active ? "text-luxury-ivory" : "text-luxury-muted-foreground hover:text-luxury-ivory",
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
       </div>
 
       {open && (
-        <div className="border-t border-luxury-border bg-luxury-black px-6 py-4 md:hidden">
+        <div className="border-t border-luxury-border bg-luxury-black px-6 py-4 lg:hidden">
           <nav className="flex flex-col gap-3" aria-label="Mobile">
             {links.map((link) => (
               <Link

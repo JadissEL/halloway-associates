@@ -7,6 +7,9 @@ export const INDEXABLE_STATIC_PATHS = [
   "/about",
   "/contact",
   "/properties",
+  "/staffing",
+  "/business-setup",
+  "/experts",
   "/book-a-call",
 ] as const;
 

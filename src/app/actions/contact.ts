@@ -10,7 +10,16 @@ const contactSchema = z.object({
   name: z.string().min(2).max(100),
   company: z.string().max(100).optional(),
   email: z.string().email().max(320),
-  focus: z.enum(["automation", "revenue", "growth", "product", "other"]),
+  focus: z.enum([
+    "automation",
+    "revenue",
+    "growth",
+    "product",
+    "staffing",
+    "business-setup",
+    "experts",
+    "other",
+  ]),
   message: z.string().min(10).max(5000),
 });
 

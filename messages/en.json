@@ -32,6 +32,9 @@
       "properties": "Find a room, apartment, or house to rent or buy — or list your own.",
       "professionals": "Lawyers, accountants, architects, and engineers, matched to your exact situation.",
       "jobs": "Search current openings across Greece.",
+      "staffing": "Staffing and recruitment for employers and candidates, in Greece and across the EU.",
+      "businessSetup": "Help for foreign businesses that want to settle and operate in Greece.",
+      "experts": "Industry experts in real estate, tourism, agriculture, and restaurants.",
       "vehicles": "Buy or sell a car, no dealership required.",
       "businesses": "Businesses for sale, plus everyday services like cleaning and renovation.",
       "travel": "Plan a trip to Greece with local, accurate guidance.",
@@ -372,9 +375,15 @@
         "revenue": "Revenue systems",
         "growth": "Marketing & growth",
         "product": "Product & MVP",
+        "staffing": "Staffing & Recruitment",
+        "business-setup": "Business setup in Greece",
+        "experts": "Expert network",
         "other": "Not sure yet"
       },
       "message": "What are you trying to build or fix?",
+      "staffingMessage": "Describe the role, or the kind of work you are looking for. Say where it is based.",
+      "businessSetupMessage": "Describe the activity you want in Greece, where it should be based, and whether a company already exists.",
+      "expertsMessage": "Name the sector, the place in Greece, and the question you want an expert to help with.",
       "submit": "Send message",
       "sending": "Sending…",
       "success": "Message sent. We'll be in touch shortly.",
@@ -406,6 +415,8 @@
     "ourWork": "Our work",
     "privacy": "Privacy",
     "contact": "Contact",
+    "creditBefore": "Also made by Jadiss EL ANTAKI:",
+    "creditLink": "shopthebarber.app",
     "copyright": "© {year} Halloway & Associates"
   },
   "consent": {
@@ -432,9 +443,253 @@
       "contact": "I'd like to talk to a real person"
     }
   },
+  "staffingPage": {
+    "eyebrow": "Staffing & Recruitment",
+    "title": "Staff hired with care, across Greece and Europe.",
+    "intro": "Halloway & Associates handles staffing and recruitment for employers who need people and for candidates looking for the right role. The work covers Greece and the European Union. You send a brief; a person on the team takes it from there.",
+    "metaDescription": "Staffing and recruitment for employers and candidates in Greece and across the European Union. Share a role or a search through the contact form.",
+    "keywords": "staffing Greece|recruitment Europe|hire staff Greece|EU recruitment|Halloway & Associates|staffing and recruitment",
+    "audiences": {
+      "eyebrow": "Who we work with",
+      "title": "Employers who need staff, and candidates looking for work.",
+      "employers": {
+        "title": "Employers",
+        "body": "You need people — one specialist, a seasonal team, or help with hiring that keeps coming back. Tell us the role, where the work is, which languages matter, and when you need someone. We read that brief and reply with a clear next step."
+      },
+      "candidates": {
+        "title": "Candidates",
+        "body": "You are looking for work in Greece or elsewhere in the European Union. Tell us the kind of role you want, where you can be based, and the experience you bring. We only make an introduction when the brief fits."
+      }
+    },
+    "sectors": {
+      "eyebrow": "Sectors",
+      "title": "The sectors we recruit in.",
+      "items": {
+        "hospitality": {
+          "title": "Hospitality and tourism",
+          "body": "Hotels, food service, guest experience, and seasonal teams."
+        },
+        "professional": {
+          "title": "Professional services",
+          "body": "Finance, accounting, legal support, and administration."
+        },
+        "technology": {
+          "title": "Technology and digital",
+          "body": "Product, engineering, operations, and commercial roles."
+        },
+        "operations": {
+          "title": "Logistics and skilled work",
+          "body": "Operations, warehousing, construction, and trades."
+        },
+        "care": {
+          "title": "Health and care",
+          "body": "Care and clinical-support roles, introduced only where the qualifications in the brief match."
+        },
+        "retail": {
+          "title": "Retail and customer roles",
+          "body": "Shops, customer service, and front-of-house teams, including seasonal peaks."
+        }
+      }
+    },
+    "process": {
+      "eyebrow": "The process",
+      "title": "Four steps. A person at each one.",
+      "steps": {
+        "brief": {
+          "title": "Send the brief",
+          "body": "Employers describe the role. Candidates describe the work they want. Use the contact form and say which you are."
+        },
+        "review": {
+          "title": "We review it",
+          "body": "Someone on the team reads the request and confirms what we can take on. Nothing is matched automatically."
+        },
+        "introduce": {
+          "title": "We make introductions",
+          "body": "When there is a fit, we introduce the people who should talk. You decide whether to continue."
+        },
+        "follow": {
+          "title": "We stay with it",
+          "body": "Questions and next steps stay with the person handling the request."
+        }
+      }
+    },
+    "coverage": {
+      "eyebrow": "Coverage",
+      "title": "Greece, and the European Union.",
+      "body": "Recruitment runs in Greece and across the EU. A role can be based in Greece, in another member state, or across both — a Greek employer hiring elsewhere in the Union, or a candidate in Greece considering work in another EU country. Put the place of work in the request so the brief lands in the right market."
+    },
+    "cta": {
+      "title": "Send the brief.",
+      "body": "Use the contact form and choose Staffing & Recruitment. Say whether you are hiring or looking, where the work is, and what you need.",
+      "button": "Contact the team",
+      "secondary": "Prefer to talk first? Book a call"
+    }
+  },
+  "businessSetupPage": {
+      "eyebrow": "Business setup in Greece",
+      "title": "Settle and operate a business in Greece.",
+      "intro": "Halloway & Associates helps foreign businesses set up and run an activity in Greece. Tell us what you want to establish, from where, and whether a company already exists. A person on the team reads the brief and replies with the next step.",
+      "metaDescription": "Help for foreign businesses settling and operating in Greece. Send a brief through the contact form.",
+      "keywords": "business setup Greece|foreign company Greece|set up a business in Greece|operate in Greece|Halloway & Associates",
+      "audiences": {
+        "eyebrow": "Who this is for",
+        "title": "Foreign businesses that want a presence in Greece.",
+        "companies": {
+          "title": "Companies coming in",
+          "body": "You already operate somewhere else and want a company, a branch, or a local activity in Greece. Tell us what you do, where you want to be based, and what has to be in place before you can trade."
+        },
+        "founders": {
+          "title": "Founders starting here",
+          "body": "You are setting up a new activity in Greece and you are not based here yet. Tell us the activity, the timeline you have in mind, and what you already know. We will not guess the rest."
+        }
+      },
+      "sectors": {
+        "eyebrow": "What we help with",
+        "title": "What a foreign business has to arrange.",
+        "items": {
+          "structure": {
+            "title": "Company and registration",
+            "body": "The form the activity should take, and the registrations that have to happen before it can operate."
+          },
+          "tax": {
+            "title": "Tax and social security",
+            "body": "The registrations a new activity needs with the tax and social-security authorities. We do not give tax advice in place of an accountant."
+          },
+          "banking": {
+            "title": "Banking and administration",
+            "body": "What a foreign business usually has to arrange so it can be paid, pay others, and keep ordinary records."
+          },
+          "premises": {
+            "title": "A place to operate",
+            "body": "Finding premises, or understanding what a site needs, when the activity cannot run from abroad."
+          },
+          "people": {
+            "title": "People",
+            "body": "When you are ready to hire, staffing and recruitment sits alongside this work. Say so in the brief if hiring is part of the plan."
+          },
+          "ongoing": {
+            "title": "After the company exists",
+            "body": "The questions that come up once you are operating: renewals, local suppliers, and who to speak to when something changes."
+          }
+        }
+      },
+      "process": {
+        "eyebrow": "The process",
+        "title": "Four steps. A person at each one.",
+        "steps": {
+          "brief": {
+            "title": "Send the brief",
+            "body": "Describe the activity, where it should sit in Greece, and whether a company already exists."
+          },
+          "review": {
+            "title": "We review it",
+            "body": "Someone on the team reads the request and confirms what we can help with. We do not file anything automatically."
+          },
+          "map": {
+            "title": "We set out the next steps",
+            "body": "Registrations, premises, people, and which kind of professional should be involved. Where a lawyer or an accountant is the right next person, we say so."
+          },
+          "follow": {
+            "title": "We stay with it",
+            "body": "Questions stay with the person handling the request."
+          }
+        }
+      },
+      "coverage": {
+        "eyebrow": "Coverage",
+        "title": "Greece.",
+        "body": "This service is for activity in Greece. The business can be coming from anywhere. The place of work, the customers, or the company you want to establish should be in Greece. Put that location in the request."
+      },
+      "cta": {
+        "title": "Send the brief.",
+        "body": "Use the contact form and choose Business setup in Greece. Say what you want to establish, where in Greece, and whether you are already operating somewhere else.",
+        "button": "Contact the team",
+        "secondary": "Prefer to talk first? Book a call"
+      }
+    },
+    "expertsPage": {
+      "eyebrow": "Expert network",
+      "title": "A person who knows the sector, in Greece.",
+      "intro": "Halloway & Associates introduces you to industry experts for work in Greece. The network covers real estate, tourism, agriculture, and restaurants and hospitality. Describe the question. A person on the team decides whether someone's experience is the right introduction.",
+      "metaDescription": "Introductions to industry experts in Greece for real estate, tourism, agriculture, and restaurants and hospitality. Send the question through the contact form.",
+      "keywords": "Greece expert network|real estate expert Greece|tourism expert Greece|agriculture Greece|restaurant hospitality Greece|Halloway & Associates",
+      "audiences": {
+        "eyebrow": "Who this is for",
+        "title": "People who need a sector view, not a general list.",
+        "businesses": {
+          "title": "Businesses and investors",
+          "body": "You need a sector view before you commit — a site, a season, a crop, or a concept. Tell us the decision you are trying to make and the part of Greece it concerns."
+        },
+        "operators": {
+          "title": "Operators already here",
+          "body": "You are already working in Greece and you need someone who knows the trade, not a general introduction. Tell us the question and what you have already tried."
+        }
+      },
+      "sectors": {
+        "eyebrow": "Sectors",
+        "title": "The four sectors in the network.",
+        "items": {
+          "realEstate": {
+            "title": "Real estate",
+            "body": "Land, buildings, and how a property is used in a local market."
+          },
+          "tourism": {
+            "title": "Tourism",
+            "body": "Visitors, seasons, and what it takes to run a tourism activity in Greece."
+          },
+          "agriculture": {
+            "title": "Agriculture",
+            "body": "Land, crops, and the practical questions of producing in Greece."
+          },
+          "hospitality": {
+            "title": "Restaurants and hospitality",
+            "body": "Kitchens, dining rooms, and hospitality operations."
+          }
+        }
+      },
+      "process": {
+        "eyebrow": "The process",
+        "title": "Four steps. A person at each one.",
+        "steps": {
+          "brief": {
+            "title": "Describe the question",
+            "body": "Name the sector, the place in Greece, and what you need the expert to help you understand."
+          },
+          "review": {
+            "title": "We review the fit",
+            "body": "Someone on the team reads the request. We only offer an introduction when a person's experience matches the question."
+          },
+          "introduce": {
+            "title": "We make the introduction",
+            "body": "You hear who we suggest and why the question fits. You decide whether to talk."
+          },
+          "follow": {
+            "title": "You decide the next step",
+            "body": "An introduction is a conversation. It is not a report, a valuation, or a promise of an outcome."
+          }
+        }
+      },
+      "coverage": {
+        "eyebrow": "Coverage",
+        "title": "Greece, in four sectors.",
+        "body": "The experts we introduce work on questions in Greece, in real estate, tourism, agriculture, and restaurants and hospitality. If the question sits outside those sectors, or outside Greece, say so — we will tell you if it is not one we can help with."
+      },
+      "cta": {
+        "title": "Ask for an introduction.",
+        "body": "Use the contact form and choose Expert network. Name the sector, the place in Greece, and the question.",
+        "button": "Contact the team",
+        "secondary": "Prefer to talk first? Book a call"
+      }
+    },
   "marketplaceNav": {
     "properties": "Properties",
     "jobs": "Jobs",
+    "staffing": "Staffing & Recruitment",
+    "staffingShort": "Staffing",
+    "businessSetup": "Business setup in Greece",
+    "businessSetupShort": "Setup",
+    "experts": "Expert network",
+    "expertsShort": "Experts",
     "professionals": "Professionals",
     "vehicles": "Vehicles",
     "businesses": "Businesses",
@@ -495,6 +750,9 @@
       "buyProperty": "Buy property",
       "sellProperty": "Sell property",
       "findJob": "Find a job",
+      "staffing": "Staffing & recruitment",
+      "businessSetup": "Business setup in Greece",
+      "experts": "Expert network",
       "sellCar": "Sell my car",
       "buyCar": "Buy a car",
       "sellFurniture": "Sell furniture",
