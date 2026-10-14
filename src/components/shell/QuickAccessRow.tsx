@@ -4,25 +4,27 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useConversation } from "./ConversationContext";
 import {
-  BedDouble, Home, Building2, Tag, Briefcase, Car, Sofa, Truck,
+  BedDouble, Home, Building2, Tag, Briefcase, Users, Flag, Wheat, Car, Sofa, Truck,
   Wrench, Sparkles, Building, CalendarCheck, Scale, Calculator,
   Compass, Coins, PiggyBank, Globe2, Plane, Store, Landmark, Megaphone,
   type LucideIcon,
 } from "lucide-react";
 
-// `href` is set only for categories with zero AI-tool/data backing today
-// (no Job/Vehicle/Travel/Business model, per src/lib/ai/tools.ts) — those
-// chips go straight to the platform's own honest "coming soon" page (or, for
-// land, the real property-posting form — land is a real PropertyType) instead
-// of opening a chat the concierge has no way to actually fulfill. Every chip
-// without `href` maps to a category the concierge DOES have a real tool for
-// (search_properties / find_professionals / etc.) and stays a chat prompt.
+// `href` opens a page instead of a concierge prompt. Staffing, business
+// setup, and the expert network are real service pages. Jobs, vehicles,
+// travel, and businesses for sale have no search tool yet, so those chips
+// go to the platform's own "coming soon" page. Land uses the property form
+// because land is a real PropertyType. Every chip without `href` maps to a
+// category the concierge has a tool for.
 const TAGS: { key: string; icon: LucideIcon; href?: string }[] = [
   { key: "rentRoom", icon: BedDouble },
   { key: "rentHouse", icon: Home },
   { key: "buyProperty", icon: Building2 },
   { key: "sellProperty", icon: Tag },
   { key: "findJob", icon: Briefcase, href: "/jobs" },
+  { key: "staffing", icon: Users, href: "/staffing" },
+  { key: "businessSetup", icon: Flag, href: "/business-setup" },
+  { key: "experts", icon: Wheat, href: "/experts" },
   { key: "sellCar", icon: Car, href: "/vehicles" },
   { key: "buyCar", icon: Car, href: "/vehicles" },
   { key: "sellFurniture", icon: Sofa },

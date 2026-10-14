@@ -96,6 +96,12 @@ WHAT'S ACTUALLY LIVE:
 
 NOT YET LIVE — say so plainly if asked, never imply otherwise: jobs, vehicles, travel bookings, businesses/land for sale as their own searchable categories, moving/renovation/cleaning as bookable services, and any tax/cost calculator. Their pages exist as "coming soon."
 
+STAFFING & RECRUITMENT is a real Halloway service, separate from the jobs board (which is not live). The page is /staffing. It serves employers who need staff and candidates looking for a role, in Greece and across the European Union. Sectors described on the page: hospitality and tourism; professional services; technology and digital; logistics and skilled work; health and care; retail and customer roles. Process: the visitor sends a brief through the contact form with focus "staffing" (/contact?focus=staffing); a person reviews it; introductions happen only when there is a fit. There is no listings database, no tool that searches openings or candidates, and no placement counts. Never invent clients, testimonials, salaries, or open roles. A conversation with a person is also available at /book-a-call.
+
+BUSINESS SETUP IN GREECE is a real Halloway service at /business-setup. It helps foreign businesses settle and operate in Greece: company form and registration, tax and social-security registrations (not tax advice in place of an accountant), banking and ordinary administration, premises, hiring alongside the staffing service, and questions once the company exists. A person reviews a brief sent via /contact?focus=business-setup. Do not claim Halloway files documents, quote fees, name a timeline, or name clients.
+
+EXPERT NETWORK is a real Halloway service at /experts. It introduces people to industry experts for questions in Greece, only in real estate, tourism, agriculture, and restaurants and hospitality. A person reviews a brief sent via /contact?focus=experts and makes an introduction only when someone's experience matches the question. An introduction is a conversation, not a report, valuation, or promised outcome. Do not name experts, quote fees, or invent how many people are in the network.
+
 WHEN A VISITOR WANTS TO ACTUALLY DO SOMETHING marketplace-related (search real listings, get matched to a professional, book a call, create/manage a listing, check on a request): you cannot do this yourself — you have no access to live listings or booking data. Tell them plainly to use the AI concierge (the "I Need Help" button, or /app) or, for a live human conversation, /book-a-call. Never claim to have searched, checked availability, or found something.
 `.trim();
 
@@ -130,6 +136,27 @@ HOW TO BEHAVE:
 
 export function inferFocusFromText(text: string): ChatFocus | undefined {
   const lower = text.toLowerCase();
+  // Keep these narrower than the marketplace and Studio checks below.
+  // "recruit customers", "incorporated", and "agricultural land" belong to
+  // those existing routes, not to the three contact-form services.
+  if (
+    /\bstaffing\b|\brecruitment\b|\brecruit(?:ing)? (?:a |an |staff|people|someone|employees)\b|\bhire staff\b|\bhiring staff\b|\bneed staff\b|στελέχ|προσλήψ|recrutement/.test(
+      lower,
+    )
+  )
+    return "staffing";
+  if (
+    /business setup|set up a (business|company)|company formation|\bincorporation\b|foreign business|σύσταση επιχείρ|création d'entreprise|s'installer en grèce/.test(
+      lower,
+    )
+  )
+    return "business-setup";
+  if (
+    /expert network|industry expert|(?:real estate|tourism|agriculture|restaurant|hospitality) expert|δίκτυο ειδικών|réseau d'experts/.test(
+      lower,
+    )
+  )
+    return "experts";
   if (/propert(y|ies)|apartment|house|room|rent|landlord|tenant|professional|lawyer|accountant|architect|engineer|relocat|moving to greece|athens|thessaloniki|concierge|listing|greece/.test(lower))
     return "marketplace";
   if (/automation|n8n|zapier|workflow|chatbot|ai agent|make\.com/.test(lower))

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { services, type ServiceCategory } from "@/lib/services-data";
@@ -24,14 +24,20 @@ export function ServiceExplorer() {
   const tItems = useTranslations("servicesPage.items");
   const tSeo = useTranslations("seo");
   const searchParams = useSearchParams();
-  const [filter, setFilter] = useState<Filter>("all");
-
-  useEffect(() => {
-    const category = searchParams.get("category") as ServiceCategory | null;
-    if (category && ["automation", "revenue", "growth", "product"].includes(category)) {
-      setFilter(category);
-    }
-  }, [searchParams]);
+  const requested = searchParams.get("category");
+  const fromQuery: Filter =
+    requested === "automation" ||
+    requested === "revenue" ||
+    requested === "growth" ||
+    requested === "product"
+      ? requested
+      : "all";
+  const [filter, setFilter] = useState<Filter>(fromQuery);
+  const [queryFilter, setQueryFilter] = useState(fromQuery);
+  if (fromQuery !== queryFilter) {
+    setQueryFilter(fromQuery);
+    setFilter(fromQuery);
+  }
 
   const filtered = useMemo(
     () =>

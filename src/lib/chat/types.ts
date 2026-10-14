@@ -9,7 +9,21 @@ export type ChatRole = "user" | "assistant";
 // those). Kept separate from ServiceCategory itself rather than extending
 // it: ServiceCategory also drives the unrelated /services filter UI
 // (ServiceExplorer.tsx), which has no "marketplace" tab to filter to.
-export type ChatFocus = ServiceCategory | "marketplace";
+export type ChatFocus =
+  | ServiceCategory
+  | "marketplace"
+  | "staffing"
+  | "business-setup"
+  | "experts";
+
+export function isStudioFocus(focus: ChatFocus): focus is ServiceCategory {
+  return (
+    focus === "automation" ||
+    focus === "revenue" ||
+    focus === "growth" ||
+    focus === "product"
+  );
+}
 
 export interface ChatMessage {
   role: ChatRole;

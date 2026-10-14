@@ -5,6 +5,7 @@ import { usePathname } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 import {
   VISITOR_STORAGE_KEY,
+  isStudioFocus,
   type VisitorProfile,
 } from "@/lib/chat/types";
 import { inferFocusFromText } from "@/lib/chat/knowledge-base";
@@ -75,7 +76,7 @@ export function trackUserMessage(content: string, locale: string) {
   // in types.ts) — a "marketplace" signal is used for the contact-handoff
   // destination in SalesChatbot.tsx, not stored here.
   const focus = inferFocusFromText(content);
-  if (focus && focus !== "marketplace" && !profile.interests.includes(focus)) {
+  if (focus && isStudioFocus(focus) && !profile.interests.includes(focus)) {
     profile.interests = [...profile.interests, focus];
   }
   saveVisitorProfile(profile);

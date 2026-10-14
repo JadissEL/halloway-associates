@@ -32,6 +32,9 @@
       "properties": "Trouvez une chambre, un appartement ou une maison à louer ou à acheter — ou publiez la vôtre.",
       "professionals": "Avocats, comptables, architectes et ingénieurs, adaptés à votre situation exacte.",
       "jobs": "Recherchez les offres d'emploi actuelles partout en Grèce.",
+      "staffing": "Recrutement pour les employeurs et les candidats, en Grèce et dans toute l'Union européenne.",
+      "businessSetup": "Une aide pour les entreprises étrangères qui veulent s'installer et exercer en Grèce.",
+      "experts": "Des experts de l'immobilier, du tourisme, de l'agriculture et des restaurants.",
       "vehicles": "Achetez ou vendez une voiture, sans concessionnaire.",
       "businesses": "Commerces à vendre, ainsi que des services du quotidien comme le ménage et la rénovation.",
       "travel": "Planifiez votre voyage en Grèce avec des informations locales et fiables.",
@@ -372,9 +375,15 @@
         "revenue": "Systèmes de revenus",
         "growth": "Marketing et croissance",
         "product": "Produit et MVP",
+        "staffing": "Recrutement et staffing",
+        "business-setup": "Création d'entreprise en Grèce",
+        "experts": "Réseau d'experts",
         "other": "Pas encore certain"
       },
       "message": "Que souhaitez-vous construire ou corriger?",
+      "staffingMessage": "Décrivez le poste, ou le type de travail que vous cherchez. Indiquez où il est basé.",
+      "businessSetupMessage": "Décrivez l'activité que vous voulez en Grèce, où elle doit être basée, et si une société existe déjà.",
+      "expertsMessage": "Nommez le secteur, le lieu en Grèce, et la question pour laquelle vous voulez l'aide d'un expert.",
       "submit": "Envoyer le message",
       "sending": "Envoi en cours…",
       "success": "Message envoyé. Nous vous contacterons sous peu.",
@@ -406,6 +415,8 @@
     "ourWork": "Nos réalisations",
     "privacy": "Confidentialité",
     "contact": "Contact",
+    "creditBefore": "Également réalisé par Jadiss EL ANTAKI :",
+    "creditLink": "shopthebarber.app",
     "copyright": "© {year} Halloway & Associates"
   },
   "consent": {
@@ -432,9 +443,253 @@
       "contact": "Je voudrais parler à une vraie personne"
     }
   },
+  "staffingPage": {
+    "eyebrow": "Recrutement et staffing",
+    "title": "Du personnel choisi avec soin, en Grèce et en Europe.",
+    "intro": "Halloway & Associates s'occupe du recrutement et du staffing pour les employeurs qui ont besoin de personnel et pour les candidats qui cherchent le bon poste. Le périmètre couvre la Grèce et l'Union européenne. Vous envoyez un brief ; une personne de l'équipe le prend en charge.",
+    "metaDescription": "Recrutement et staffing pour les employeurs et les candidats, en Grèce et dans toute l'Union européenne. Envoyez un poste ou une recherche par le formulaire de contact.",
+    "keywords": "recrutement Grèce|staffing Europe|embaucher en Grèce|recrutement UE|Halloway & Associates|recrutement et staffing",
+    "audiences": {
+      "eyebrow": "À qui nous parlons",
+      "title": "Les employeurs qui ont besoin de personnel, et les candidats qui cherchent un poste.",
+      "employers": {
+        "title": "Employeurs",
+        "body": "Vous avez besoin de personnes — un spécialiste, une équipe saisonnière, ou un besoin d'embauche qui revient. Indiquez le poste, le lieu de travail, les langues qui comptent et le moment où vous en avez besoin. Nous lisons ce brief et répondons avec une prochaine étape claire."
+      },
+      "candidates": {
+        "title": "Candidats",
+        "body": "Vous cherchez du travail en Grèce ou ailleurs dans l'Union européenne. Dites-nous le type de poste voulu, où vous pouvez travailler et l'expérience que vous apportez. Nous ne faisons une mise en relation que lorsque le brief correspond."
+      }
+    },
+    "sectors": {
+      "eyebrow": "Secteurs",
+      "title": "Les secteurs dans lesquels nous recrutons.",
+      "items": {
+        "hospitality": {
+          "title": "Hôtellerie et tourisme",
+          "body": "Hôtels, restauration, expérience client et équipes saisonnières."
+        },
+        "professional": {
+          "title": "Services professionnels",
+          "body": "Finance, comptabilité, soutien juridique et administration."
+        },
+        "technology": {
+          "title": "Technologie et numérique",
+          "body": "Produit, ingénierie, opérations et fonctions commerciales."
+        },
+        "operations": {
+          "title": "Logistique et métiers qualifiés",
+          "body": "Opérations, entreposage, construction et métiers."
+        },
+        "care": {
+          "title": "Santé et accompagnement",
+          "body": "Postes d'accompagnement et de soutien clinique, proposés seulement lorsque les qualifications du brief correspondent."
+        },
+        "retail": {
+          "title": "Commerce et relation client",
+          "body": "Magasins, service client et équipes d'accueil, y compris les pics saisonniers."
+        }
+      }
+    },
+    "process": {
+      "eyebrow": "Le processus",
+      "title": "Quatre étapes. Une personne à chacune.",
+      "steps": {
+        "brief": {
+          "title": "Envoyez le brief",
+          "body": "Les employeurs décrivent le poste. Les candidats décrivent le travail qu'ils cherchent. Utilisez le formulaire de contact et dites de quel côté vous êtes."
+        },
+        "review": {
+          "title": "Nous l'examinons",
+          "body": "Une personne de l'équipe lit la demande et confirme ce que nous pouvons prendre. Rien n'est apparié automatiquement."
+        },
+        "introduce": {
+          "title": "Nous faisons les présentations",
+          "body": "Lorsqu'il y a une correspondance, nous présentons les personnes qui doivent se parler. Vous décidez de la suite."
+        },
+        "follow": {
+          "title": "Nous restons présents",
+          "body": "Les questions et les prochaines étapes restent avec la personne qui traite la demande."
+        }
+      }
+    },
+    "coverage": {
+      "eyebrow": "Couverture",
+      "title": "La Grèce, et l'Union européenne.",
+      "body": "Le recrutement se fait en Grèce et dans toute l'UE. Un poste peut être basé en Grèce, dans un autre État membre, ou des deux côtés — un employeur grec qui embauche ailleurs dans l'Union, ou un candidat en Grèce qui envisage un poste dans un autre pays de l'UE. Indiquez le lieu de travail dans la demande pour que le brief tombe dans le bon marché."
+    },
+    "cta": {
+      "title": "Envoyez le brief.",
+      "body": "Utilisez le formulaire de contact et choisissez Recrutement et staffing. Dites si vous embauchez ou si vous cherchez, où se trouve le travail, et ce dont vous avez besoin.",
+      "button": "Contacter l'équipe",
+      "secondary": "Vous préférez en parler d'abord ? Réservez un appel"
+    }
+  },
+  "businessSetupPage": {
+      "eyebrow": "Création d'entreprise en Grèce",
+      "title": "S'installer et exercer une activité en Grèce.",
+      "intro": "Halloway & Associates aide les entreprises étrangères à s'installer et à exercer en Grèce. Dites-nous ce que vous voulez établir, d'où vous venez, et si une société existe déjà. Une personne de l'équipe lit le brief et répond avec la prochaine étape.",
+      "metaDescription": "Aide aux entreprises étrangères qui s'installent et exercent en Grèce. Envoyez un brief par le formulaire de contact.",
+      "keywords": "création entreprise Grèce|société étrangère Grèce|s'installer en Grèce|exercer en Grèce|Halloway & Associates",
+      "audiences": {
+        "eyebrow": "À qui s'adresse ce service",
+        "title": "Les entreprises étrangères qui veulent une présence en Grèce.",
+        "companies": {
+          "title": "Sociétés qui arrivent",
+          "body": "Vous exercez déjà ailleurs et vous voulez une société, une succursale ou une activité locale en Grèce. Dites-nous ce que vous faites, où vous voulez être établi, et ce qui doit être en place avant de pouvoir opérer."
+        },
+        "founders": {
+          "title": "Fondateurs qui démarrent ici",
+          "body": "Vous lancez une nouvelle activité en Grèce et vous n'êtes pas établi ici. Dites-nous l'activité, l'horizon que vous avez en tête, et ce que vous savez déjà. Nous ne devinerons pas le reste."
+        }
+      },
+      "sectors": {
+        "eyebrow": "Ce que nous couvrons",
+        "title": "Ce qu'une entreprise étrangère doit organiser.",
+        "items": {
+          "structure": {
+            "title": "Société et immatriculation",
+            "body": "La forme que l'activité devrait prendre, et les immatriculations nécessaires avant qu'elle puisse opérer."
+          },
+          "tax": {
+            "title": "Fiscalité et sécurité sociale",
+            "body": "Les inscriptions qu'une nouvelle activité doit faire auprès des autorités fiscales et de sécurité sociale. Nous ne remplaçons pas le conseil d'un comptable."
+          },
+          "banking": {
+            "title": "Banque et administration",
+            "body": "Ce qu'une entreprise étrangère doit en général organiser pour être payée, payer, et tenir des registres ordinaires."
+          },
+          "premises": {
+            "title": "Un lieu pour opérer",
+            "body": "Trouver des locaux, ou comprendre ce qu'un site exige, quand l'activité ne peut pas se faire depuis l'étranger."
+          },
+          "people": {
+            "title": "Les personnes",
+            "body": "Quand vous êtes prêt à embaucher, le recrutement vient à côté de ce travail. Dites-le dans le brief si l'embauche fait partie du plan."
+          },
+          "ongoing": {
+            "title": "Une fois la société créée",
+            "body": "Les questions qui arrivent quand vous êtes en activité : renouvellements, fournisseurs locaux, et à qui parler quand quelque chose change."
+          }
+        }
+      },
+      "process": {
+        "eyebrow": "Le processus",
+        "title": "Quatre étapes. Une personne à chacune.",
+        "steps": {
+          "brief": {
+            "title": "Envoyez le brief",
+            "body": "Décrivez l'activité, où elle doit se situer en Grèce, et si une société existe déjà."
+          },
+          "review": {
+            "title": "Nous l'examinons",
+            "body": "Une personne de l'équipe lit la demande et confirme ce que nous pouvons prendre. Rien n'est déposé automatiquement."
+          },
+          "map": {
+            "title": "Nous posons les prochaines étapes",
+            "body": "Immatriculations, locaux, personnes, et quel type de professionnel doit intervenir. Quand un avocat ou un comptable est la bonne personne, nous le disons."
+          },
+          "follow": {
+            "title": "Nous restons présents",
+            "body": "Les questions restent avec la personne qui traite la demande."
+          }
+        }
+      },
+      "coverage": {
+        "eyebrow": "Couverture",
+        "title": "La Grèce.",
+        "body": "Ce service concerne une activité en Grèce. L'entreprise peut venir de n'importe où. Le lieu de travail, les clients, ou la société que vous voulez créer doivent être en Grèce. Indiquez ce lieu dans la demande."
+      },
+      "cta": {
+        "title": "Envoyez le brief.",
+        "body": "Utilisez le formulaire de contact et choisissez Création d'entreprise en Grèce. Dites ce que vous voulez établir, où en Grèce, et si vous exercez déjà ailleurs.",
+        "button": "Contacter l'équipe",
+        "secondary": "Vous préférez en parler d'abord ? Réservez un appel"
+      }
+    },
+    "expertsPage": {
+      "eyebrow": "Réseau d'experts",
+      "title": "Une personne qui connaît le secteur, en Grèce.",
+      "intro": "Halloway & Associates vous présente des experts de secteur pour un travail en Grèce. Le réseau couvre l'immobilier, le tourisme, l'agriculture, et les restaurants et l'hôtellerie. Décrivez la question. Une personne de l'équipe décide si l'expérience de quelqu'un correspond à la bonne présentation.",
+      "metaDescription": "Mises en relation avec des experts de secteur en Grèce : immobilier, tourisme, agriculture, restaurants et hôtellerie. Envoyez la question par le formulaire de contact.",
+      "keywords": "réseau d'experts Grèce|expert immobilier Grèce|expert tourisme Grèce|agriculture Grèce|restaurant hôtellerie Grèce|Halloway & Associates",
+      "audiences": {
+        "eyebrow": "À qui s'adresse ce service",
+        "title": "Ceux qui ont besoin d'un regard de secteur, pas d'une liste générale.",
+        "businesses": {
+          "title": "Entreprises et investisseurs",
+          "body": "Vous avez besoin d'un regard de secteur avant de vous engager — un site, une saison, une culture ou un concept. Dites-nous la décision que vous cherchez à prendre et la partie de la Grèce qu'elle concerne."
+        },
+        "operators": {
+          "title": "Exploitants déjà sur place",
+          "body": "Vous travaillez déjà en Grèce et vous avez besoin de quelqu'un qui connaît le métier, pas d'une présentation générale. Dites-nous la question et ce que vous avez déjà essayé."
+        }
+      },
+      "sectors": {
+        "eyebrow": "Secteurs",
+        "title": "Les quatre secteurs du réseau.",
+        "items": {
+          "realEstate": {
+            "title": "Immobilier",
+            "body": "Terrains, bâtiments, et la façon dont un bien est utilisé dans un marché local."
+          },
+          "tourism": {
+            "title": "Tourisme",
+            "body": "Visiteurs, saisons, et ce qu'il faut pour faire tourner une activité touristique en Grèce."
+          },
+          "agriculture": {
+            "title": "Agriculture",
+            "body": "Terres, cultures, et les questions pratiques de produire en Grèce."
+          },
+          "hospitality": {
+            "title": "Restaurants et hôtellerie",
+            "body": "Cuisines, salles, et exploitation d'une activité d'hospitalité."
+          }
+        }
+      },
+      "process": {
+        "eyebrow": "Le processus",
+        "title": "Quatre étapes. Une personne à chacune.",
+        "steps": {
+          "brief": {
+            "title": "Décrivez la question",
+            "body": "Nommez le secteur, le lieu en Grèce, et ce que vous voulez que l'expert vous aide à comprendre."
+          },
+          "review": {
+            "title": "Nous regardons si cela correspond",
+            "body": "Une personne de l'équipe lit la demande. Nous ne proposons une présentation que lorsque l'expérience de quelqu'un correspond à la question."
+          },
+          "introduce": {
+            "title": "Nous faisons la présentation",
+            "body": "Vous entendez qui nous proposons et pourquoi la question correspond. Vous décidez si vous parlez."
+          },
+          "follow": {
+            "title": "Vous décidez de la suite",
+            "body": "Une présentation est une conversation. Ce n'est pas un rapport, une évaluation, ni une promesse de résultat."
+          }
+        }
+      },
+      "coverage": {
+        "eyebrow": "Couverture",
+        "title": "La Grèce, dans quatre secteurs.",
+        "body": "Les experts que nous présentons travaillent sur des questions en Grèce, en immobilier, tourisme, agriculture, et restaurants et hôtellerie. Si la question est hors de ces secteurs, ou hors de Grèce, dites-le — nous vous dirons si ce n'est pas un sujet que nous pouvons prendre."
+      },
+      "cta": {
+        "title": "Demandez une présentation.",
+        "body": "Utilisez le formulaire de contact et choisissez Réseau d'experts. Nommez le secteur, le lieu en Grèce, et la question.",
+        "button": "Contacter l'équipe",
+        "secondary": "Vous préférez en parler d'abord ? Réservez un appel"
+      }
+    },
   "marketplaceNav": {
     "properties": "Propriétés",
     "jobs": "Emplois",
+    "staffing": "Recrutement et staffing",
+    "staffingShort": "Recrutement",
+    "businessSetup": "Création d'entreprise en Grèce",
+    "businessSetupShort": "Implantation",
+    "experts": "Réseau d'experts",
+    "expertsShort": "Experts",
     "professionals": "Professionnels",
     "vehicles": "Véhicules",
     "businesses": "Entreprises",
@@ -495,6 +750,9 @@
       "buyProperty": "Acheter un bien",
       "sellProperty": "Vendre un bien",
       "findJob": "Trouver un emploi",
+      "staffing": "Recrutement",
+      "businessSetup": "Création d'entreprise en Grèce",
+      "experts": "Réseau d'experts",
       "sellCar": "Vendre ma voiture",
       "buyCar": "Acheter une voiture",
       "sellFurniture": "Vendre des meubles",

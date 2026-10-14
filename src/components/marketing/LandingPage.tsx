@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import {
-  Building2, Scale, Briefcase, Car, Store, Plane, PhoneCall, Megaphone,
+  Building2, Scale, Briefcase, Users, Flag, Wheat, Car, Store, Plane, PhoneCall, Megaphone,
   MessageSquareText, Sparkles, ShieldCheck, Layers, Languages, ArrowRight,
   type LucideIcon,
 } from "lucide-react";
@@ -10,6 +10,9 @@ const SERVICES: { key: string; href: string; icon: LucideIcon }[] = [
   { key: "properties", href: "/properties", icon: Building2 },
   { key: "professionals", href: "/professionals", icon: Scale },
   { key: "jobs", href: "/jobs", icon: Briefcase },
+  { key: "staffing", href: "/staffing", icon: Users },
+  { key: "businessSetup", href: "/business-setup", icon: Flag },
+  { key: "experts", href: "/experts", icon: Wheat },
   { key: "vehicles", href: "/vehicles", icon: Car },
   { key: "businesses", href: "/businesses", icon: Store },
   { key: "travel", href: "/travel", icon: Plane },

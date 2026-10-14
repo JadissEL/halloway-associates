@@ -14,6 +14,9 @@ export function SiteFooter() {
     { href: "/properties", label: tMarketplace("properties") },
     { href: "/professionals", label: tMarketplace("professionals") },
     { href: "/jobs", label: tMarketplace("jobs") },
+    { href: "/staffing", label: tMarketplace("staffing") },
+    { href: "/business-setup", label: tMarketplace("businessSetup") },
+    { href: "/experts", label: tMarketplace("experts") },
     { href: "/services", label: tNav("services") },
   ] as const;
 
@@ -59,7 +62,18 @@ export function SiteFooter() {
             </ul>
           </div>
         </div>
-        <p className="mt-12 text-xs text-luxury-muted-foreground">{t("copyright", { year })}</p>
+        <p className="mt-12 text-xs text-luxury-muted-foreground">
+          {t("creditBefore")}{" "}
+          <a
+            href="https://shopthebarber.app"
+            target="_blank"
+            rel="noreferrer"
+            className="text-luxury-gold no-underline hover:underline"
+          >
+            {t("creditLink")}
+          </a>
+        </p>
+        <p className="mt-2 text-xs text-luxury-muted-foreground">{t("copyright", { year })}</p>
       </div>
     </footer>
   );

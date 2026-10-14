@@ -10,13 +10,32 @@ import { Send } from "lucide-react";
 
 const initialState: ContactFormState = { ok: false, message: "" };
 
-const focusOptions = ["automation", "revenue", "growth", "product", "other"] as const;
+const focusOptions = [
+  "automation",
+  "revenue",
+  "growth",
+  "product",
+  "staffing",
+  "business-setup",
+  "experts",
+  "other",
+] as const;
+
+const briefLabels = {
+  staffing: "staffingMessage",
+  "business-setup": "businessSetupMessage",
+  experts: "expertsMessage",
+} as const;
 
 export function ContactForm() {
   const t = useTranslations("contactPage.form");
   const searchParams = useSearchParams();
   const [state, formAction, pending] = useActionState(submitContactForm, initialState);
-  const defaultFocus = searchParams.get("focus") ?? "";
+  const requestedFocus = searchParams.get("focus") ?? "";
+  const defaultFocus = focusOptions.includes(requestedFocus as (typeof focusOptions)[number])
+    ? requestedFocus
+    : "other";
+  const briefLabel = briefLabels[defaultFocus as keyof typeof briefLabels];
 
   return (
     <form action={formAction} className="space-y-5">
@@ -29,7 +48,7 @@ export function ContactForm() {
       <Select
         label={t("focus")}
         name="focus"
-        defaultValue={focusOptions.includes(defaultFocus as (typeof focusOptions)[number]) ? defaultFocus : "other"}
+        defaultValue={defaultFocus}
       >
         {focusOptions.map((option) => (
           <option key={option} value={option}>
@@ -38,7 +57,13 @@ export function ContactForm() {
         ))}
       </Select>
 
-      <Textarea label={t("message")} name="message" rows={5} required error={state.fieldErrors?.message} />
+      <Textarea
+        label={briefLabel ? t(briefLabel) : t("message")}
+        name="message"
+        rows={5}
+        required
+        error={state.fieldErrors?.message}
+      />
 
       <Button type="submit" disabled={pending} loading={pending} size="lg">
         <Send size={15} />
