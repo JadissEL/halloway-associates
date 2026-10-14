@@ -31,7 +31,7 @@ export function organizationJsonLd(locale: string) {
     name: SITE_NAME,
     url: SITE_URL,
     email: SITE_EMAIL,
-    logo: `${SITE_URL}/brand/logo-mark.png`,
+    logo: `${SITE_URL}/icon.png`,
     description:
       locale === "el"
         ? "Ενοικιάσεις και τοποθέτηση ενοικιαστών στην Αθήνα, υπηρεσίες μετεγκατάστασης στην Ελλάδα, οικιακές υπηρεσίες και στελέχωση προσωπικού."
