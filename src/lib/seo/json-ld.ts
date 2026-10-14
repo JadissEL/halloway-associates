@@ -1,8 +1,5 @@
-import { regionCountryNames } from "@/lib/map-config";
 import { services, type ServiceId } from "@/lib/services-data";
 import { SITE_EMAIL, SITE_NAME, SITE_URL, localePath } from "@/lib/seo/site";
-
-const GLOBAL_MARKETS = Object.values(regionCountryNames);
 
 export function serviceListJsonLd(
   locale: string,
@@ -23,28 +20,30 @@ export function serviceListJsonLd(
 }
 
 export function organizationJsonLd(locale: string) {
+  // Halloway is a Greek rentals, relocation, and staffing business based in
+  // Athens. Street address, phone, and legal name stay omitted until they
+  // are confirmed — do not invent them. LocalBusiness rich results want an
+  // address; add `address` / `telephone` / `legalName` only once confirmed.
   return {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
+    "@type": ["RealEstateAgent", "LocalBusiness"],
     "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
     url: SITE_URL,
     email: SITE_EMAIL,
+    logo: `${SITE_URL}/brand/logo-mark.png`,
     description:
-      locale === "fr"
-        ? "Studio d'ingénierie IA, automatisation et croissance. Systèmes prêts pour la production."
-        : "AI, automation, and growth engineering studio. Production-grade systems for ambitious companies.",
-    areaServed: GLOBAL_MARKETS.map((name) => ({
-      "@type": "Country",
-      name,
-    })),
-    knowsLanguage: ["English", "French", "Arabic", "Spanish", "Italian", "Greek"],
-    serviceType: [
-      "AI Automation",
-      "MVP Development",
-      "Revenue Systems",
-      "Growth Engineering",
+      locale === "el"
+        ? "Ενοικιάσεις και τοποθέτηση ενοικιαστών στην Αθήνα, υπηρεσίες μετεγκατάστασης στην Ελλάδα, οικιακές υπηρεσίες και στελέχωση προσωπικού."
+        : locale === "fr"
+          ? "Locations et placement de locataires à Athènes, installation en Grèce, services à domicile et recrutement en Grèce et en Europe."
+          : "Athens rentals and tenant placement, relocation to Greece, home services and staffing in Greece and Europe.",
+    areaServed: [
+      { "@type": "City", name: "Athens" },
+      { "@type": "Country", name: "Greece" },
     ],
+    knowsLanguage: ["en", "el", "fr"],
+    priceRange: "€€",
   };
 }
 
@@ -55,7 +54,7 @@ export function websiteJsonLd(locale: string) {
     "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
     url: SITE_URL,
-    inLanguage: [locale === "fr" ? "fr-CA" : "en-CA"],
+    inLanguage: locale === "el" ? "el-GR" : locale === "fr" ? "fr-FR" : "en-GR",
     publisher: { "@id": `${SITE_URL}/#organization` },
   };
 }
@@ -90,7 +89,7 @@ export function serviceJsonLd(
     name: title,
     description,
     provider: { "@id": `${SITE_URL}/#organization` },
-    areaServed: GLOBAL_MARKETS.map((name) => ({ "@type": "Country", name })),
+    areaServed: { "@type": "Country", name: "Greece" },
     serviceType: service?.category ?? "ProfessionalService",
     url: localePath(locale, `/services/${serviceId}`),
   };

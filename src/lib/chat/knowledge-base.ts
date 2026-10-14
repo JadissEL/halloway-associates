@@ -1,4 +1,5 @@
 import { services } from "@/lib/services-data";
+import { SITE_URL } from "@/lib/seo/site";
 import { regions } from "@/lib/regions-data";
 import type { ChatFocus } from "./types";
 
@@ -107,9 +108,9 @@ WHEN A VISITOR WANTS TO ACTUALLY DO SOMETHING marketplace-related (search real l
 
   return `
 COMPANY: Halloway & Associates
-WEBSITE: https://www.hallowayassociates.com
+WEBSITE: ${SITE_URL}
 EMAIL: hello@hallowayassociates.com
-CONTACT: https://www.hallowayassociates.com/${locale}/contact
+CONTACT: ${SITE_URL}/${locale}/contact
 
 Halloway & Associates has two real product lines today — introduce whichever one is actually relevant to what the visitor asked, don't recite both unprompted:
 

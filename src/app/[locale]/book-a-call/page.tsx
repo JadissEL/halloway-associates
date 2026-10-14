@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 import { prisma } from "@/lib/db/client";
 import { safeQuery } from "@/lib/db/safe-query";
 import { getCurrentUser } from "@/lib/auth/current-user";
@@ -7,6 +9,21 @@ import { BookACallForm } from "@/components/marketplace/BookACallForm";
 import { GatedAction } from "@/components/marketplace/GatedAction";
 
 type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const el = locale === "el";
+  return buildPageMetadata({
+    locale,
+    path: "/book-a-call",
+    title: el
+      ? "Κλείστε κλήση άφιξης | Halloway & Associates"
+      : "Book an Arrival Call | Halloway & Associates",
+    description: el
+      ? "Κλείστε μια κλήση με την ομάδα για μετεγκατάσταση, ενοικίαση ή εγκατάσταση στην Αθήνα και την Ελλάδα."
+      : "Book a call with the team about relocation, rentals, or getting set up in Athens and Greece.",
+  });
+}
 
 export default async function BookACallPage({ params }: Props) {
   const { locale } = await params;

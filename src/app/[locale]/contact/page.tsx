@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbJsonLd, contactPageJsonLd } from "@/lib/seo/json-ld";
+import { SITE_URL } from "@/lib/seo/site";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -62,7 +63,7 @@ export default async function ContactPage({ params }: Props) {
                 {t("direct.email")}
               </a>
               <a
-                href="https://www.hallowayassociates.com"
+                href={SITE_URL}
                 className="mt-2 block text-sm text-luxury-muted-foreground"
               >
                 {t("direct.website")}
