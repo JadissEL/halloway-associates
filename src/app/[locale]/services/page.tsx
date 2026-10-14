@@ -21,6 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: t("subtitle"),
     ogTitle: t("title"),
     ogImagePath: `/${locale}/services/opengraph-image`,
+    noindex: true,
     keywords: [
       "AI automation",
       "MVP development",

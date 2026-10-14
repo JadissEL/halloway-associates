@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/db/client";
 import { safeQuery } from "@/lib/db/safe-query";
@@ -24,6 +26,21 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
 
 const VALID_TYPES = new Set(Object.keys(TYPE_ICONS));
 const VALID_INTENTS = new Set(["RENT", "SALE"]);
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const el = locale === "el";
+  return buildPageMetadata({
+    locale,
+    path: "/properties",
+    title: el
+      ? "Ενοικιάσεις διαμερισμάτων στην Αθήνα | Halloway & Associates"
+      : "Apartments & Rooms for Rent in Athens | Halloway & Associates",
+    description: el
+      ? "Βρείτε διαμέρισμα, δωμάτιο ή σπίτι προς ενοικίαση στην Αθήνα. Ελεγμένοι ιδιοκτήτες και ενοικιαστές, τοποθέτηση ενοικιαστή με CheckRent."
+      : "Find apartments, rooms and houses to rent in Athens. Vetted landlords and tenants, with CheckRent tenant placement.",
+  });
+}
 
 // searchParams are user-controlled — an old/renamed type value or a
 // non-numeric price must never reach Prisma raw (it throws, and the page

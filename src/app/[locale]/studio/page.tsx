@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t("title"),
     description: t("description"),
     keywords: t("keywords").split("|").map((k) => k.trim()),
+    noindex: true,
   });
 }
 

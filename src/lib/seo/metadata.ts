@@ -30,7 +30,7 @@ export function buildPageMetadata({
   ogImagePath,
 }: PageMetadataInput): Metadata {
   const canonical = localePath(locale, path);
-  const ogLocale = LOCALE_OG[locale as keyof typeof LOCALE_OG] ?? "en_CA";
+  const ogLocale = LOCALE_OG[locale as keyof typeof LOCALE_OG] ?? "en_GR";
   const ogImage = ogImagePath ?? `/${locale}/opengraph-image`;
 
   const metadata: Metadata = {

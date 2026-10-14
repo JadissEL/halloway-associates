@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/db/client";
 import { safeQuery } from "@/lib/db/safe-query";
@@ -14,6 +16,21 @@ type Props = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ category?: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const el = locale === "el";
+  return buildPageMetadata({
+    locale,
+    path: "/professionals",
+    title: el
+      ? "Επαγγελματίες και οικιακές υπηρεσίες στην Ελλάδα | Halloway & Associates"
+      : "Professionals & Home Services in Greece | Halloway & Associates",
+    description: el
+      ? "Βρείτε ελεγμένους δικηγόρους, λογιστές, αρχιτέκτονες, μηχανικούς, καθαριστές, μεταφορείς και διαχειριστές ακινήτων στην Ελλάδα."
+      : "Find vetted lawyers, accountants, architects, engineers, cleaners, movers, and property managers in Greece.",
+  });
+}
 
 const CATEGORIES: ProfessionalCategory[] = [
   "LAWYER", "ACCOUNTANT", "ARCHITECT", "ENGINEER", "CLEANER",

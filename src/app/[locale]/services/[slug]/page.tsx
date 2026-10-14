@@ -26,7 +26,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isServiceId(slug)) {
-    return { title: "Not found" };
+    return { title: "Not found", robots: { index: false, follow: false } };
   }
 
   const t = await getTranslations({ locale, namespace: "servicesPage.items" });
@@ -40,6 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     ogTitle: title,
     ogImagePath: `/${locale}/services/${slug}/opengraph-image`,
+    noindex: true,
     keywords: [
       title,
       "Halloway & Associates",

@@ -25,7 +25,7 @@ Open [http://localhost:3000/en](http://localhost:3000/en) or [http://localhost:3
 Copy `.env.example` to `.env.local`:
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://www.hallowayassociates.com
+NEXT_PUBLIC_SITE_URL=https://hallowayassociates.com
 CONTACT_TO_EMAIL=hello@hallowayassociates.com
 CONTACT_FROM_EMAIL=onboarding@resend.dev
 RESEND_API_KEY=
